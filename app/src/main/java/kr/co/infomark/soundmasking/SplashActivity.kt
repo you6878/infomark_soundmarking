@@ -5,10 +5,10 @@ import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Build
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Toast
 import androidx.annotation.RequiresApi
+import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 
 const val REQUEST_ALL_PERMISSION = 1
@@ -16,6 +16,9 @@ const val REQUEST_ALL_PERMISSION = 1
 val PERMISSIONS = arrayOf(Manifest.permission.ACCESS_FINE_LOCATION)
 
 val PERMISSIONS_S_ABOVE = arrayOf(
+    Manifest.permission.BLUETOOTH,
+    Manifest.permission.BLUETOOTH_ADMIN,
+    Manifest.permission.BLUETOOTH_ADVERTISE,
     Manifest.permission.BLUETOOTH_SCAN,
     Manifest.permission.BLUETOOTH_CONNECT,
     Manifest.permission.ACCESS_FINE_LOCATION

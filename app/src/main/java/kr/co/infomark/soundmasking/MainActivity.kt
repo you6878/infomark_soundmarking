@@ -20,26 +20,15 @@ import androidx.core.app.ActivityCompat
 import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
+import kr.co.infomark.soundmasking.bluetooth.BluetoothSPP
 import kr.co.infomark.soundmasking.databinding.ActivityMainBinding
 import java.nio.charset.StandardCharsets
-import java.util.*
 
 
 class MainActivity : AppCompatActivity(), View.OnClickListener {
     companion object{
-        private val TAG = MainActivity::class.java.simpleName
-
-        private val BT_MODULE_UUID: UUID =
-            UUID.fromString("00001101-0000-1000-8000-00805F9B34FB") // "random" unique identifier
-
-
-        // #defines for identifying shared types between calling functions
-        private const val REQUEST_ENABLE_BT = 1 // used to identify adding bluetooth names
-
         const val MESSAGE_READ = 2 // used in bluetooth handler to identify message update
-
-        private const val CONNECTING_STATUS =
-            3 // used in bluetooth handler to identify message status
+        private const val CONNECTING_STATUS = 3 // used in bluetooth handler to identify message status
 
     }
     lateinit var binding : ActivityMainBinding
@@ -51,10 +40,12 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
 
     lateinit var mBTAdapter: BluetoothAdapter
     lateinit var devicesAdapter : PairedDevicesAdapter
+    private lateinit var bt: BluetoothSPP
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_main)
+        bt =  BluetoothSPP(this); //Initializing
         bluetoothManager.enableBluetooth()
         mBTAdapter = BluetoothAdapter.getDefaultAdapter() // get a handle on the bluetooth radio
         setOnClickListener()
@@ -78,6 +69,19 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
                         getString(R.string.BTconnFail)
                 }
             }
+        }
+        if (!bt.isBluetoothAvailable) { //블루투스 사용 불가라면
+            // 사용불가라고 토스트 띄워줌
+            Toast.makeText(this@MainActivity
+                , "Bluetooth is not available"
+                , Toast.LENGTH_SHORT).show();
+            // 화면 종료
+            finish();
+        }
+
+        binding.btnConnect.setOnClickListener {
+            val intent = Intent(applicationContext, DeviceListActivity::class.java)
+            startActivity(intent)
         }
     }
     private fun discover() {

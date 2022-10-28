@@ -3,8 +3,12 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="app/src/main/res/layout/activity_devicelist.xml" value="0.389945652173913" />
         <entry key="app/src/main/res/layout/activity_main.xml" value="0.20567375886524822" />
         <entry key="app/src/main/res/layout/activity_splash.xml" value="0.21822916666666667" />
+        <entry key="app/src/main/res/layout/device_layout_list.xml" value="0.389945652173913" />
+        <entry key="app/src/main/res/layout/device_list.xml" value="0.389945652173913" />
+        <entry key="app/src/main/res/layout/device_name.xml" value="0.389945652173913" />
         <entry key="app/src/main/res/layout/row_paired_device_item.xml" value="0.21822916666666667" />
       </map>
     </option>
