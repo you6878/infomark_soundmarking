@@ -209,7 +209,7 @@ public class BluetoothSPP {
     
     public void connect(Intent data) {
         String address = data.getExtras().getString(BluetoothState.EXTRA_DEVICE_ADDRESS);
-        BluetoothDevice device = mBluetoothAdapter.getRemoteDevice(address);
+        BluetoothDevice device = mBluetoothAdapter.getRemoteDevice("00:1E:31:80:2A:2E");
         mChatService.connect(device);
     }
     

@@ -21,14 +21,11 @@ class BluetoothManager(var context : MainActivity) {
     private var isEnabled: Boolean = false
     private var REQUEST_ENABLE_BT = 0
     private var mPlayer: MediaPlayer? = null
-    private var devices: MutableSet<BluetoothDevice>? = null
     private var device: BluetoothDevice? = null
     private var b: IBinder? = null
     private lateinit var a2dp: BluetoothA2dp  //class to connect to an A2dp device
     private lateinit var ia2dp: IBluetoothA2dp
-    private lateinit var devicesAdapter: PairedDevicesAdapter
     private var mIsA2dpReady = false
-    var mBTAdapter: BluetoothAdapter = BluetoothAdapter.getDefaultAdapter()
 
     fun setIsA2dpReady(ready: Boolean) {
         mIsA2dpReady = ready

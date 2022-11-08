@@ -132,6 +132,18 @@
             app:layout_constraintRight_toRightOf="parent"
             />
 
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnSend"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingStart="@dimen/dp_20"
+            android:text="Discover"
+            android:textColor="@android:color/white"
+            android:textSize="@dimen/sp_13"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/btnDiscover"
+            app:layout_constraintTop_toBottomOf="@id/btnShowPairedDevices" />
+
         <LinearLayout
             android:id="@+id/lnrLayout"
             android:layout_width="0dp"

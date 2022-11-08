@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+    </data>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/gray_background"
+        tools:context=".StartSpeakerSettingActivity">
+
+        <RelativeLayout
+            android:background="@color/white"
+            android:layout_width="match_parent"
+            android:layout_height="56dp">
+
+            <ImageButton
+                android:id="@+id/toolbar_back_left"
+                android:src="@drawable/navigation_chevron_left"
+                android:background="@color/white"
+                android:layout_width="56dp"
+                android:layout_height="56dp"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textStyle="normal"
+                android:textSize="20dp"
+                android:textColor="#000000"
+                android:layout_centerInParent="true"
+                android:text="스피커 연동" />
+        </RelativeLayout>
+
+        <TextView
+            android:layout_above="@+id/confirm_linear"
+            android:layout_marginBottom="70dp"
+            android:layout_centerHorizontal="true"
+            android:layout_width="328dp"
+            android:layout_height="wrap_content"
+            android:textStyle="normal"
+            android:textSize="14dp"
+            android:textColor="#cc000000"
+            android:lineSpacingExtra="4sp"
+            android:gravity="center_horizontal"
+            tools:text="스피커의 원활한 사용을 위해서는\n와이파이 연결이 필요합니다."/>
+
+        <LinearLayout
+            android:id="@+id/confirm_linear"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_marginLeft="16dp"
+            android:layout_marginRight="16dp"
+            android:layout_marginBottom="24dp">
+
+            <androidx.appcompat.widget.AppCompatButton
+                android:id="@+id/speaker_start_popup_cancel"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:background="@drawable/white_btn"
+                android:text="이전" />
+
+            <androidx.appcompat.widget.AppCompatButton
+                android:id="@+id/speaker_start_popup_apply"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="12dp"
+                android:layout_weight="1"
+                android:background="@drawable/black_btn"
+                android:text="다음"
+                android:textColor="@color/white" />
+        </LinearLayout>
+    </RelativeLayout>
+</layout>

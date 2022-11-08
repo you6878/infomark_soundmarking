@@ -13,6 +13,7 @@ import android.os.Handler
 import android.os.Looper
 import android.os.Message
 import android.view.View
+import android.widget.Button
 import android.widget.LinearLayout
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
@@ -20,9 +21,13 @@ import androidx.core.app.ActivityCompat
 import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.google.gson.Gson
 import kr.co.infomark.soundmasking.bluetooth.BluetoothSPP
+import kr.co.infomark.soundmasking.bluetooth.BluetoothState
 import kr.co.infomark.soundmasking.databinding.ActivityMainBinding
+import kr.co.infomark.soundmasking.model.*
 import java.nio.charset.StandardCharsets
+
 
 
 class MainActivity : AppCompatActivity(), View.OnClickListener {
@@ -31,13 +36,14 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
         private const val CONNECTING_STATUS = 3 // used in bluetooth handler to identify message status
 
     }
+    var currentCommand = ""
     lateinit var binding : ActivityMainBinding
     var bluetoothManager = BluetoothManager(this)
     private var devices: MutableSet<BluetoothDevice>? = null
     private var device: BluetoothDevice? = null
     private var mHandler // Our main handler that will receive callback notifications
             : Handler? = null
-
+    lateinit var gson : Gson
     lateinit var mBTAdapter: BluetoothAdapter
     lateinit var devicesAdapter : PairedDevicesAdapter
     private lateinit var bt: BluetoothSPP
@@ -45,11 +51,11 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_main)
+        gson = Gson()
         bt =  BluetoothSPP(this); //Initializing
         bluetoothManager.enableBluetooth()
         mBTAdapter = BluetoothAdapter.getDefaultAdapter() // get a handle on the bluetooth radio
         setOnClickListener()
-
         //getting paired devices
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.BLUETOOTH_CONNECT) != PackageManager.PERMISSION_GRANTED) {
             return
@@ -58,6 +64,31 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
         devices = BluetoothAdapter.getDefaultAdapter().bondedDevices
         setRecyclerview(::connectUsingBluetoothA2dp)
 
+        bt.setOnDataReceivedListener { data, message ->
+            if(currentCommand == WlanState){
+                var model = gson.fromJson(message, DefaultModel::class.java)
+                println(model)
+            }
+        }
+        bt.setBluetoothConnectionListener(object : BluetoothSPP.BluetoothConnectionListener {
+            override fun onDeviceConnected(name: String, address: String) {
+                Toast.makeText(
+                    applicationContext, "Connected to $name\n$address", Toast.LENGTH_SHORT
+                ).show()
+            }
+
+            override fun onDeviceDisconnected() {
+                Toast.makeText(
+                    applicationContext, "Connection lost", Toast.LENGTH_SHORT
+                ).show()
+            }
+
+            override fun onDeviceConnectionFailed() {
+                Toast.makeText(
+                    applicationContext, "Unable to connect", Toast.LENGTH_SHORT
+                ).show()
+            }
+        })
         mHandler = object : Handler(Looper.getMainLooper()) {
             override fun handleMessage(msg: Message) {
                 if (msg.what == MESSAGE_READ) {
@@ -82,6 +113,11 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
         binding.btnConnect.setOnClickListener {
             val intent = Intent(applicationContext, DeviceListActivity::class.java)
             startActivity(intent)
+        }
+        binding.btnSend.setOnClickListener {
+            currentCommand = WlanState
+            var commandModel = CommandModel(currentCommand)
+            bt.send(gson.toJson(commandModel));
         }
     }
     private fun discover() {
@@ -132,6 +168,7 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
 
 
     override fun onDestroy() {
+        bt.stopService()
         bluetoothManager.releaseMediaPlayer()
         bluetoothManager.disConnectUsingBluetoothA2dp(device)
         super.onDestroy()
@@ -140,6 +177,20 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
     override fun onPause() {
         bluetoothManager.releaseMediaPlayer()
         super.onPause()
+    }
+
+    override fun onResume() {
+        super.onResume()
+
+        if (!bt.isBluetoothEnabled) {
+            bt.enable()
+        } else {
+            if (!bt.isServiceAvailable) {
+                bt.setupService()
+                bt.startService(BluetoothState.DEVICE_OTHER)
+            }
+        }
+
     }
 
 
@@ -164,8 +215,10 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
             }
         }
     }
+
     fun connectUsingBluetoothA2dp(deviceToConnect: BluetoothDevice?) {
         bluetoothManager.connectUsingBluetoothA2dp(deviceToConnect)
+        bt.connect(deviceToConnect?.address ?: "")
     }
 
     private fun setRecyclerview(
