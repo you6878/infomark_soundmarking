@@ -11,7 +11,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@color/gray_background"
-        tools:context=".StartSpeakerSettingActivity">
+        tools:context=".intro.StartSpeakerSettingActivity">
 
         <RelativeLayout
             android:background="@color/white"
@@ -34,6 +34,7 @@
             android:layout_width="match_parent"
             android:layout_height="152dp"
             android:layout_alignParentBottom="true"
+            android:visibility="gone"
             android:background="@color/white">
 
             <TextView
@@ -78,6 +79,7 @@
         </RelativeLayout>
 
         <RelativeLayout
+            android:visibility="gone"
             android:id="@+id/speaker_select_popup_rela"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -92,17 +94,18 @@
                 android:layout_marginTop="10dp"
                 android:layout_marginRight="16dp"
                 android:lineSpacingExtra="8sp"
-                android:text="AI스피커가 근처에 있습니다.\스피커 선택해주세요."
+                android:text="AI스피커가 근처에 있습니다.\n스피커 선택해주세요."
                 android:textColor="#000000"
                 android:textSize="16dp"
                 android:textStyle="normal" />
 
             <androidx.recyclerview.widget.RecyclerView
-                tools:listitem="@layout/select_device_item"
-                android:layout_margin="16dp"
-                android:layout_below="@+id/speaker_select_popup_textview"
+                android:id="@+id/device_recyclerview"
                 android:layout_width="match_parent"
-                android:layout_height="300dp"/>
+                android:layout_height="300dp"
+                android:layout_below="@+id/speaker_select_popup_textview"
+                android:layout_margin="16dp"
+                tools:listitem="@layout/select_device_item" />
 
         </RelativeLayout>
     </RelativeLayout>

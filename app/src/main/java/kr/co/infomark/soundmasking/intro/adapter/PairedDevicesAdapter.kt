@@ -1,4 +1,4 @@
-package kr.co.infomark.soundmasking
+package kr.co.infomark.soundmasking.intro.adapter
 
 import android.Manifest
 import android.bluetooth.BluetoothDevice
@@ -8,18 +8,20 @@ import android.view.ViewGroup
 import androidx.core.app.ActivityCompat
 import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.RecyclerView
-import kr.co.infomark.soundmasking.databinding.RowPairedDeviceItemBinding
+import kr.co.infomark.soundmasking.R
+import kr.co.infomark.soundmasking.databinding.SelectDeviceItemBinding
 
 class PairedDevicesAdapter(private val connect: (deviceToConnect: BluetoothDevice?) -> Unit) : RecyclerView.Adapter<PairedDevicesAdapter.DeviceViewHolder>() {
 
     private var devicesList: ArrayList<BluetoothDevice> = ArrayList()
-    lateinit var rowPairedDeviceItemBinding : RowPairedDeviceItemBinding
-    inner class DeviceViewHolder(val binding: RowPairedDeviceItemBinding) : RecyclerView.ViewHolder(binding.root)
+    lateinit var selectDeviceItemBinding : SelectDeviceItemBinding
+    inner class DeviceViewHolder(val binding: SelectDeviceItemBinding) : RecyclerView.ViewHolder(binding.root)
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): DeviceViewHolder {
 
-        rowPairedDeviceItemBinding =  DataBindingUtil.inflate(LayoutInflater.from(parent.context),R.layout.row_paired_device_item, parent, false)
-        return DeviceViewHolder(rowPairedDeviceItemBinding)
+        selectDeviceItemBinding =  DataBindingUtil.inflate(LayoutInflater.from(parent.context),
+            R.layout.select_device_item, parent, false)
+        return DeviceViewHolder(selectDeviceItemBinding)
     }
 
     override fun getItemCount(): Int {
@@ -36,8 +38,7 @@ class PairedDevicesAdapter(private val connect: (deviceToConnect: BluetoothDevic
         ) {
             return
         }
-        holder.binding.tvDeviceName.text = device.name
-        holder.binding.tvDeviceAddress.text = device.address
+        holder.binding.deviceName.text = device.name
         holder.itemView.setOnClickListener {
             connect(device)
         }

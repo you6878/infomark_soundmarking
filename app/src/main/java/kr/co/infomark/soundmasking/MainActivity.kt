@@ -22,9 +22,11 @@ import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.gson.Gson
+import kr.co.infomark.soundmasking.bluetooth.BluetoothManager
 import kr.co.infomark.soundmasking.bluetooth.BluetoothSPP
 import kr.co.infomark.soundmasking.bluetooth.BluetoothState
 import kr.co.infomark.soundmasking.databinding.ActivityMainBinding
+import kr.co.infomark.soundmasking.intro.adapter.PairedDevicesAdapter
 import kr.co.infomark.soundmasking.model.*
 import java.nio.charset.StandardCharsets
 

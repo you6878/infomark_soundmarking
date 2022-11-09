@@ -1,7 +1,8 @@
-package kr.co.infomark.soundmasking
+package kr.co.infomark.soundmasking.intro
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import kr.co.infomark.soundmasking.R
 
 class InputWifiPasswordActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {

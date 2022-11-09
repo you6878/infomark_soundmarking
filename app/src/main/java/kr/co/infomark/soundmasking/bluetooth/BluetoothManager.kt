@@ -1,21 +1,18 @@
-package kr.co.infomark.soundmasking
+package kr.co.infomark.soundmasking.bluetooth
 
-import android.Manifest
 import android.bluetooth.BluetoothA2dp
 import android.bluetooth.BluetoothAdapter
 import android.bluetooth.BluetoothDevice
 import android.bluetooth.BluetoothProfile
 import android.content.Context
-import android.content.Intent
-import android.content.pm.PackageManager
 import android.media.AudioAttributes
 import android.media.MediaPlayer
 import android.os.IBinder
-import androidx.core.app.ActivityCompat
+import kr.co.infomark.soundmasking.IBluetoothA2dp
 import java.io.IOException
 import java.lang.reflect.Method
 
-class BluetoothManager(var context : MainActivity) {
+class BluetoothManager(var context : Context) {
 
 
     private var isEnabled: Boolean = false
@@ -132,34 +129,6 @@ class BluetoothManager(var context : MainActivity) {
     }
 
     fun enableBluetooth() {
-        //Checking if bluetooth is on or off
-        if (BluetoothAdapter.getDefaultAdapter().isEnabled) {
-            context.binding.tbBluetooth.isChecked = true
-            isEnabled = true
-        }
-        context.binding.tbBluetooth.setOnCheckedChangeListener { _, isChecked ->
-            if (isChecked) {
-                if (!BluetoothAdapter.getDefaultAdapter().isEnabled) {
-                    //turn bluetooth on
-                    val enableBtIntent = Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE)
-                    if (ActivityCompat.checkSelfPermission(
-                            context,
-                            Manifest.permission.BLUETOOTH_CONNECT
-                        ) != PackageManager.PERMISSION_GRANTED
-                    ) {
 
-                        return@setOnCheckedChangeListener
-                    }
-                    context.startActivityForResult(enableBtIntent, REQUEST_ENABLE_BT)
-                    isEnabled = true
-                }
-            } else {
-                if (isEnabled) {
-                    //turn bluetooth off
-                    BluetoothAdapter.getDefaultAdapter().disable()
-                    isEnabled = false
-                }
-            }
-        }
     }
 }

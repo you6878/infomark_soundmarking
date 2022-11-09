@@ -1,5 +1,7 @@
 package kr.co.infomark.soundmasking;
 
+import static kr.co.infomark.soundmasking.bluetooth.BluetoothState.MESSAGE_READ;
+
 import android.bluetooth.BluetoothSocket;
 import android.os.Handler;
 import android.os.SystemClock;
@@ -46,7 +48,7 @@ public class ConnectedThread extends Thread {
                     SystemClock.sleep(100); //pause and wait for rest of data. Adjust this depending on your sending speed.
                     bytes = mmInStream.available(); // how many bytes are ready to be read?
                     bytes = mmInStream.read(buffer, 0, bytes); // record how many bytes we actually read
-                    mHandler.obtainMessage(MainActivity.MESSAGE_READ, bytes, -1, buffer)
+                    mHandler.obtainMessage(MESSAGE_READ, bytes, -1, buffer)
                             .sendToTarget(); // Send the obtained bytes to the UI activity
                 }
             } catch (IOException e) {
