@@ -23,7 +23,7 @@ class InputWifiPasswordActivity : AppCompatActivity() {
 
     }
     fun initView(){
-        val id =  intent.getStringExtra("id")
+        val id =  intent.getStringExtra("SSID")
         val password = intent.getStringExtra("password")
         binding.wifiIdTextview.text = id
         binding.eyePassowrdImageview.setOnClickListener {

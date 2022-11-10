@@ -12,6 +12,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import kr.co.infomark.soundmasking.MainActivity
 import kr.co.infomark.soundmasking.R
+import kr.co.infomark.soundmasking.util.Util
 
 const val REQUEST_ALL_PERMISSION = 1
 
@@ -42,19 +43,28 @@ class SplashActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_splash)
+        val device = Util.getSharedPreferenceString(this@SplashActivity,Util.DEVICE)
         if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.S){
             if (!hasPermissions(this, PERMISSIONS_S_ABOVE)) {
                 requestPermissions(PERMISSIONS_S_ABOVE, REQUEST_ALL_PERMISSION)
             }else{
                 finish()
-                startActivity(Intent(this, StartSpeakerSettingActivity::class.java))
+                if(device.isEmpty()){
+                    startActivity(Intent(this, StartSpeakerSettingActivity::class.java))
+                }else{
+                    startActivity(Intent(this, MainActivity::class.java))
+                }
             }
         }else{
             if (!hasPermissions(this, PERMISSIONS)) {
                 requestPermissions(PERMISSIONS, REQUEST_ALL_PERMISSION)
             }else{
                 finish()
-                startActivity(Intent(this, StartSpeakerSettingActivity::class.java))
+                if(device.isEmpty()){
+                    startActivity(Intent(this, StartSpeakerSettingActivity::class.java))
+                }else{
+                    startActivity(Intent(this, MainActivity::class.java))
+                }
             }
         }
     }

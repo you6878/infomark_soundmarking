@@ -26,32 +26,40 @@ import kr.co.infomark.soundmasking.bluetooth.BluetoothManager
 import kr.co.infomark.soundmasking.bluetooth.BluetoothSPP
 import kr.co.infomark.soundmasking.bluetooth.BluetoothState
 import kr.co.infomark.soundmasking.databinding.ActivityMainBinding
+import kr.co.infomark.soundmasking.intro.StartSpeakerSettingActivity
 import kr.co.infomark.soundmasking.intro.adapter.PairedDevicesAdapter
 import kr.co.infomark.soundmasking.model.*
+import kr.co.infomark.soundmasking.util.Util
 import java.nio.charset.StandardCharsets
 
 
 
 class MainActivity : AppCompatActivity() {
-    companion object{
-        const val MESSAGE_READ = 2 // used in bluetooth handler to identify message update
-        private const val CONNECTING_STATUS = 3 // used in bluetooth handler to identify message status
-
-    }
-    var currentCommand = ""
     lateinit var binding : ActivityMainBinding
-    var bluetoothManager = BluetoothManager(this)
-    private var devices: MutableSet<BluetoothDevice>? = null
-    private var device: BluetoothDevice? = null
-    private var mHandler // Our main handler that will receive callback notifications
-            : Handler? = null
-    lateinit var gson : Gson
-    lateinit var mBTAdapter: BluetoothAdapter
-    lateinit var devicesAdapter : PairedDevicesAdapter
-    private lateinit var bt: BluetoothSPP
+    lateinit var deviceModel: DeviceModel
+    lateinit var gson: Gson
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_main)
+        gson = Gson()
+
+
+        initView()
+    }
+    fun initView(){
+
+        binding.startSpeakerSettingBtn.setOnClickListener {
+            val i = Intent(this, StartSpeakerSettingActivity::class.java)
+            i.putExtra("fromMain",true)
+            startActivity(i)
+        }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        deviceModel = gson.fromJson(Util.getSharedPreferenceString(this,Util.DEVICE),DeviceModel::class.java)
+        binding.ssidTextview.text = deviceModel.ssid
+        binding.wifiNameTextview.text = deviceModel.wifi_name
     }
 }

@@ -47,13 +47,18 @@ class SelectSpeakerWifiActivity : AppCompatActivity() {
     var resultLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
         if (result.resultCode == Activity.RESULT_OK) {
             // There are no request codes
-            startActivity(Intent(this, SpeakerConnectCompleteActivity::class.java))
+            val i = Intent(this, SpeakerConnectCompleteActivity::class.java)
+            i.putExtra("fromMain",intent.getBooleanExtra("fromMain",false))
+            i.putExtra("SSID",intent.getStringExtra("SSID"))
+            i.putExtra("WifiName",intent.getStringExtra("SSID"))
+            startActivity(i)
             finish()
         }
     }
     fun nextPage(id : String){
         val i = Intent(this,InputWifiPasswordActivity::class.java)
-        i.putExtra("id",id)
+        i.putExtra("SSID",id)
+        intent.putExtra("SSID",id)
         resultLauncher.launch(i)
 
 

@@ -114,7 +114,9 @@ class StartSpeakerSettingActivity : AppCompatActivity() {
     }
     fun handleDialogClose(handleDialogClose : DialogFragment){
 
-        startActivity(Intent(this, SelectSpeakerWifiActivity::class.java))
+        val selectSpeakerWifiActivity = Intent(this, SelectSpeakerWifiActivity::class.java)
+        selectSpeakerWifiActivity.putExtra("fromMain",intent.getBooleanExtra("fromMain",false))
+        startActivity(selectSpeakerWifiActivity)
         finish()
         handleDialogClose.dismiss()
     }
