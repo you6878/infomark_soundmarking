@@ -1,199 +1,305 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
 
     </data>
 
-    <androidx.constraintlayout.widget.ConstraintLayout
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context=".MainActivity">
+        android:background="@color/gray_background"
+        tools:context=".intro.StartSpeakerSettingActivity">
+
+        <RelativeLayout
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="56dp"
+            android:background="@color/white">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:text="홈"
+                android:textColor="#000000"
+                android:textSize="20dp"
+                android:textStyle="normal" />
+        </RelativeLayout>
 
         <TextView
-            android:id="@+id/tvBluetoothStatus"
+            android:id="@+id/status_textview"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            app:layout_constraintTop_toTopOf="parent"
-            android:layout_marginTop="@dimen/dp_10"
-            app:layout_constraintStart_toStartOf="parent"
-            android:layout_marginStart="@dimen/dp_10"
-            android:text="@string/bluetooth_status"
-            android:textStyle="bold"
-            android:fontFamily="sans-serif-condensed-medium"
-            android:textColor="@android:color/black"
-            android:textSize="@dimen/sp_20" />
-
-        <androidx.appcompat.widget.AppCompatToggleButton
-            android:id="@+id/tbBluetooth"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            app:layout_constraintEnd_toEndOf="parent"
-            android:textOn="@string/on"
-            android:textOff="@string/off"
-            android:layout_marginTop="@dimen/dp_4"
-            app:layout_constraintTop_toTopOf="@id/tvBluetoothStatus"
-            app:layout_constraintBottom_toBottomOf="@id/tvBluetoothStatus" />
-
+            android:layout_below="@id/toolbar"
+            android:layout_margin="16dp"
+            android:text="연결 상태"
+            android:textColor="#000000"
+            android:textSize="16dp"
+            android:textStyle="bold" />
 
         <LinearLayout
-            app:layout_constraintTop_toBottomOf="@id/tvBluetoothStatus"
-            android:id="@+id/top_linearlayout"
+            android:id="@+id/speaker_linear"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
+            android:layout_below="@+id/status_textview"
+            android:layout_marginTop="8dp"
             android:orientation="horizontal">
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="0.1"
-                android:ellipsize="end"
-                android:maxLines="1"
-                android:text="RX:"
-                android:textStyle="bold" />
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="3"
+                android:gravity="center"
+                android:orientation="vertical">
 
-            <TextView
-                android:id="@+id/read_buffer"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="0.9"
-                android:ellipsize="end"
-                android:maxLines="1"
-                android:text="&lt;Read Buffer>" />
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/icon_aispeaker" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Connected" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="7"
+                android:gravity="center_vertical"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:lineSpacingExtra="4sp"
+                    android:textColor="#000000"
+                    android:textSize="20dp"
+                    android:textStyle="bold"
+                    android:text="SSID : ---- ---- ---- ---" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="16dp"
+                    android:lineSpacingExtra="0sp"
+                    android:textColor="#000000"
+                    android:textSize="14dp"
+                    android:textStyle="normal"
+                    android:text="FW Version : 0.9.3" />
+            </LinearLayout>
         </LinearLayout>
 
         <LinearLayout
-            app:layout_constraintTop_toBottomOf="@id/top_linearlayout"
-            android:id="@+id/bottom_linearlayout"
+            android:id="@+id/wifi_linear"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_below="@+id/speaker_linear"
+            android:layout_marginTop="40dp"
             android:orientation="horizontal">
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="0.1"
-                android:ellipsize="end"
-                android:maxLines="1"
-                android:text="Status:"
-                android:textStyle="bold" />
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="3"
+                android:gravity="center"
+                android:orientation="vertical">
 
-            <TextView
-                android:id="@+id/bluetooth_status"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="0.9"
-                android:ellipsize="end"
-                android:maxLines="1"
-                android:text="&lt;Bluetooth Status>" />
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/home_icon_wifi" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Connected" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="7"
+                android:gravity="center_vertical"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:lineSpacingExtra="4sp"
+                    android:textColor="#000000"
+                    android:textSize="20dp"
+                    android:textStyle="bold"
+                    android:text="Wi-Fi Name : -----5G" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="16dp"
+                    android:lineSpacingExtra="0sp"
+                    android:textColor="#000000"
+                    android:textSize="14dp"
+                    android:textStyle="normal"
+                    android:text="Wi-Fi Address : 86:18:94:EE:AC:1G" />
+            </LinearLayout>
         </LinearLayout>
-
-        <com.google.android.material.button.MaterialButton
-            app:layout_constraintTop_toBottomOf="@id/bottom_linearlayout"
-            android:id="@+id/btnShowPairedDevices"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/show_paired_devices"
-            android:paddingStart="@dimen/dp_20"
-            android:textColor="@android:color/white"
-            android:textSize="@dimen/sp_13"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toRightOf="parent"
-             />
-
-        <com.google.android.material.button.MaterialButton
-
-            android:id="@+id/btnConnect"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:paddingStart="@dimen/dp_20"
-            android:text="SPPConnect"
-            android:textColor="@android:color/white"
-            android:textSize="@dimen/sp_13"
-            android:layout_marginRight="10dp"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintEnd_toStartOf="@+id/btnDiscover"
-            app:layout_constraintTop_toBottomOf="@id/btnShowPairedDevices" />
-
-        <com.google.android.material.button.MaterialButton
-            app:layout_constraintTop_toBottomOf="@id/btnShowPairedDevices"
-            android:id="@+id/btnDiscover"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Discover"
-            android:paddingStart="@dimen/dp_20"
-            android:textColor="@android:color/white"
-            android:textSize="@dimen/sp_13"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toRightOf="parent"
-            />
-
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/btnSend"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:paddingStart="@dimen/dp_20"
-            android:text="Discover"
-            android:textColor="@android:color/white"
-            android:textSize="@dimen/sp_13"
-            app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/btnDiscover"
-            app:layout_constraintTop_toBottomOf="@id/btnShowPairedDevices" />
 
         <LinearLayout
-            android:id="@+id/lnrLayout"
-            android:layout_width="0dp"
+            android:id="@+id/phone_linear"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            android:weightSum="2"
-            android:layout_marginBottom="@dimen/dp_10">
+            android:layout_below="@+id/wifi_linear"
+            android:layout_marginTop="40dp"
+            android:orientation="horizontal">
 
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/btnPlay"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/play_music"
-                android:layout_weight="1"
-                android:textColor="@android:color/white"
-                android:textSize="@dimen/sp_13"
-                android:layout_marginStart="@dimen/dp_10"
-                android:layout_marginEnd="@dimen/dp_5" />
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="3"
+                android:gravity="center"
+                android:orientation="vertical">
 
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/btnDisconnect"
-                android:layout_height="wrap_content"
-                android:layout_width="match_parent"
-                android:text="@string/disconnect"
-                android:layout_weight="1"
-                android:textColor="@android:color/white"
-                android:textSize="@dimen/sp_13"
-                android:layout_marginEnd="@dimen/dp_10"
-                android:layout_marginStart="@dimen/dp_5" />
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/icon_mobile" />
 
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Connected" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="7"
+                android:gravity="center_vertical"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:lineSpacingExtra="4sp"
+                    android:textColor="#000000"
+                    android:textSize="20dp"
+                    android:textStyle="bold"
+                    android:text="Update : 2022.11.15" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="16dp"
+                    android:lineSpacingExtra="0sp"
+                    android:textColor="#000000"
+                    android:textSize="14dp"
+                    android:textStyle="normal"
+                    android:text="AppVersion : 0.9.8
+" />
+            </LinearLayout>
         </LinearLayout>
 
-        <androidx.recyclerview.widget.RecyclerView
-            android:layout_width="0dp"
-            android:layout_height="0dp"
-            android:id="@+id/rvPairedDevices"
-            android:choiceMode="singleChoice"
-            app:layout_constraintBottom_toTopOf="@+id/lnrLayout"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toRightOf="parent"
-            android:layout_marginBottom="@dimen/dp_10"
-            android:layout_marginTop="@dimen/dp_10"
-            android:layout_marginStart="@dimen/dp_10"
-            android:layout_marginEnd="@dimen/dp_10"
-            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-            android:orientation="vertical"
-            app:layout_constraintTop_toBottomOf="@id/btnDiscover" />
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/wifi_refresh_button"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:layout_above="@+id/tab_bar"
+            android:layout_marginLeft="16dp"
+            android:layout_marginRight="16dp"
+            android:layout_marginBottom="24dp"
+            android:background="@drawable/black_btn"
+            android:text="브라운 연결하기"
+            android:textColor="@color/white" />
 
-    </androidx.constraintlayout.widget.ConstraintLayout>
+        <LinearLayout
+            android:background="@color/white"
+            android:id="@+id/tab_bar"
+            android:layout_width="match_parent"
+            android:layout_height="56dp"
+            android:layout_alignParentBottom="true"
+            android:orientation="horizontal">
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:orientation="vertical">
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/ico_home_black" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="홈"
+                    android:textColor="#000000"
+                    android:textSize="12dp" />
+            </LinearLayout>
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:orientation="vertical">
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/ico_player_gray" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="플레이어"
+                    android:textColor="#000000"
+                    android:textSize="12dp" />
+            </LinearLayout>
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:orientation="vertical">
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/ico_playlist_gray" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="재생목록"
+                    android:textColor="#000000"
+                    android:textSize="12dp" />
+            </LinearLayout>
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:orientation="vertical">
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/ico_mypage_gray" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="마이페이지"
+                    android:textColor="#000000"
+                    android:textSize="12dp" />
+            </LinearLayout>
+
+
+        </LinearLayout>
+    </RelativeLayout>
 </layout>

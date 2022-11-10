@@ -12,7 +12,7 @@ import androidx.recyclerview.widget.RecyclerView
 import kr.co.infomark.soundmasking.R
 import kr.co.infomark.soundmasking.databinding.SelectWifiItemBinding
 
-class WifiListAdapter() : RecyclerView.Adapter<WifiListAdapter.WifiItemViewHolder>() {
+class WifiListAdapter(var nextPage: (String) -> Unit) : RecyclerView.Adapter<WifiListAdapter.WifiItemViewHolder>() {
 
     private var scanResults: ArrayList<ScanResult> = ArrayList()
     lateinit var selectDeviceItemBinding : SelectWifiItemBinding
@@ -38,6 +38,9 @@ class WifiListAdapter() : RecyclerView.Adapter<WifiListAdapter.WifiItemViewHolde
             ) != PackageManager.PERMISSION_GRANTED
         ) {
             return
+        }
+        holder.itemView.setOnClickListener {
+            nextPage(item.SSID)
         }
         holder.binding.deviceName.text = item.SSID
     }

@@ -14,6 +14,7 @@
         tools:context=".intro.StartSpeakerSettingActivity">
 
         <RelativeLayout
+            android:id="@+id/toolbar"
             android:background="@color/white"
             android:layout_width="match_parent"
             android:layout_height="56dp">
@@ -27,7 +28,13 @@
                 android:layout_centerInParent="true"
                 android:text="스피커 연동" />
         </RelativeLayout>
-
+        <ImageView
+            android:layout_marginTop="64dp"
+            android:layout_below="@+id/toolbar"
+            android:layout_centerHorizontal="true"
+            android:src="@drawable/speaker_img"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
 
         <RelativeLayout
             android:id="@+id/speaker_start_popup_rela"
