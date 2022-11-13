@@ -14,7 +14,7 @@ import kr.co.infomark.soundmasking.databinding.SelectWifiItemBinding
 
 class WifiListAdapter(var nextPage: (String) -> Unit) : RecyclerView.Adapter<WifiListAdapter.WifiItemViewHolder>() {
 
-    private var scanResults: ArrayList<ScanResult> = ArrayList()
+    var scanResults: ArrayList<ScanResult> = ArrayList()
     lateinit var selectDeviceItemBinding : SelectWifiItemBinding
     inner class WifiItemViewHolder(val binding: SelectWifiItemBinding) : RecyclerView.ViewHolder(binding.root)
 

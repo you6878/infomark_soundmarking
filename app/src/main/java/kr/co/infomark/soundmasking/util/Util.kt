@@ -6,10 +6,18 @@ import android.content.Context
 object Util {
 
     // 1등
-    const val DEVICE = "DEVICE"
+    const val MAC = "MAC"
+    const val WIFI_NAME = "WIFI_NAME"
 
 
+    fun putSharedClear(context: Context) {
+        val prefs = context.getSharedPreferences(context.packageName, Context.MODE_PRIVATE)
 
+        val editor = prefs?.edit()
+
+        editor?.clear()
+        editor?.apply()
+    }
     fun putSharedPreferenceBoolean(context: Context?, key: String, value: Boolean) {
         val prefs = context?.getSharedPreferences(context.packageName, Context.MODE_PRIVATE)
 

@@ -51,7 +51,11 @@ class PairedDevicesAdapter(private val connect: (deviceToConnect: BluetoothDevic
     }
 
     fun addItem(device: BluetoothDevice) {
-        devicesList.add(device)
-        notifyDataSetChanged()
+        if(!devicesList.contains(device)){
+            devicesList.add(device)
+            notifyDataSetChanged()
+        }
+
+
     }
 }

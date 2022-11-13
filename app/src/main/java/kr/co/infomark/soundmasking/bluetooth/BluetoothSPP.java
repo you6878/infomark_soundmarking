@@ -14,6 +14,7 @@ import java.util.Set;
 
 @SuppressLint("NewApi")
 public class BluetoothSPP {
+	private static BluetoothSPP bluetoothSPP;
 	// Listener for Bluetooth Status & Connection
 	private BluetoothStateListener mBluetoothStateListener = null;
 	private OnDataReceivedListener mDataReceivedListener = null;
@@ -44,8 +45,15 @@ public class BluetoothSPP {
 	
     private BluetoothConnectionListener bcl;
     private int c = 0;
-	
-	public BluetoothSPP(Context context) {
+
+	public static BluetoothSPP getInstance(Context context) {
+		if(bluetoothSPP == null) {
+			bluetoothSPP = new BluetoothSPP(context);
+		}
+
+		return bluetoothSPP;
+	}
+	private BluetoothSPP(Context context) {
 		mContext = context;
 		mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
 	}
@@ -104,7 +112,10 @@ public class BluetoothSPP {
 	}
 	
 	public void setupService() {
-        mChatService = new BluetoothService(mContext, mHandler);
+		if(mChatService == null){
+			mChatService = new BluetoothService(mContext, mHandler);
+		}
+
 	}
 	
 	public BluetoothAdapter getBluetoothAdapter() {
@@ -209,7 +220,7 @@ public class BluetoothSPP {
     
     public void connect(Intent data) {
         String address = data.getExtras().getString(BluetoothState.EXTRA_DEVICE_ADDRESS);
-        BluetoothDevice device = mBluetoothAdapter.getRemoteDevice("00:1E:31:80:2A:2E");
+        BluetoothDevice device = mBluetoothAdapter.getRemoteDevice(address);
         mChatService.connect(device);
     }
     

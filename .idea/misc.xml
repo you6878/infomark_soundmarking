@@ -9,11 +9,12 @@
         <entry key="app/src/main/res/layout/activity_devicelist.xml" value="0.389945652173913" />
         <entry key="app/src/main/res/layout/activity_input_wifi_password.xml" value="0.44551282051282054" />
         <entry key="app/src/main/res/layout/activity_main.xml" value="0.3252730109204368" />
+        <entry key="app/src/main/res/layout/activity_main2.xml" value="0.389945652173913" />
         <entry key="app/src/main/res/layout/activity_select_speaker_wifi.xml" value="0.253125" />
         <entry key="app/src/main/res/layout/activity_speaker_connect_complete.xml" value="0.22447916666666667" />
         <entry key="app/src/main/res/layout/activity_speaker_wifi_cofirm.xml" value="0.2390625" />
         <entry key="app/src/main/res/layout/activity_splash.xml" value="0.21822916666666667" />
-        <entry key="app/src/main/res/layout/activity_start_speaker_setting.xml" value="0.13546600341796877" />
+        <entry key="app/src/main/res/layout/activity_start_speaker_setting.xml" value="0.3022421524663677" />
         <entry key="app/src/main/res/layout/device_layout_list.xml" value="0.389945652173913" />
         <entry key="app/src/main/res/layout/device_list.xml" value="0.389945652173913" />
         <entry key="app/src/main/res/layout/device_name.xml" value="0.389945652173913" />

@@ -7,6 +7,7 @@ import android.content.Intent
 import android.content.IntentFilter
 import android.net.wifi.WifiManager
 import android.os.Bundle
+import android.view.View
 import android.widget.LinearLayout
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
@@ -18,6 +19,7 @@ import kr.co.infomark.soundmasking.MainActivity
 import kr.co.infomark.soundmasking.R
 import kr.co.infomark.soundmasking.databinding.ActivitySelectSpeakerWifiBinding
 import kr.co.infomark.soundmasking.intro.adapter.WifiListAdapter
+import kr.co.infomark.soundmasking.util.Util
 
 class SelectSpeakerWifiActivity : AppCompatActivity() {
     lateinit var binding : ActivitySelectSpeakerWifiBinding
@@ -34,6 +36,7 @@ class SelectSpeakerWifiActivity : AppCompatActivity() {
             wifiManager.isWifiEnabled = true;
         }
         setRecyclerview()
+
     }
     private fun setRecyclerview() {
         wifiListAdapter = WifiListAdapter(::nextPage)
@@ -49,8 +52,9 @@ class SelectSpeakerWifiActivity : AppCompatActivity() {
             // There are no request codes
             val i = Intent(this, SpeakerConnectCompleteActivity::class.java)
             i.putExtra("fromMain",intent.getBooleanExtra("fromMain",false))
-            i.putExtra("SSID",intent.getStringExtra("SSID"))
-            i.putExtra("WifiName",intent.getStringExtra("SSID"))
+            intent.getStringExtra("SSID")?.let {
+                Util.putSharedPreferenceString(this@SelectSpeakerWifiActivity,Util.WIFI_NAME, it)
+            }
             startActivity(i)
             finish()
         }
@@ -70,6 +74,10 @@ class SelectSpeakerWifiActivity : AppCompatActivity() {
         intentFilter.addAction(WifiManager.SCAN_RESULTS_AVAILABLE_ACTION)
         registerReceiver(wifiScanReceiver, intentFilter)
         wifiManager.startScan()
+        if(wifiListAdapter.scanResults.size == 0){
+            binding.progressCir.visibility = View.VISIBLE
+        }
+
     }
 
     val wifiScanReceiver = object : BroadcastReceiver() {
@@ -77,6 +85,7 @@ class SelectSpeakerWifiActivity : AppCompatActivity() {
         override fun onReceive(context: Context, intent: Intent) {
             val success = intent.getBooleanExtra(WifiManager.EXTRA_RESULTS_UPDATED, false)
             if (success) {
+                binding.progressCir.visibility = View.GONE
                 val results = wifiManager.scanResults
                 wifiListAdapter.addItems(results)
 

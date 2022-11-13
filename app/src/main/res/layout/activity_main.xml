@@ -60,9 +60,10 @@
                     android:src="@drawable/icon_aispeaker" />
 
                 <TextView
+                    android:id="@+id/speaker_status_textview"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Connected" />
+                    android:text="Connecting" />
             </LinearLayout>
 
             <LinearLayout
@@ -81,7 +82,7 @@
                         android:textColor="#000000"
                         android:textSize="20dp"
                         android:textStyle="bold"
-                        android:text="SSID : " />
+                        android:text="MAC : " />
                     <TextView
                         android:id="@+id/ssid_textview"
                         android:layout_width="wrap_content"
@@ -102,7 +103,7 @@
                     android:textColor="#000000"
                     android:textSize="14dp"
                     android:textStyle="normal"
-                    android:text="FW Version : 0.9.3" />
+                    android:text="FW Version : 0.0.1" />
             </LinearLayout>
         </LinearLayout>
 
@@ -127,9 +128,10 @@
                     android:src="@drawable/home_icon_wifi" />
 
                 <TextView
+                    android:id="@+id/wifi_status_textview"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Connected" />
+                    android:text="Connecting" />
             </LinearLayout>
 
             <LinearLayout
@@ -169,7 +171,7 @@
                     android:textColor="#000000"
                     android:textSize="14dp"
                     android:textStyle="normal"
-                    android:text="Wi-Fi Address : 86:18:94:EE:AC:1G" />
+                    android:text="Wi-Fi Address" />
             </LinearLayout>
         </LinearLayout>
 
@@ -223,13 +225,12 @@
                     android:textColor="#000000"
                     android:textSize="14dp"
                     android:textStyle="normal"
-                    android:text="AppVersion : 0.9.8
+                    android:text="AppVersion : 0.0.1
 " />
             </LinearLayout>
         </LinearLayout>
-
         <androidx.appcompat.widget.AppCompatButton
-            android:id="@+id/start_speaker_setting_btn"
+            android:id="@+id/play_music"
             android:layout_width="match_parent"
             android:layout_height="40dp"
             android:layout_above="@+id/tab_bar"
@@ -237,8 +238,32 @@
             android:layout_marginRight="16dp"
             android:layout_marginBottom="24dp"
             android:background="@drawable/black_btn"
-            android:text="브라운 연결하기"
+            android:text="내부 사운드 재생"
             android:textColor="@color/white" />
+
+<!--        <androidx.appcompat.widget.AppCompatButton-->
+<!--            android:id="@+id/debug_btn"-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="40dp"-->
+<!--            android:layout_above="@+id/start_speaker_setting_btn"-->
+<!--            android:layout_marginLeft="16dp"-->
+<!--            android:layout_marginRight="16dp"-->
+<!--            android:layout_marginBottom="24dp"-->
+<!--            android:background="@drawable/black_btn"-->
+<!--            android:text="장비 초기화 버튼"-->
+<!--            android:textColor="@color/white" />-->
+
+<!--        <androidx.appcompat.widget.AppCompatButton-->
+<!--            android:id="@+id/start_speaker_setting_btn"-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="40dp"-->
+<!--            android:layout_above="@+id/tab_bar"-->
+<!--            android:layout_marginLeft="16dp"-->
+<!--            android:layout_marginRight="16dp"-->
+<!--            android:layout_marginBottom="24dp"-->
+<!--            android:background="@drawable/black_btn"-->
+<!--            android:text="브라운 연결하기"-->
+<!--            android:textColor="@color/white" />-->
 
         <LinearLayout
             android:background="@color/white"

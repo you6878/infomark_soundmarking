@@ -28,7 +28,58 @@ class BluetoothManager(var context : Context) {
         mIsA2dpReady = ready
     }
 
-    fun connectUsingBluetoothA2dp(deviceToConnect: BluetoothDevice?) {
+
+    fun connectUsingBluetoothA2dpCallback(deviceToConnect: BluetoothDevice, callback: (Boolean) -> Unit) {
+        try {
+            val c2 = Class.forName("android.os.ServiceManager")
+            val m2: Method = c2.getDeclaredMethod("getService", String::class.java)
+            b = m2.invoke(c2.newInstance(), "bluetooth_a2dp") as IBinder?
+            if (b == null) {
+                // For Android 4.2 Above Devices
+                device = deviceToConnect
+                //establish a connection to the profile proxy object associated with the profile
+                BluetoothAdapter.getDefaultAdapter().getProfileProxy(
+                    context,
+                    // listener notifies BluetoothProfile clients when they have been connected to or disconnected from the service
+                    object : BluetoothProfile.ServiceListener {
+                        override fun onServiceDisconnected(profile: Int) {
+                            setIsA2dpReady(false)
+                            disConnectUsingBluetoothA2dp(device)
+                        }
+
+                        override fun onServiceConnected(
+                            profile: Int,
+                            proxy: BluetoothProfile
+                        ) {
+                            a2dp = proxy as BluetoothA2dp
+                            try {
+                                //establishing bluetooth connection with A2DP devices
+                                a2dp.javaClass
+                                    .getMethod("connect", BluetoothDevice::class.java)
+                                    .invoke(a2dp, deviceToConnect)
+                            } catch (e: Exception) {
+                                e.printStackTrace()
+                            }
+                            callback(true)
+
+                        }
+                    }, BluetoothProfile.A2DP
+                )
+            } else {
+                val c3 =
+                    Class.forName("android.bluetooth.IBluetoothA2dp")
+                val s2 = c3.declaredClasses
+                val c = s2[0]
+                val m: Method = c.getDeclaredMethod("asInterface", IBinder::class.java)
+                m.isAccessible = true
+                ia2dp = m.invoke(null, b) as IBluetoothA2dp
+                ia2dp.connect(deviceToConnect)
+            }
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
+    }
+    fun connectUsingBluetoothA2dp(deviceToConnect: BluetoothDevice) {
         try {
             val c2 = Class.forName("android.os.ServiceManager")
             val m2: Method = c2.getDeclaredMethod("getService", String::class.java)
@@ -60,6 +111,7 @@ class BluetoothManager(var context : Context) {
                                 e.printStackTrace()
                             }
                             setIsA2dpReady(true)
+
                         }
                     }, BluetoothProfile.A2DP
                 )
@@ -80,6 +132,7 @@ class BluetoothManager(var context : Context) {
 
 
 
+
      fun playMusic() {
         //streaming music on the connected A2DP device
         mPlayer = MediaPlayer()
@@ -88,7 +141,7 @@ class BluetoothManager(var context : Context) {
                 AudioAttributes.Builder()
                     .setContentType(AudioAttributes.CONTENT_TYPE_MUSIC).build()
             )
-            val descriptor = context.assets.openFd("testsong_20_sec.mp3")
+            val descriptor = context.assets.openFd("testsong.mp3")
             mPlayer?.setDataSource(descriptor.fileDescriptor, descriptor.startOffset, descriptor.length);
 //            mPlayer?.setDataSource(
 //                this,

@@ -43,15 +43,18 @@ class SplashActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_splash)
-        val device = Util.getSharedPreferenceString(this@SplashActivity,Util.DEVICE)
+        val mac = Util.getSharedPreferenceString(this@SplashActivity,Util.MAC)
+        val wifiName = Util.getSharedPreferenceString(this@SplashActivity,Util.WIFI_NAME)
         if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.S){
             if (!hasPermissions(this, PERMISSIONS_S_ABOVE)) {
                 requestPermissions(PERMISSIONS_S_ABOVE, REQUEST_ALL_PERMISSION)
             }else{
                 finish()
-                if(device.isEmpty()){
+                if(mac.isEmpty()){
                     startActivity(Intent(this, StartSpeakerSettingActivity::class.java))
-                }else{
+                }else if(wifiName.isEmpty()){
+                    startActivity(Intent(this, SelectSpeakerWifiActivity::class.java))
+                } else{
                     startActivity(Intent(this, MainActivity::class.java))
                 }
             }
@@ -60,9 +63,11 @@ class SplashActivity : AppCompatActivity() {
                 requestPermissions(PERMISSIONS, REQUEST_ALL_PERMISSION)
             }else{
                 finish()
-                if(device.isEmpty()){
+                if(mac.isEmpty()){
                     startActivity(Intent(this, StartSpeakerSettingActivity::class.java))
-                }else{
+                }else if(wifiName.isEmpty()){
+                    startActivity(Intent(this, SelectSpeakerWifiActivity::class.java))
+                } else{
                     startActivity(Intent(this, MainActivity::class.java))
                 }
             }

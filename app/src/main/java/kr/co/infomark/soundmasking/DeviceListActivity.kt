@@ -37,7 +37,7 @@ class DeviceListActivity : Activity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_devicelist)
-        bt = BluetoothSPP(this)
+        bt = BluetoothSPP.getInstance(this)
         gson = Gson()
         if (!bt.isBluetoothAvailable) {
             Toast.makeText(

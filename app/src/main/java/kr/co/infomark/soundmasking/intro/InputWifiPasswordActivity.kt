@@ -3,28 +3,68 @@ package kr.co.infomark.soundmasking.intro
 import android.content.Intent
 import android.os.Bundle
 import android.text.InputType
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
+import com.google.gson.Gson
 import kr.co.infomark.soundmasking.MainActivity
 import kr.co.infomark.soundmasking.R
 import kr.co.infomark.soundmasking.bluetooth.BluetoothManager
 import kr.co.infomark.soundmasking.bluetooth.BluetoothSPP
+import kr.co.infomark.soundmasking.bluetooth.BluetoothState
 import kr.co.infomark.soundmasking.databinding.ActivityInputWifiPasswordBinding
+import kr.co.infomark.soundmasking.model.*
+import kr.co.infomark.soundmasking.util.Util
 
 
 class InputWifiPasswordActivity : AppCompatActivity() {
+    private var currentCommand = ""
     private lateinit var bt: BluetoothSPP
     lateinit var binding : ActivityInputWifiPasswordBinding
+    lateinit var gson : Gson
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(this,R.layout.activity_input_wifi_password)
-        bt =  BluetoothSPP(this); //Initializing
+        gson = Gson()
+
+        bt =  BluetoothSPP.getInstance(this); //Initializing
+        bt.setOnDataReceivedListener { data, message ->
+            println(message)
+            if(currentCommand == WlanAddNetwork){
+                var model = gson.fromJson(message, DefaultModel::class.java)
+                println(model)
+                if(model.result == "ok"){
+                    setResult(RESULT_OK)
+                    finish()
+                }else{
+                    Toast.makeText(this,"와이파이 정보가 정확하지 않습니다.",Toast.LENGTH_LONG).show()
+
+                }
+            }
+        }
         initView()
 
     }
+
+    override fun onResume() {
+        super.onResume()
+        if (!bt.isBluetoothEnabled) {
+            bt.enable()
+        } else {
+            if (!bt.isServiceAvailable) {
+                bt.setupService()
+                bt.startService(BluetoothState.DEVICE_OTHER)
+
+                //Auto Connect in exceoption
+                if(bt.connectedDeviceAddress == null){
+                    val mac = Util.MAC
+                    bt.connect(Util.getSharedPreferenceString(this,mac))
+                }
+            }
+        }
+    }
     fun initView(){
         val id =  intent.getStringExtra("SSID")
-        val password = intent.getStringExtra("password")
         binding.wifiIdTextview.text = id
         binding.eyePassowrdImageview.setOnClickListener {
             val psEditText = binding.passwordWifiEdittext
@@ -34,12 +74,16 @@ class InputWifiPasswordActivity : AppCompatActivity() {
             } else {
                 psEditText.inputType = InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD
             }
+//            var commandModel = RemoveCommandModel(WlanRemoveNetwork,binding.wifiIdTextview.text.toString())
+//            println(commandModel)
+//            bt.send(gson.toJson(commandModel));
 
         }
         binding.speakerStartPopupApply.setOnClickListener {
-            setResult(RESULT_OK)
-            finish()
-
+            currentCommand = WlanAddNetwork
+            var commandModel = CommandModel(currentCommand,binding.wifiIdTextview.text.toString(),binding.passwordWifiEdittext.text.toString())
+            println(commandModel)
+            bt.send(gson.toJson(commandModel));
         }
     }
 }

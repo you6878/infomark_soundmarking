@@ -19,7 +19,6 @@ class SpeakerConnectCompleteActivity : AppCompatActivity() {
         binding = DataBindingUtil.setContentView(this,R.layout.activity_speaker_connect_complete)
         gson = Gson()
         binding.wifiConnectCompleteButton.setOnClickListener {
-            saveDevice()
 
             val fromMainActivity = intent.getBooleanExtra("fromMain",false);
             if(!fromMainActivity){
@@ -29,15 +28,6 @@ class SpeakerConnectCompleteActivity : AppCompatActivity() {
 
 
         }
-
-    }
-    fun  saveDevice(){
-        val ssid = intent.getStringExtra("SSID") ?: ""
-        val wifiName = intent.getStringExtra("WifiName") ?: ""
-
-        val deviceModel = DeviceModel(ssid,wifiName)
-        Util.putSharedPreferenceString(this,Util.DEVICE,gson.toJson(deviceModel))
-
 
     }
 }
