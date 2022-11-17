@@ -2,17 +2,25 @@ package kr.co.infomark.soundmasking
 
 import android.bluetooth.BluetoothAdapter
 import android.bluetooth.BluetoothDevice
+import android.content.Intent
+import android.os.Build.VERSION_CODES.P
 import android.os.Bundle
+import android.util.Log
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import com.google.gson.Gson
+import kotlinx.coroutines.Delay
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 import kr.co.infomark.soundmasking.bluetooth.BluetoothManager
 import kr.co.infomark.soundmasking.bluetooth.BluetoothSPP
 import kr.co.infomark.soundmasking.bluetooth.BluetoothState
 import kr.co.infomark.soundmasking.databinding.ActivityMainBinding
+import kr.co.infomark.soundmasking.intro.StartSpeakerSettingActivity
 import kr.co.infomark.soundmasking.model.*
 import kr.co.infomark.soundmasking.util.Util
+import java.lang.reflect.Method
 
 
 class MainActivity : AppCompatActivity() {
@@ -36,12 +44,8 @@ class MainActivity : AppCompatActivity() {
                     binding.wifiStatusTextview.text = model.state
                 }
             }
-
         }
-
-
         initView()
-        deviceCallback()
     }
     fun deviceCallback(){
 
@@ -86,11 +90,25 @@ class MainActivity : AppCompatActivity() {
 //        binding.debugBtn.setOnClickListener {
 //            Util.putSharedClear(this)
 //        }
-//        binding.startSpeakerSettingBtn.setOnClickListener {
-//            val i = Intent(this, StartSpeakerSettingActivity::class.java)
-//            i.putExtra("fromMain",true)
-//            startActivity(i)
-//        }
+        binding.startSpeakerSettingBtn.setOnClickListener {
+            currentCommand = WlanRemoveNetwork
+            var commandModel = RemoveCommandModel(WlanRemoveNetwork,Util.getSharedPreferenceString(this,Util.WIFI_NAME))
+            bt.send(gson.toJson(commandModel));
+            bt.stopService()
+            bluetoothManager.releaseMediaPlayer()
+            bluetoothManager.disConnectUsingBluetoothA2dp(selectDeivice)
+            removeBond(selectDeivice)
+            Util.clearSharedPreference(this)
+
+            finish()
+        }
+    }
+    fun removeBond(device: BluetoothDevice) {
+        try {
+            device::class.java.getMethod("removeBond").invoke(device)
+        } catch (e: Exception) {
+
+        }
     }
 
     override fun onResume() {
@@ -103,17 +121,18 @@ class MainActivity : AppCompatActivity() {
             if (!bt.isServiceAvailable) {
                 bt.setupService()
                 bt.startService(BluetoothState.DEVICE_OTHER)
-
                 //Auto Connect in exceoption
                 if(bt.connectedDeviceAddress == null){
                     val mac = Util.MAC
                     bt.connect(Util.getSharedPreferenceString(this,mac))
                 }
             }
+            deviceCallback()
         }
     }
 
     override fun onDestroy() {
+
         bt.stopService()
         bluetoothManager.releaseMediaPlayer()
         bluetoothManager.disConnectUsingBluetoothA2dp(selectDeivice)

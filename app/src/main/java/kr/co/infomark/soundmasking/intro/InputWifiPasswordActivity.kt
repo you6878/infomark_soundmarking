@@ -26,7 +26,6 @@ class InputWifiPasswordActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(this,R.layout.activity_input_wifi_password)
         gson = Gson()
-
         bt =  BluetoothSPP.getInstance(this); //Initializing
         bt.setOnDataReceivedListener { data, message ->
             println(message)
@@ -38,7 +37,6 @@ class InputWifiPasswordActivity : AppCompatActivity() {
                     finish()
                 }else{
                     Toast.makeText(this,"와이파이 정보가 정확하지 않습니다.",Toast.LENGTH_LONG).show()
-
                 }
             }
         }
@@ -74,9 +72,9 @@ class InputWifiPasswordActivity : AppCompatActivity() {
             } else {
                 psEditText.inputType = InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD
             }
-//            var commandModel = RemoveCommandModel(WlanRemoveNetwork,binding.wifiIdTextview.text.toString())
-//            println(commandModel)
-//            bt.send(gson.toJson(commandModel));
+            var commandModel = RemoveCommandModel(WlanRemoveNetwork,binding.wifiIdTextview.text.toString())
+            println(commandModel)
+            bt.send(gson.toJson(commandModel));
 
         }
         binding.speakerStartPopupApply.setOnClickListener {

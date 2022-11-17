@@ -1,7 +1,6 @@
 package kr.co.infomark.soundmasking.intro
 
 import android.Manifest
-
 import android.bluetooth.BluetoothAdapter
 import android.bluetooth.BluetoothDevice
 import android.content.BroadcastReceiver
@@ -21,6 +20,7 @@ import androidx.fragment.app.DialogFragment
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.gson.Gson
+import kr.co.infomark.soundmasking.R
 import kr.co.infomark.soundmasking.bluetooth.BluetoothManager
 import kr.co.infomark.soundmasking.bluetooth.BluetoothSPP
 import kr.co.infomark.soundmasking.bluetooth.BluetoothState
@@ -45,6 +45,7 @@ class StartSpeakerSettingActivity : AppCompatActivity() {
     var bluetoothManager = BluetoothManager(this)
     lateinit var mBTAdapter: BluetoothAdapter
     var selectDevice: BluetoothDevice? = null
+    var threadState = true
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(
@@ -77,7 +78,10 @@ class StartSpeakerSettingActivity : AppCompatActivity() {
 
         bt.setBluetoothConnectionListener(object : BluetoothSPP.BluetoothConnectionListener {
             override fun onDeviceConnected(name: String, address: String) {
-                selectDevice?.let { bluetoothManager.connectUsingBluetoothA2dp(it) }
+
+                binding.progressCir.visibility = View.GONE
+                val dialog = CanUseSpeakerDialogFragment()
+                dialog.show(supportFragmentManager, "CanUseSpeakerDialogFragment")
             }
 
             override fun onDeviceDisconnected() {
@@ -88,12 +92,10 @@ class StartSpeakerSettingActivity : AppCompatActivity() {
 
             override fun onDeviceConnectionFailed() {
                 Toast.makeText(
-                    applicationContext, "Unable to connect", Toast.LENGTH_SHORT
+                    applicationContext, "Try to connect", Toast.LENGTH_SHORT
                 ).show()
             }
         })
-
-
     }
 
 
@@ -113,9 +115,7 @@ class StartSpeakerSettingActivity : AppCompatActivity() {
                         intent.getParcelableExtra<BluetoothDevice>(BluetoothDevice.EXTRA_DEVICE)
 
                     if (device?.bondState == BluetoothDevice.BOND_BONDED) {
-                        binding.progressCir.visibility = View.GONE
-                        val dialog = CanUseSpeakerDialogFragment()
-                        dialog.show(supportFragmentManager, "CanUseSpeakerDialogFragment")
+
                     }
                 }
             }
@@ -133,6 +133,7 @@ class StartSpeakerSettingActivity : AppCompatActivity() {
             binding.speakerSelectPopupRela.visibility = View.VISIBLE
         }
         binding.bluetoothRefreshButton.setOnClickListener {
+            Toast.makeText(this, "블루투스 재검색을 시작합니다.", Toast.LENGTH_SHORT).show()
             discover()
         }
     }
@@ -148,7 +149,11 @@ class StartSpeakerSettingActivity : AppCompatActivity() {
                 bt.startService(BluetoothState.DEVICE_OTHER)
             }
         }
+
         discover()
+
+
+
     }
 
     private fun setRecyclerview() {
@@ -169,6 +174,7 @@ class StartSpeakerSettingActivity : AppCompatActivity() {
         override fun onReceive(context: Context, intent: Intent) {
             val action = intent.action
             if (BluetoothDevice.ACTION_FOUND == action) {
+                threadState = false
                 val device =
                     intent.getParcelableExtra<BluetoothDevice>(BluetoothDevice.EXTRA_DEVICE)
                 // add the name to the list
@@ -179,7 +185,10 @@ class StartSpeakerSettingActivity : AppCompatActivity() {
                 ) {
                     return
                 }
+                println("====Deivice List====")
+                println(device?.name)
                 if (device?.name == "FRIENDS") {
+
                     binding.progressCir.visibility = View.GONE
                     binding.bluetoothRefreshButton.visibility = View.GONE
                     binding.speakerStartPopupRela.visibility = View.VISIBLE
@@ -189,8 +198,7 @@ class StartSpeakerSettingActivity : AppCompatActivity() {
         }
     }
 
-    private fun discover() {
-        // Check if the device is already discovering
+    fun discover() {
         if (ActivityCompat.checkSelfPermission(
                 this,
                 Manifest.permission.BLUETOOTH_SCAN
@@ -198,20 +206,29 @@ class StartSpeakerSettingActivity : AppCompatActivity() {
         ) {
             return
         }
-        if (mBTAdapter.isEnabled) {
-            binding.progressCir.visibility = View.VISIBLE
-            mBTAdapter.startDiscovery()
-            registerReceiver(blReceiver, IntentFilter(BluetoothDevice.ACTION_FOUND))
-        } else {
-            Toast.makeText(
-                applicationContext,
-                getString(kr.co.infomark.soundmasking.R.string.BTnotOn),
-                Toast.LENGTH_SHORT
-            )
+        // Check if the device is already discovering
+        if (mBTAdapter.isDiscovering) {
+            mBTAdapter.cancelDiscovery()
+            Toast.makeText(applicationContext, getString(R.string.DisStop), Toast.LENGTH_SHORT)
                 .show()
+        } else {
+            if (mBTAdapter.isEnabled) {
+                mBTAdapter.startDiscovery()
+                Toast.makeText(
+                    applicationContext,
+                    getString(R.string.DisStart),
+                    Toast.LENGTH_SHORT
+                ).show()
+                registerReceiver(blReceiver, IntentFilter(BluetoothDevice.ACTION_FOUND))
+            } else {
+                Toast.makeText(
+                    applicationContext,
+                    getString(R.string.BTnotOn),
+                    Toast.LENGTH_SHORT
+                ).show()
+            }
         }
     }
-
     fun handleDialogClose(handleDialogClose: DialogFragment) {
 
         Util.putSharedPreferenceString(this, Util.MAC, selectDevice?.address ?: "")
@@ -228,6 +245,5 @@ class StartSpeakerSettingActivity : AppCompatActivity() {
             bt.connect(it.address ?: "")
             selectDevice = it
         }
-
     }
 }

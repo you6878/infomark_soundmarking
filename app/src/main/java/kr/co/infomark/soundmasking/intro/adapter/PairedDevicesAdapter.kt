@@ -39,6 +39,7 @@ class PairedDevicesAdapter(private val connect: (deviceToConnect: BluetoothDevic
             return
         }
         holder.binding.deviceName.text = device.name
+        holder.binding.deviceAddress.text = device.address
         holder.itemView.setOnClickListener {
             connect(device)
         }
@@ -51,11 +52,16 @@ class PairedDevicesAdapter(private val connect: (deviceToConnect: BluetoothDevic
     }
 
     fun addItem(device: BluetoothDevice) {
-        if(!devicesList.contains(device)){
+        var duplicate = false
+        devicesList.forEach { it
+               if(it.address == device.address){
+                   duplicate = true
+               }
+        }
+        if(!duplicate){
             devicesList.add(device)
             notifyDataSetChanged()
         }
-
 
     }
 }

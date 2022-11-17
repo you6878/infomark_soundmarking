@@ -25,7 +25,9 @@ val PERMISSIONS = arrayOf(
     Manifest.permission.ACCESS_FINE_LOCATION,
     Manifest.permission.ACCESS_COARSE_LOCATION,
     Manifest.permission.ACCESS_WIFI_STATE,
-    Manifest.permission.CHANGE_WIFI_STATE
+    Manifest.permission.CHANGE_WIFI_STATE,
+    Manifest.permission.ACCESS_BACKGROUND_LOCATION
+
 )
 val PERMISSIONS_S_ABOVE = arrayOf(
     Manifest.permission.BLUETOOTH,
@@ -36,7 +38,9 @@ val PERMISSIONS_S_ABOVE = arrayOf(
     Manifest.permission.ACCESS_FINE_LOCATION,
     Manifest.permission.ACCESS_COARSE_LOCATION,
     Manifest.permission.ACCESS_WIFI_STATE,
-    Manifest.permission.CHANGE_WIFI_STATE
+    Manifest.permission.CHANGE_WIFI_STATE,
+    Manifest.permission.ACCESS_BACKGROUND_LOCATION
+
 )
 
 class SplashActivity : AppCompatActivity() {
