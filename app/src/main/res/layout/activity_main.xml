@@ -231,6 +231,7 @@
         </LinearLayout>
 
         <androidx.appcompat.widget.AppCompatButton
+            android:visibility="gone"
             android:id="@+id/play_music"
             android:layout_width="match_parent"
             android:layout_height="40dp"
@@ -242,17 +243,17 @@
             android:text="내부 사운드 재생"
             android:textColor="@color/white" />
 
-<!--        <androidx.appcompat.widget.AppCompatButton-->
-<!--            android:id="@+id/debug_btn"-->
-<!--            android:layout_width="match_parent"-->
-<!--            android:layout_height="40dp"-->
-<!--            android:layout_above="@+id/start_speaker_setting_btn"-->
-<!--            android:layout_marginLeft="16dp"-->
-<!--            android:layout_marginRight="16dp"-->
-<!--            android:layout_marginBottom="24dp"-->
-<!--            android:background="@drawable/black_btn"-->
-<!--            android:text="장비 초기화 버튼"-->
-<!--            android:textColor="@color/white" />-->
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/log_btn"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:layout_above="@+id/start_speaker_setting_btn"
+            android:layout_marginLeft="16dp"
+            android:layout_marginRight="16dp"
+            android:layout_marginBottom="24dp"
+            android:background="@drawable/black_btn"
+            android:text="로그 버튼"
+            android:textColor="@color/white" />
 
         <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/start_speaker_setting_btn"

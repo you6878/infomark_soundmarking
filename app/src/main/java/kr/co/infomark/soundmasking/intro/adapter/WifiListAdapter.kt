@@ -11,10 +11,11 @@ import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.RecyclerView
 import kr.co.infomark.soundmasking.R
 import kr.co.infomark.soundmasking.databinding.SelectWifiItemBinding
+import kr.co.infomark.soundmasking.model.WlanNetworkListModel
 
 class WifiListAdapter(var nextPage: (String) -> Unit) : RecyclerView.Adapter<WifiListAdapter.WifiItemViewHolder>() {
 
-    var scanResults: ArrayList<ScanResult> = ArrayList()
+    var scanResult = WlanNetworkListModel()
     lateinit var selectDeviceItemBinding : SelectWifiItemBinding
     inner class WifiItemViewHolder(val binding: SelectWifiItemBinding) : RecyclerView.ViewHolder(binding.root)
 
@@ -26,33 +27,21 @@ class WifiListAdapter(var nextPage: (String) -> Unit) : RecyclerView.Adapter<Wif
     }
 
     override fun getItemCount(): Int {
-        return scanResults.size
+        return scanResult.data.size
     }
 
     override fun onBindViewHolder(holder: WifiItemViewHolder, position: Int) {
-        val item = scanResults[position]
-
-        if (ActivityCompat.checkSelfPermission(
-                holder.itemView.context,
-                Manifest.permission.BLUETOOTH_CONNECT
-            ) != PackageManager.PERMISSION_GRANTED
-        ) {
-            return
-        }
+        val item = scanResult.data.get(position)
         holder.itemView.setOnClickListener {
-            nextPage(item.SSID)
+            nextPage(item.ssid)
         }
-        holder.binding.deviceName.text = item.SSID
+        holder.binding.deviceName.text = item?.ssid
     }
 
-    fun addItems(list: MutableList<ScanResult>) {
-        scanResults.clear()
-        scanResults.addAll(list)
+    fun addItems(result: WlanNetworkListModel) {
+        scanResult.data.clear()
+        scanResult = result
         notifyDataSetChanged()
     }
 
-    fun addItem(scanResult: ScanResult) {
-        scanResults.add(scanResult)
-        notifyDataSetChanged()
-    }
 }

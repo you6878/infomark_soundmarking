@@ -29,13 +29,14 @@
             android:layout_height="wrap_content" />
 
         <ImageView
-            android:layout_toLeftOf="@+id/wifi_antena_imageview"
+            android:visibility="gone"
             android:id="@+id/wifi_secu_imageview"
-            android:layout_marginRight="8dp"
-            android:layout_centerVertical="true"
-            android:src="@drawable/wifi_secu_icon"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="8dp"
+            android:layout_toLeftOf="@+id/wifi_antena_imageview"
+            android:src="@drawable/wifi_secu_icon" />
 
         <View
 

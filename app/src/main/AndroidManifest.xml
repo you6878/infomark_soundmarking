@@ -12,19 +12,17 @@
     <uses-permission android:name="android.permission.BLUETOOTH_ADVERTISE" />
     <uses-permission android:name="android.permission.BLUETOOTH_CONNECT" />
     <uses-permission android:name="android.permission.BLUETOOTH_SCAN" />
-
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
     <uses-permission android:name="android.permission.CHANGE_WIFI_STATE" />
 
-    <uses-permission android:name="android.permission.ACCESS_BACKGROUND_LOCATION" />
-
-    <permission android:name="android.permission.BLUETOOTH" android:label="BLUETOOTH" />
+    <permission
+        android:name="android.permission.BLUETOOTH"
+        android:label="BLUETOOTH" />
     <permission android:name="android.permission.BLUETOOTH_ADMIN" />
     <permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
-
 
     <uses-feature
         android:name="android.hardware.bluetooth"
@@ -44,6 +42,9 @@
         android:theme="@style/Theme.SoundMasking"
         tools:targetApi="31">
         <activity
+            android:name=".LogActivity"
+            android:exported="false" />
+        <activity
             android:name=".intro.SpeakerConnectCompleteActivity"
             android:exported="false" />
         <activity
@@ -54,33 +55,25 @@
             android:exported="false" />
         <activity
             android:name=".intro.SelectSpeakerWifiActivity"
-            android:exported="true" >
-
-
-        </activity>
+            android:exported="true"></activity>
         <activity
             android:name=".intro.StartSpeakerSettingActivity"
-            android:exported="true">
-
-        </activity>
+            android:exported="true"></activity>
         <activity android:name=".DeviceListActivity" />
         <activity
             android:name=".bluetooth.DeviceList"
             android:exported="false" />
         <activity
             android:name=".intro.SplashActivity"
-            android:exported="true" >
+            android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-
         </activity>
         <activity
             android:name=".MainActivity"
-            android:exported="true" >
-
-        </activity>
+            android:exported="true"></activity>
     </application>
 
 </manifest>

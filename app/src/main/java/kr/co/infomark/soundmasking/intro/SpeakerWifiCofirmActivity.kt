@@ -25,8 +25,7 @@ class SpeakerWifiCofirmActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(this,R.layout.activity_speaker_wifi_cofirm)
-
-
+        binding.toolbarBackLeft.setOnClickListener { finish() }
     }
 
     override fun onResume() {

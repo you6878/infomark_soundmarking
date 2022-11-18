@@ -15,23 +15,34 @@ import kr.co.infomark.soundmasking.bluetooth.BluetoothState
 import kr.co.infomark.soundmasking.databinding.ActivityInputWifiPasswordBinding
 import kr.co.infomark.soundmasking.model.*
 import kr.co.infomark.soundmasking.util.Util
+import org.json.JSONObject
 
 
 class InputWifiPasswordActivity : AppCompatActivity() {
-    private var currentCommand = ""
     private lateinit var bt: BluetoothSPP
     lateinit var binding : ActivityInputWifiPasswordBinding
     lateinit var gson : Gson
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(this,R.layout.activity_input_wifi_password)
+        binding.toolbarBackLeft.setOnClickListener { finish() }
         gson = Gson()
         bt =  BluetoothSPP.getInstance(this); //Initializing
+
+        initView()
+
+
+
         bt.setOnDataReceivedListener { data, message ->
+            var isLog = JSONObject(message).isNull("log")
+            if(!isLog){
+                return@setOnDataReceivedListener
+            }
             println(message)
-            if(currentCommand == WlanAddNetwork){
+
+            var cmd = JSONObject(message).getString("cmd")
+            if(cmd == WlanAddNetwork){
                 var model = gson.fromJson(message, DefaultModel::class.java)
-                println(model)
                 if(model.result == "ok"){
                     setResult(RESULT_OK)
                     finish()
@@ -39,9 +50,8 @@ class InputWifiPasswordActivity : AppCompatActivity() {
                     Toast.makeText(this,"와이파이 정보가 정확하지 않습니다.",Toast.LENGTH_LONG).show()
                 }
             }
-        }
-        initView()
 
+        }
     }
 
     override fun onResume() {
@@ -78,9 +88,8 @@ class InputWifiPasswordActivity : AppCompatActivity() {
 
         }
         binding.speakerStartPopupApply.setOnClickListener {
-            currentCommand = WlanAddNetwork
-            var commandModel = CommandModel(currentCommand,binding.wifiIdTextview.text.toString(),binding.passwordWifiEdittext.text.toString())
-            println(commandModel)
+
+            var commandModel = CommandModel(WlanAddNetwork,binding.wifiIdTextview.text.toString(),binding.passwordWifiEdittext.text.toString())
             bt.send(gson.toJson(commandModel));
         }
     }

@@ -102,13 +102,7 @@ class StartSpeakerSettingActivity : AppCompatActivity() {
     //블루투스 검색결과 BroadcastReceiver
     var mBluetoothSearchReceiver: BroadcastReceiver = object : BroadcastReceiver() {
         override fun onReceive(context: Context, intent: Intent) {
-            if (ActivityCompat.checkSelfPermission(
-                    this@StartSpeakerSettingActivity,
-                    Manifest.permission.BLUETOOTH_CONNECT
-                ) != PackageManager.PERMISSION_GRANTED
-            ) {
-                return
-            }
+
             when (intent.action) {
                 BluetoothDevice.ACTION_BOND_STATE_CHANGED -> {
                     val device =
@@ -178,15 +172,10 @@ class StartSpeakerSettingActivity : AppCompatActivity() {
                 val device =
                     intent.getParcelableExtra<BluetoothDevice>(BluetoothDevice.EXTRA_DEVICE)
                 // add the name to the list
-                if (ActivityCompat.checkSelfPermission(
-                        this@StartSpeakerSettingActivity,
-                        Manifest.permission.BLUETOOTH_CONNECT
-                    ) != PackageManager.PERMISSION_GRANTED
-                ) {
-                    return
-                }
+
                 println("====Deivice List====")
                 println(device?.name)
+                println(device?.address)
                 if (device?.name == "FRIENDS") {
 
                     binding.progressCir.visibility = View.GONE
@@ -199,34 +188,27 @@ class StartSpeakerSettingActivity : AppCompatActivity() {
     }
 
     fun discover() {
-        if (ActivityCompat.checkSelfPermission(
-                this,
-                Manifest.permission.BLUETOOTH_SCAN
-            ) != PackageManager.PERMISSION_GRANTED
-        ) {
-            return
-        }
+
         // Check if the device is already discovering
         if (mBTAdapter.isDiscovering) {
             mBTAdapter.cancelDiscovery()
             Toast.makeText(applicationContext, getString(R.string.DisStop), Toast.LENGTH_SHORT)
                 .show()
+        }
+        if (mBTAdapter.isEnabled) {
+            mBTAdapter.startDiscovery()
+            Toast.makeText(
+                applicationContext,
+                getString(R.string.DisStart),
+                Toast.LENGTH_SHORT
+            ).show()
+            registerReceiver(blReceiver, IntentFilter(BluetoothDevice.ACTION_FOUND))
         } else {
-            if (mBTAdapter.isEnabled) {
-                mBTAdapter.startDiscovery()
-                Toast.makeText(
-                    applicationContext,
-                    getString(R.string.DisStart),
-                    Toast.LENGTH_SHORT
-                ).show()
-                registerReceiver(blReceiver, IntentFilter(BluetoothDevice.ACTION_FOUND))
-            } else {
-                Toast.makeText(
-                    applicationContext,
-                    getString(R.string.BTnotOn),
-                    Toast.LENGTH_SHORT
-                ).show()
-            }
+            Toast.makeText(
+                applicationContext,
+                getString(R.string.BTnotOn),
+                Toast.LENGTH_SHORT
+            ).show()
         }
     }
     fun handleDialogClose(handleDialogClose: DialogFragment) {

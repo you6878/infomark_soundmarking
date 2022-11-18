@@ -29,10 +29,10 @@ import kr.co.infomark.soundmasking.bluetooth.DeviceList
 import kr.co.infomark.soundmasking.model.CommandModel
 import kr.co.infomark.soundmasking.model.DefaultModel
 import kr.co.infomark.soundmasking.model.WlanState
+import org.json.JSONObject
 
 class DeviceListActivity : Activity() {
     lateinit var bt: BluetoothSPP
-    var currentCommand = ""
     lateinit var gson : Gson
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -46,7 +46,12 @@ class DeviceListActivity : Activity() {
             finish()
         }
         bt.setOnDataReceivedListener { data, message ->
-            if(currentCommand == WlanState){
+            var isLog = JSONObject(message).isNull("log")
+            if(!isLog){
+                return@setOnDataReceivedListener
+            }
+            var cmd = JSONObject(message).getString("cmd")
+            if(cmd == "wlan_state"){
                 var model = gson.fromJson(message,DefaultModel::class.java)
                 println(model)
             }
@@ -126,8 +131,7 @@ class DeviceListActivity : Activity() {
     fun setup() {
         val btnSend = findViewById<View>(R.id.btnSend) as Button
         btnSend.setOnClickListener {
-            currentCommand = WlanState
-            var commandModel = CommandModel(currentCommand)
+            var commandModel = CommandModel(WlanState)
             bt.send(gson.toJson(commandModel));
         }
     }

@@ -12,6 +12,7 @@ import androidx.databinding.DataBindingUtil
 import com.google.gson.Gson
 import kotlinx.coroutines.Delay
 import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kr.co.infomark.soundmasking.bluetooth.BluetoothManager
 import kr.co.infomark.soundmasking.bluetooth.BluetoothSPP
@@ -20,31 +21,22 @@ import kr.co.infomark.soundmasking.databinding.ActivityMainBinding
 import kr.co.infomark.soundmasking.intro.StartSpeakerSettingActivity
 import kr.co.infomark.soundmasking.model.*
 import kr.co.infomark.soundmasking.util.Util
+import org.json.JSONObject
 import java.lang.reflect.Method
 
 
 class MainActivity : AppCompatActivity() {
-    private var currentCommand = ""
     lateinit var binding : ActivityMainBinding
     lateinit var gson: Gson
     var bluetoothManager = BluetoothManager(this)
     lateinit var bt: BluetoothSPP
     lateinit var selectDeivice: BluetoothDevice
-
+    var removeAllData = false
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_main)
         gson = Gson()
         bt =  BluetoothSPP.getInstance(this); //Initializing
-        bt.setOnDataReceivedListener { data, message ->
-            if(currentCommand == WlanState){
-                var model = gson.fromJson(message, DefaultModel::class.java)
-                println(model)
-                if(model.result == "ok"){
-                    binding.wifiStatusTextview.text = model.state
-                }
-            }
-        }
         initView()
     }
     fun deviceCallback(){
@@ -61,9 +53,7 @@ class MainActivity : AppCompatActivity() {
         //Wifi Status
         bt.setBluetoothConnectionListener(object : BluetoothSPP.BluetoothConnectionListener {
             override fun onDeviceConnected(name: String, address: String) {
-                var commandModel = CommandModel(WlanState)
-                currentCommand = WlanState
-                bt.send(gson.toJson(commandModel))
+                checkWifiState()
             }
 
             override fun onDeviceDisconnected() {
@@ -87,20 +77,41 @@ class MainActivity : AppCompatActivity() {
         binding.playMusic.setOnClickListener {
             bluetoothManager.playMusic()
         }
-//        binding.debugBtn.setOnClickListener {
-//            Util.putSharedClear(this)
-//        }
+        binding.logBtn.setOnClickListener {
+            startActivity(Intent(this,LogActivity::class.java))
+        }
         binding.startSpeakerSettingBtn.setOnClickListener {
-            currentCommand = WlanRemoveNetwork
+            removeAllData = true
             var commandModel = RemoveCommandModel(WlanRemoveNetwork,Util.getSharedPreferenceString(this,Util.WIFI_NAME))
             bt.send(gson.toJson(commandModel));
-            bt.stopService()
-            bluetoothManager.releaseMediaPlayer()
-            bluetoothManager.disConnectUsingBluetoothA2dp(selectDeivice)
-            removeBond(selectDeivice)
-            Util.clearSharedPreference(this)
+        }
+    }
 
-            finish()
+    fun setBTListener(){
+        bt.setOnDataReceivedListener { data, message ->
+            println(message)
+            var isLog = JSONObject(message).isNull("log")
+            if(!isLog){
+                return@setOnDataReceivedListener
+            }
+            var cmd = JSONObject(message).getString("cmd")
+            if(cmd == WlanState){
+                var model = gson.fromJson(message, DefaultModel::class.java)
+                if(model.result == "ok"){
+                    binding.wifiStatusTextview.text = model.state
+                }
+            }
+
+            if(cmd == WlanRemoveNetwork && removeAllData){
+                removeAllData = false
+                bt.stopService()
+                bluetoothManager.releaseMediaPlayer()
+                bluetoothManager.disConnectUsingBluetoothA2dp(selectDeivice)
+                removeBond(selectDeivice)
+                Util.clearSharedPreference(this)
+
+                finish()
+            }
         }
     }
     fun removeBond(device: BluetoothDevice) {
@@ -129,7 +140,18 @@ class MainActivity : AppCompatActivity() {
             }
             deviceCallback()
         }
+        checkWifiState()
+        setBTListener()
     }
+    fun checkWifiState(){
+        GlobalScope.launch {
+            delay(2000)
+            var commandModel = CommandModel(WlanState)
+            bt.send(gson.toJson(commandModel))
+        }.start()
+
+    }
+
 
     override fun onDestroy() {
 

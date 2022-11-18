@@ -31,13 +31,7 @@ class PairedDevicesAdapter(private val connect: (deviceToConnect: BluetoothDevic
     override fun onBindViewHolder(holder: DeviceViewHolder, position: Int) {
         val device = devicesList[position]
 
-        if (ActivityCompat.checkSelfPermission(
-                holder.itemView.context,
-                Manifest.permission.BLUETOOTH_CONNECT
-            ) != PackageManager.PERMISSION_GRANTED
-        ) {
-            return
-        }
+
         holder.binding.deviceName.text = device.name
         holder.binding.deviceAddress.text = device.address
         holder.itemView.setOnClickListener {

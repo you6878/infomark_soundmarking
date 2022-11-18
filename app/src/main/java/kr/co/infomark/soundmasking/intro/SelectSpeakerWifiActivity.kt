@@ -1,39 +1,55 @@
 package kr.co.infomark.soundmasking.intro
 
 import android.app.Activity
-import android.content.BroadcastReceiver
-import android.content.Context
 import android.content.Intent
-import android.content.IntentFilter
-import android.net.wifi.WifiManager
 import android.os.Bundle
 import android.view.View
 import android.widget.LinearLayout
-import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
-import kr.co.infomark.soundmasking.MainActivity
+import com.google.gson.Gson
 import kr.co.infomark.soundmasking.R
+import kr.co.infomark.soundmasking.bluetooth.BluetoothSPP
 import kr.co.infomark.soundmasking.databinding.ActivitySelectSpeakerWifiBinding
 import kr.co.infomark.soundmasking.intro.adapter.WifiListAdapter
+import kr.co.infomark.soundmasking.model.CommandModel
+import kr.co.infomark.soundmasking.model.WlanNetworkListModel
+import kr.co.infomark.soundmasking.model.WlanScanResult
 import kr.co.infomark.soundmasking.util.Util
+import org.json.JSONObject
 
 class SelectSpeakerWifiActivity : AppCompatActivity() {
     lateinit var binding : ActivitySelectSpeakerWifiBinding
-    private lateinit var wifiManager: WifiManager
     private lateinit var wifiListAdapter: WifiListAdapter
-
-
+    private lateinit var bt: BluetoothSPP
+    lateinit var gson : Gson
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(this,R.layout.activity_select_speaker_wifi)
-        wifiManager = applicationContext.getSystemService(WIFI_SERVICE) as WifiManager
-        if (!wifiManager.isWifiEnabled) {
-            Toast.makeText(this, "와이파이를 켜고 있습니다.", Toast.LENGTH_LONG).show();
-            wifiManager.isWifiEnabled = true;
+        gson = Gson()
+        bt =  BluetoothSPP.getInstance(this); //Initializing
+        bt.setOnDataReceivedListener { data, message ->
+            var isLog = JSONObject(message).isNull("log")
+            if(!isLog){
+                return@setOnDataReceivedListener
+            }
+            var cmd = JSONObject(message).getString("cmd")
+            if(cmd == WlanScanResult){
+                binding.progressCir.visibility = View.GONE
+                var result = gson.fromJson(message, WlanNetworkListModel::class.java)
+                wifiListAdapter.addItems(result)
+            }
+//
+//            println(model)
+//            if(model.result == "ok"){
+//                setResult(RESULT_OK)
+//                finish()
+//            }else{
+//                Toast.makeText(this,"와이파이 정보가 정확하지 않습니다.",Toast.LENGTH_LONG).show()
+//            }
         }
         setRecyclerview()
 
@@ -70,26 +86,17 @@ class SelectSpeakerWifiActivity : AppCompatActivity() {
     }
     override fun onResume() {
         super.onResume()
-        val intentFilter = IntentFilter()
-        intentFilter.addAction(WifiManager.SCAN_RESULTS_AVAILABLE_ACTION)
-        registerReceiver(wifiScanReceiver, intentFilter)
-        wifiManager.startScan()
-        if(wifiListAdapter.scanResults.size == 0){
+        if(wifiListAdapter.scanResult.data.size == 0){
             binding.progressCir.visibility = View.VISIBLE
         }
+        scanWifiList()
+
+
 
     }
-
-    val wifiScanReceiver = object : BroadcastReceiver() {
-
-        override fun onReceive(context: Context, intent: Intent) {
-            val success = intent.getBooleanExtra(WifiManager.EXTRA_RESULTS_UPDATED, false)
-            if (success) {
-                binding.progressCir.visibility = View.GONE
-                val results = wifiManager.scanResults
-                wifiListAdapter.addItems(results)
-
-            }
-        }
+    fun  scanWifiList(){
+        var commandModel = CommandModel(WlanScanResult)
+        bt.send(gson.toJson(commandModel))
     }
+
 }
