@@ -6,6 +6,7 @@ import android.content.Context
 object Util {
 
     // 1등
+    const val LOGS = "LOGS"
     const val MAC = "MAC"
     const val WIFI_NAME = "WIFI_NAME"
 

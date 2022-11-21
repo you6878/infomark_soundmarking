@@ -252,7 +252,7 @@
             android:layout_marginRight="16dp"
             android:layout_marginBottom="24dp"
             android:background="@drawable/black_btn"
-            android:text="로그 버튼"
+            android:text="로그 보기"
             android:textColor="@color/white" />
 
         <androidx.appcompat.widget.AppCompatButton
@@ -264,7 +264,7 @@
             android:layout_marginRight="16dp"
             android:layout_marginBottom="24dp"
             android:background="@drawable/black_btn"
-            android:text="장비 초기화"
+            android:text="설정 초기화"
             android:textColor="@color/white" />
 
         <LinearLayout

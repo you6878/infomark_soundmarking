@@ -1,0 +1,155 @@
+{
+  "project_info": {
+    "project_number": "271361150197",
+    "firebase_url": "https://howlab-a5b78.firebaseio.com",
+    "project_id": "howlab-a5b78",
+    "storage_bucket": "howlab-a5b78.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:271361150197:android:c6a57e063d89903e0809bc",
+        "android_client_info": {
+          "package_name": "com.howlab.howlcolorlens"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "271361150197-6q3b2msrj2801j0gbts3p7tv3l895q72.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAJmQHd9Nre7ATopI5LV3fXwtHG7mwPlLs"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "271361150197-6q3b2msrj2801j0gbts3p7tv3l895q72.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "271361150197-vtid8t7alkbl26hskh90v3qmpum676oe.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.cranioIt.lidarscan"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:271361150197:android:504244b8b1fd05810809bc",
+        "android_client_info": {
+          "package_name": "com.howlab.test"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "271361150197-6q3b2msrj2801j0gbts3p7tv3l895q72.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAJmQHd9Nre7ATopI5LV3fXwtHG7mwPlLs"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "271361150197-6q3b2msrj2801j0gbts3p7tv3l895q72.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "271361150197-vtid8t7alkbl26hskh90v3qmpum676oe.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.cranioIt.lidarscan"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:271361150197:android:1bba3a34c4d5926f0809bc",
+        "android_client_info": {
+          "package_name": "kr.co.infomark.howlwebview"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "271361150197-6q3b2msrj2801j0gbts3p7tv3l895q72.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAJmQHd9Nre7ATopI5LV3fXwtHG7mwPlLs"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "271361150197-6q3b2msrj2801j0gbts3p7tv3l895q72.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "271361150197-vtid8t7alkbl26hskh90v3qmpum676oe.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.cranioIt.lidarscan"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:271361150197:android:f4f3674fd39b0af00809bc",
+        "android_client_info": {
+          "package_name": "kr.co.infomark.soundmasking"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "271361150197-6q3b2msrj2801j0gbts3p7tv3l895q72.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAJmQHd9Nre7ATopI5LV3fXwtHG7mwPlLs"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "271361150197-6q3b2msrj2801j0gbts3p7tv3l895q72.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "271361150197-vtid8t7alkbl26hskh90v3qmpum676oe.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.cranioIt.lidarscan"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

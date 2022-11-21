@@ -3,6 +3,7 @@ package kr.co.infomark.soundmasking.intro
 import android.content.Intent
 import android.os.Bundle
 import android.text.InputType
+import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
@@ -14,6 +15,7 @@ import kr.co.infomark.soundmasking.bluetooth.BluetoothSPP
 import kr.co.infomark.soundmasking.bluetooth.BluetoothState
 import kr.co.infomark.soundmasking.databinding.ActivityInputWifiPasswordBinding
 import kr.co.infomark.soundmasking.model.*
+import kr.co.infomark.soundmasking.popup.CanUseSpeakerDialogFragment
 import kr.co.infomark.soundmasking.util.Util
 import org.json.JSONObject
 
@@ -30,8 +32,6 @@ class InputWifiPasswordActivity : AppCompatActivity() {
         bt =  BluetoothSPP.getInstance(this); //Initializing
 
         initView()
-
-
 
         bt.setOnDataReceivedListener { data, message ->
             var isLog = JSONObject(message).isNull("log")
@@ -70,6 +70,21 @@ class InputWifiPasswordActivity : AppCompatActivity() {
                 }
             }
         }
+        bt.setBluetoothConnectionListener(object : BluetoothSPP.BluetoothConnectionListener {
+            override fun onDeviceConnected(name: String, address: String) {
+                var commandModel = RemoveCommandModel(WlanRemoveNetwork,binding.wifiIdTextview.text.toString())
+                println(commandModel)
+                bt.send(gson.toJson(commandModel));
+            }
+
+            override fun onDeviceDisconnected() {
+
+            }
+
+            override fun onDeviceConnectionFailed() {
+
+            }
+        })
     }
     fun initView(){
         val id =  intent.getStringExtra("SSID")
@@ -82,10 +97,6 @@ class InputWifiPasswordActivity : AppCompatActivity() {
             } else {
                 psEditText.inputType = InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD
             }
-            var commandModel = RemoveCommandModel(WlanRemoveNetwork,binding.wifiIdTextview.text.toString())
-            println(commandModel)
-            bt.send(gson.toJson(commandModel));
-
         }
         binding.speakerStartPopupApply.setOnClickListener {
 

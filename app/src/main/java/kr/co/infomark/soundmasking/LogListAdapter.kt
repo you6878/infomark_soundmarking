@@ -4,15 +4,16 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.RecyclerView
+import com.google.gson.Gson
 import kr.co.infomark.soundmasking.databinding.LogItemBinding
 import kr.co.infomark.soundmasking.model.LogModel
 import java.text.SimpleDateFormat
 
-class LogListAdapter() : RecyclerView.Adapter<LogListAdapter.LogItemViewHolder>() {
+class LogListAdapter(var logs: MutableList<LogModel>) : RecyclerView.Adapter<LogListAdapter.LogItemViewHolder>() {
 
-    var logs = ArrayList<LogModel>()
     lateinit var selectDeviceItemBinding : LogItemBinding
     inner class LogItemViewHolder(val binding: LogItemBinding) : RecyclerView.ViewHolder(binding.root)
+
     val sdf = SimpleDateFormat("yyyy-MM-dd HH:mm:ss")
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): LogListAdapter.LogItemViewHolder {
 

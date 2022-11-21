@@ -103,14 +103,16 @@ class MainActivity : AppCompatActivity() {
             }
 
             if(cmd == WlanRemoveNetwork && removeAllData){
-                removeAllData = false
-                bt.stopService()
-                bluetoothManager.releaseMediaPlayer()
-                bluetoothManager.disConnectUsingBluetoothA2dp(selectDeivice)
-                removeBond(selectDeivice)
-                Util.clearSharedPreference(this)
-
-                finish()
+                var model = gson.fromJson(message, DefaultModel::class.java)
+                if(model.cmd == "ok"){
+                    removeAllData = false
+                    bt.stopService()
+                    bluetoothManager.releaseMediaPlayer()
+                    bluetoothManager.disConnectUsingBluetoothA2dp(selectDeivice)
+                    removeBond(selectDeivice)
+                    Util.clearSharedPreference(this)
+                    finish()
+                }
             }
         }
     }
