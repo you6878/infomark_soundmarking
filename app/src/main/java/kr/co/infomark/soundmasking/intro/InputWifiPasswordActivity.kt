@@ -27,7 +27,7 @@ class InputWifiPasswordActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(this,R.layout.activity_input_wifi_password)
-        binding.toolbarBackLeft.setOnClickListener { finish() }
+
         gson = Gson()
         bt =  BluetoothSPP.getInstance(this); //Initializing
 
@@ -98,6 +98,8 @@ class InputWifiPasswordActivity : AppCompatActivity() {
                 psEditText.inputType = InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD
             }
         }
+        binding.speakerStartPopupCancel.setOnClickListener { finish() }
+        binding.toolbarBackLeft.setOnClickListener { finish() }
         binding.speakerStartPopupApply.setOnClickListener {
 
             var commandModel = CommandModel(WlanAddNetwork,binding.wifiIdTextview.text.toString(),binding.passwordWifiEdittext.text.toString())

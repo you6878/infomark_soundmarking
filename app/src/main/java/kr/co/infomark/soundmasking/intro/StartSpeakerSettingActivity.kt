@@ -1,33 +1,35 @@
 package kr.co.infomark.soundmasking.intro
 
-import android.Manifest
 import android.bluetooth.BluetoothAdapter
 import android.bluetooth.BluetoothDevice
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
-import android.content.pm.PackageManager
 import android.os.Bundle
 import android.os.Handler
 import android.view.View
 import android.widget.LinearLayout
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.app.ActivityCompat
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.DialogFragment
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.gson.Gson
+import kr.co.infomark.soundmasking.MainActivity
 import kr.co.infomark.soundmasking.R
 import kr.co.infomark.soundmasking.bluetooth.BluetoothManager
 import kr.co.infomark.soundmasking.bluetooth.BluetoothSPP
 import kr.co.infomark.soundmasking.bluetooth.BluetoothState
 import kr.co.infomark.soundmasking.databinding.ActivityStartSpeakerSettingBinding
 import kr.co.infomark.soundmasking.intro.adapter.PairedDevicesAdapter
+import kr.co.infomark.soundmasking.model.CommandModel
+import kr.co.infomark.soundmasking.model.DefaultModel
+import kr.co.infomark.soundmasking.model.WlanState
 import kr.co.infomark.soundmasking.popup.CanUseSpeakerDialogFragment
 import kr.co.infomark.soundmasking.util.Util
+import org.json.JSONObject
 
 
 class StartSpeakerSettingActivity : AppCompatActivity() {
@@ -46,6 +48,8 @@ class StartSpeakerSettingActivity : AppCompatActivity() {
     lateinit var mBTAdapter: BluetoothAdapter
     var selectDevice: BluetoothDevice? = null
     var threadState = true
+
+    var moveMainPage = false
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(
@@ -55,7 +59,7 @@ class StartSpeakerSettingActivity : AppCompatActivity() {
         gson = Gson()
         bt = BluetoothSPP.getInstance(this)
         mBTAdapter = BluetoothAdapter.getDefaultAdapter() // get a handle on the bluetooth radio
-        devicesAdapter = PairedDevicesAdapter(::connectUsingBluetoothA2dp)
+        devicesAdapter = PairedDevicesAdapter(::connectDevice)
         setRecyclerview()
         setButton()
 
@@ -74,14 +78,32 @@ class StartSpeakerSettingActivity : AppCompatActivity() {
 //        searchFilter.addAction(BluetoothAdapter.ACTION_DISCOVERY_FINISHED) //BluetoothAdapter.ACTION_DISCOVERY_FINISHED : 블루투스 검색 종료
 
         searchFilter.addAction(BluetoothDevice.ACTION_BOND_STATE_CHANGED)
-        registerReceiver(mBluetoothSearchReceiver, searchFilter)
+        setBTListener()
 
-        bt.setBluetoothConnectionListener(object : BluetoothSPP.BluetoothConnectionListener {
-            override fun onDeviceConnected(name: String, address: String) {
-
+    }
+    fun setBTListener(){
+        bt.setOnDataReceivedListener { data, message ->
+            println(message)
+            var isLog = JSONObject(message).isNull("log")
+            if(!isLog){
+                return@setOnDataReceivedListener
+            }
+            var cmd = JSONObject(message).getString("cmd")
+            if(cmd == WlanState){
+                var model = gson.fromJson(message, DefaultModel::class.java)
+                if(model.result == "ok" && model.state == "connected"){
+                    moveMainPage = true
+                    Util.putSharedPreferenceString(this,Util.WIFI_NAME, "need Name in Wlan_State")
+                }
                 binding.progressCir.visibility = View.GONE
                 val dialog = CanUseSpeakerDialogFragment()
                 dialog.show(supportFragmentManager, "CanUseSpeakerDialogFragment")
+            }
+        }
+        bt.setBluetoothConnectionListener(object : BluetoothSPP.BluetoothConnectionListener {
+            override fun onDeviceConnected(name: String, address: String) {
+                var commandModel = CommandModel(WlanState)
+                bt.send(gson.toJson(commandModel))
             }
 
             override fun onDeviceDisconnected() {
@@ -96,25 +118,9 @@ class StartSpeakerSettingActivity : AppCompatActivity() {
                 ).show()
             }
         })
+
     }
 
-
-    //블루투스 검색결과 BroadcastReceiver
-    var mBluetoothSearchReceiver: BroadcastReceiver = object : BroadcastReceiver() {
-        override fun onReceive(context: Context, intent: Intent) {
-
-            when (intent.action) {
-                BluetoothDevice.ACTION_BOND_STATE_CHANGED -> {
-                    val device =
-                        intent.getParcelableExtra<BluetoothDevice>(BluetoothDevice.EXTRA_DEVICE)
-
-                    if (device?.bondState == BluetoothDevice.BOND_BONDED) {
-
-                    }
-                }
-            }
-        }
-    }
 
 
     fun setButton() {
@@ -151,7 +157,7 @@ class StartSpeakerSettingActivity : AppCompatActivity() {
     }
 
     private fun setRecyclerview() {
-        devicesAdapter = PairedDevicesAdapter(::connectUsingBluetoothA2dp)
+        devicesAdapter = PairedDevicesAdapter(::connectDevice)
         binding.deviceRecyclerview.layoutManager = LinearLayoutManager(this)
         binding.deviceRecyclerview.addItemDecoration(
             DividerItemDecoration(
@@ -214,18 +220,30 @@ class StartSpeakerSettingActivity : AppCompatActivity() {
     fun handleDialogClose(handleDialogClose: DialogFragment) {
 
         Util.putSharedPreferenceString(this, Util.MAC, selectDevice?.address ?: "")
-        val selectSpeakerWifiActivity = Intent(this, SelectSpeakerWifiActivity::class.java)
-        selectSpeakerWifiActivity.putExtra("fromMain", intent.getBooleanExtra("fromMain", false))
-        startActivity(selectSpeakerWifiActivity)
+        if(moveMainPage){
+            val mainActivity = Intent(this, MainActivity::class.java)
+            startActivity(mainActivity)
+        }else{
+            val selectSpeakerWifiActivity = Intent(this, SelectSpeakerWifiActivity::class.java)
+            selectSpeakerWifiActivity.putExtra("fromMain", intent.getBooleanExtra("fromMain", false))
+            startActivity(selectSpeakerWifiActivity)
+        }
+
         finish()
         handleDialogClose.dismiss()
     }
 
-    fun connectUsingBluetoothA2dp(deviceToConnect: BluetoothDevice?) {
+    fun connectDevice(deviceToConnect: BluetoothDevice?) {
         deviceToConnect?.let {
+            BluetoothAdapter.getDefaultAdapter().cancelDiscovery()
             binding.progressCir.visibility = View.VISIBLE
             bt.connect(it.address ?: "")
             selectDevice = it
         }
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        BluetoothAdapter.getDefaultAdapter().cancelDiscovery()
     }
 }
