@@ -5,6 +5,8 @@ import android.bluetooth.BluetoothDevice
 import android.content.Intent
 import android.os.Build.VERSION_CODES.P
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.util.Log
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
@@ -31,7 +33,7 @@ class MainActivity : AppCompatActivity() {
     var bluetoothManager = BluetoothManager(this)
     lateinit var bt: BluetoothSPP
     lateinit var selectDeivice: BluetoothDevice
-    var removeAllData = false
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_main)
@@ -81,9 +83,18 @@ class MainActivity : AppCompatActivity() {
             startActivity(Intent(this,LogActivity::class.java))
         }
         binding.startSpeakerSettingBtn.setOnClickListener {
-            removeAllData = true
-            var commandModel = RemoveCommandModel(WlanRemoveNetwork,Util.getSharedPreferenceString(this,Util.WIFI_NAME))
+            Toast.makeText(this,"장비 초기화를 시작합니다.",Toast.LENGTH_LONG).show()
+            var commandModel = RemoveCommandModel(WlanRemoveNetwork,Util.getSharedPreferenceString(this@MainActivity,Util.WIFI_NAME))
             bt.send(gson.toJson(commandModel));
+            Handler(Looper.getMainLooper()).postDelayed({
+                BluetoothAdapter.getDefaultAdapter().cancelDiscovery()
+                bt.stopService()
+                bluetoothManager.releaseMediaPlayer()
+                bluetoothManager.disConnectUsingBluetoothA2dp(selectDeivice)
+                removeBond(selectDeivice)
+                Util.clearSharedPreference(this@MainActivity)
+                finish()
+            },1000)
         }
     }
 
@@ -100,18 +111,6 @@ class MainActivity : AppCompatActivity() {
                 if(model.result == "ok"){
                     binding.wifiStatusTextview.text = model.state
                 }
-            }
-
-            if(cmd == WlanRemoveNetwork && removeAllData){
-                removeAllData = false
-                BluetoothAdapter.getDefaultAdapter().cancelDiscovery()
-                bt.stopService()
-                bluetoothManager.releaseMediaPlayer()
-                bluetoothManager.disConnectUsingBluetoothA2dp(selectDeivice)
-                removeBond(selectDeivice)
-                Util.clearSharedPreference(this)
-                finish()
-
             }
         }
 

@@ -15,6 +15,9 @@ class LogListAdapter(var logs: MutableList<LogModel>) : RecyclerView.Adapter<Log
     inner class LogItemViewHolder(val binding: LogItemBinding) : RecyclerView.ViewHolder(binding.root)
 
     val sdf = SimpleDateFormat("yyyy-MM-dd HH:mm:ss")
+    init {
+        logs.sortByDescending { it.timestamp }
+    }
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): LogListAdapter.LogItemViewHolder {
 
         selectDeviceItemBinding =  DataBindingUtil.inflate(LayoutInflater.from(parent.context),
@@ -40,6 +43,7 @@ class LogListAdapter(var logs: MutableList<LogModel>) : RecyclerView.Adapter<Log
 
     fun addItem(item: LogModel) {
         logs.add(item)
+        logs.sortByDescending { it.timestamp }
         notifyDataSetChanged()
     }
 

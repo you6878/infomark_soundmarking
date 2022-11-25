@@ -24,9 +24,7 @@ import kr.co.infomark.soundmasking.bluetooth.BluetoothSPP
 import kr.co.infomark.soundmasking.bluetooth.BluetoothState
 import kr.co.infomark.soundmasking.databinding.ActivityStartSpeakerSettingBinding
 import kr.co.infomark.soundmasking.intro.adapter.PairedDevicesAdapter
-import kr.co.infomark.soundmasking.model.CommandModel
-import kr.co.infomark.soundmasking.model.DefaultModel
-import kr.co.infomark.soundmasking.model.WlanState
+import kr.co.infomark.soundmasking.model.*
 import kr.co.infomark.soundmasking.popup.CanUseSpeakerDialogFragment
 import kr.co.infomark.soundmasking.util.Util
 import org.json.JSONObject
@@ -91,13 +89,31 @@ class StartSpeakerSettingActivity : AppCompatActivity() {
             var cmd = JSONObject(message).getString("cmd")
             if(cmd == WlanState){
                 var model = gson.fromJson(message, DefaultModel::class.java)
+
+                //이미 연결된 상태
                 if(model.result == "ok" && model.state == "connected"){
-                    moveMainPage = true
-                    Util.putSharedPreferenceString(this,Util.WIFI_NAME, "need Name in Wlan_State")
+                    var command = CommandModel(WlanNetworkList)
+                    bt.send(gson.toJson(command))
+                }else if(model.result == "ok" && model.state == "enabled"){
+                    binding.progressCir.visibility = View.GONE
+                    val dialog = CanUseSpeakerDialogFragment()
+                    dialog.show(supportFragmentManager, "CanUseSpeakerDialogFragment")
+                }else if(model.result == "ok" && model.state == "disabled"){
+                    Toast.makeText(this, "프렌즈 스피커의 WIFI가 꺼져있어 설정할 수 없습니다.",Toast.LENGTH_LONG).show()
                 }
-                binding.progressCir.visibility = View.GONE
-                val dialog = CanUseSpeakerDialogFragment()
-                dialog.show(supportFragmentManager, "CanUseSpeakerDialogFragment")
+            }
+            if(cmd == WlanNetworkList){
+                moveMainPage = true
+                var wifis = gson.fromJson(message, WlanNetworkListModel::class.java)
+                for (item in wifis.data){
+                    if(item.status == "current"){
+                        Util.putSharedPreferenceString(this@StartSpeakerSettingActivity,Util.WIFI_NAME, item.ssid)
+                        binding.progressCir.visibility = View.GONE
+                        val dialog = CanUseSpeakerDialogFragment()
+                        dialog.show(supportFragmentManager, "CanUseSpeakerDialogFragment")
+                    }
+                }
+
             }
         }
         bt.setBluetoothConnectionListener(object : BluetoothSPP.BluetoothConnectionListener {

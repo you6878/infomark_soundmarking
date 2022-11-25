@@ -13,6 +13,8 @@ import androidx.core.app.ActivityCompat
 import kr.co.infomark.soundmasking.MainActivity
 import kr.co.infomark.soundmasking.R
 import kr.co.infomark.soundmasking.util.Util
+import kr.co.infomark.soundmasking.util.Util.getSharedPreferenceString
+import kr.co.infomark.soundmasking.util.Util.putSharedPreferenceString
 
 const val REQUEST_ALL_PERMISSION = 1
 
@@ -51,6 +53,7 @@ class SplashActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_splash)
+        putSharedPreferenceString(this,Util.LOGS,"")
         val mac = Util.getSharedPreferenceString(this@SplashActivity,Util.MAC)
         val wifiName = Util.getSharedPreferenceString(this@SplashActivity,Util.WIFI_NAME)
         if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.S){

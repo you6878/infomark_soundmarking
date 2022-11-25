@@ -256,6 +256,7 @@
             android:textColor="@color/white" />
 
         <androidx.appcompat.widget.AppCompatButton
+            android:visibility="invisible"
             android:id="@+id/start_speaker_setting_btn"
             android:layout_width="match_parent"
             android:layout_height="40dp"

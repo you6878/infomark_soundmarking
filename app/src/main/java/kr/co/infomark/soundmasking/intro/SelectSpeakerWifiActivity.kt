@@ -34,7 +34,9 @@ class SelectSpeakerWifiActivity : AppCompatActivity() {
         binding = DataBindingUtil.setContentView(this,R.layout.activity_select_speaker_wifi)
         gson = Gson()
         bt =  BluetoothSPP.getInstance(this); //Initializing
-
+        binding.wifiRefreshButton.setOnClickListener {
+            scanWifiList()
+        }
 
         setRecyclerview()
 
@@ -101,13 +103,13 @@ class SelectSpeakerWifiActivity : AppCompatActivity() {
 
             override fun onDeviceDisconnected() {
                 Toast.makeText(
-                    applicationContext, "Connection lost", Toast.LENGTH_SHORT
+                    applicationContext, "SPP 연결 해제", Toast.LENGTH_SHORT
                 ).show()
             }
 
             override fun onDeviceConnectionFailed() {
                 Toast.makeText(
-                    applicationContext, "Try to connect", Toast.LENGTH_SHORT
+                    applicationContext, "SPP 연결 실패", Toast.LENGTH_SHORT
                 ).show()
             }
         })
@@ -119,15 +121,17 @@ class SelectSpeakerWifiActivity : AppCompatActivity() {
             var cmd = JSONObject(message).getString("cmd")
             if(cmd == WlanScanResult){
                 binding.progressCir.visibility = View.GONE
-                var result = gson.fromJson(message, WlanNetworkListModel::class.java)
-                wifiListAdapter.addItems(result)
+                var res = gson.fromJson(message, WlanNetworkListModel::class.java)
+                if(res.result == "ok"){
+                    wifiListAdapter.addItems(res)
+                }else{
+                    println(res.toString())
+                }
             }
         }
     }
-
     fun  scanWifiList(){
         var commandModel = CommandModel(WlanScanResult)
         bt.send(gson.toJson(commandModel))
     }
-
 }
