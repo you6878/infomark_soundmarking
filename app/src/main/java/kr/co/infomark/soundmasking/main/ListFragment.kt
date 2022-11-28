@@ -1,11 +1,20 @@
 package kr.co.infomark.soundmasking.main
 
 import android.os.Bundle
-import androidx.fragment.app.Fragment
+import android.os.Environment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.databinding.DataBindingUtil
+import androidx.fragment.app.Fragment
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
+import kr.co.infomark.soundmasking.MainActivity
 import kr.co.infomark.soundmasking.R
+import kr.co.infomark.soundmasking.databinding.FragmentListBinding
+import kr.co.infomark.soundmasking.databinding.PlaylistItemBinding
+import java.io.File
+import java.net.URL
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -21,7 +30,6 @@ class ListFragment : Fragment() {
     // TODO: Rename and change types of parameters
     private var param1: String? = null
     private var param2: String? = null
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
@@ -30,13 +38,21 @@ class ListFragment : Fragment() {
         }
     }
 
+    lateinit var binding : FragmentListBinding
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_list, container, false)
+        binding = DataBindingUtil.inflate(inflater,R.layout.fragment_list,container,false)
+        binding.fileRecyclerview.layoutManager = LinearLayoutManager(requireContext())
+        binding.fileRecyclerview.apply {
+            val mainActivity = requireActivity() as MainActivity
+            adapter = PlayListAdapter(mainActivity.files)
+        }
+        return binding.root
     }
+
 
     companion object {
         /**
@@ -56,5 +72,32 @@ class ListFragment : Fragment() {
                     putString(ARG_PARAM2, param2)
                 }
             }
+    }
+
+    inner class PlayListAdapter(var files: MutableList<String>) : RecyclerView.Adapter<PlayListAdapter.PlayListItemViewHolder>() {
+
+        inner class PlayListItemViewHolder(val binding: PlaylistItemBinding) : RecyclerView.ViewHolder(binding.root)
+
+        override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PlayListItemViewHolder {
+            val view = DataBindingUtil.inflate<PlaylistItemBinding>(LayoutInflater.from(parent.context),
+                R.layout.playlist_item, parent, false)
+            return PlayListItemViewHolder(view)
+        }
+
+        override fun onBindViewHolder(holder: PlayListItemViewHolder, position: Int) {
+            var file = File(files[position])
+
+            holder.binding.contentTextview.text = file.name
+            holder.itemView.setOnClickListener {
+                var mainActivity = requireActivity() as MainActivity
+                mainActivity.bluetoothManager.playMusic(file.path)
+            }
+        }
+
+        override fun getItemCount(): Int {
+            return files.size
+        }
+
+
     }
 }

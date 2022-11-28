@@ -1,14 +1,202 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context=".main.MyPageFragment">
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
 
-    <!-- TODO: Update blank fragment layout -->
-    <TextView
+    <data>
+
+    </data>
+
+    <LinearLayout
+        android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:text="@string/hello_blank_fragment" />
+        tools:context=".main.MyPageFragment">
 
-</FrameLayout>
+        <RelativeLayout
+            android:id="@+id/status_menu"
+            android:layout_width="match_parent"
+            android:layout_height="55dp">
+
+
+            <TextView
+                android:layout_marginLeft="36dp"
+                android:id="@+id/status_textview"
+                android:gravity="center"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:textStyle="normal"
+                android:textSize="16dp"
+                android:textColor="#b8000000"
+                android:text="현재상태"/>
+            <TextView
+                android:layout_marginRight="12dp"
+                android:layout_toLeftOf="@+id/arrow_icon"
+                android:id="@+id/content_textview"
+                android:gravity="center"
+                android:layout_weight="1"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:textStyle="normal"
+                android:textSize="16dp"
+                android:textColor="#b8000000"
+                android:text="연결됨"/>
+
+
+            <ImageView
+                android:id="@+id/arrow_icon"
+                android:layout_marginRight="32dp"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:src="@drawable/icon_arrow_right"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+
+
+            <View
+                android:layout_alignParentBottom="true"
+                android:background="@color/gray_background"
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginRight="30dp"
+                android:layout_marginLeft="30dp"/>
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/speaker_menu"
+            android:layout_width="match_parent"
+            android:layout_height="55dp">
+
+
+            <TextView
+                android:layout_marginLeft="36dp"
+                android:id="@+id/update_speaker_textview"
+                android:gravity="center"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:textStyle="normal"
+                android:textSize="16dp"
+                android:textColor="#b8000000"
+                android:text="업데이트 (스피커)"/>
+            <TextView
+                android:layout_marginRight="12dp"
+                android:layout_toLeftOf="@+id/update_speaker_arrow_icon"
+                android:id="@+id/update_speaker_status_textview"
+                android:gravity="center"
+                android:layout_weight="1"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:textStyle="normal"
+                android:textSize="16dp"
+                android:textColor="#b8000000"
+                android:text="최신"/>
+
+
+            <ImageView
+                android:id="@+id/update_speaker_arrow_icon"
+                android:layout_marginRight="32dp"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:src="@drawable/icon_arrow_right"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+
+
+            <View
+                android:layout_alignParentBottom="true"
+                android:background="@color/gray_background"
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginRight="30dp"
+                android:layout_marginLeft="30dp"/>
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/app_menu"
+            android:layout_width="match_parent"
+            android:layout_height="55dp">
+
+
+            <TextView
+                android:layout_marginLeft="36dp"
+                android:id="@+id/update_app_textview"
+                android:gravity="center"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:textStyle="normal"
+                android:textSize="16dp"
+                android:textColor="#b8000000"
+                android:text="업데이트 (어플)"/>
+            <TextView
+                android:layout_marginRight="12dp"
+                android:layout_toLeftOf="@+id/update_app_arrow_icon"
+                android:id="@+id/update_app_status_textview"
+                android:gravity="center"
+                android:layout_weight="1"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:textStyle="normal"
+                android:textSize="16dp"
+                android:textColor="#b8000000"
+                android:text="최신"/>
+
+
+            <ImageView
+                android:id="@+id/update_app_arrow_icon"
+                android:layout_marginRight="32dp"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:src="@drawable/icon_arrow_right"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+
+
+            <View
+                android:layout_alignParentBottom="true"
+                android:background="@color/gray_background"
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginRight="30dp"
+                android:layout_marginLeft="30dp"/>
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/log_menu"
+            android:layout_width="match_parent"
+            android:layout_height="55dp">
+
+
+            <TextView
+                android:layout_marginLeft="36dp"
+                android:id="@+id/log_textview"
+                android:gravity="center"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:textStyle="normal"
+                android:textSize="16dp"
+                android:textColor="#b8000000"
+                android:text="로그 파일"/>
+
+
+
+            <ImageView
+                android:id="@+id/log_icon"
+                android:layout_marginRight="32dp"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:src="@drawable/icon_arrow_right"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+
+
+            <View
+                android:layout_alignParentBottom="true"
+                android:background="@color/gray_background"
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginRight="30dp"
+                android:layout_marginLeft="30dp"/>
+        </RelativeLayout>
+
+
+    </LinearLayout>
+</layout>

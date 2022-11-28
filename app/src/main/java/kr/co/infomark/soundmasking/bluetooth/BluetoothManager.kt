@@ -8,9 +8,11 @@ import android.content.Context
 import android.media.AudioAttributes
 import android.media.MediaPlayer
 import android.os.IBinder
+import androidx.core.content.PackageManagerCompat.LOG_TAG
 import kr.co.infomark.soundmasking.IBluetoothA2dp
 import java.io.IOException
 import java.lang.reflect.Method
+
 
 class BluetoothManager(var context : Context) {
 
@@ -23,6 +25,7 @@ class BluetoothManager(var context : Context) {
     private lateinit var a2dp: BluetoothA2dp  //class to connect to an A2dp device
     private lateinit var ia2dp: IBluetoothA2dp
     private var mIsA2dpReady = false
+
 
     fun setIsA2dpReady(ready: Boolean) {
         mIsA2dpReady = ready
@@ -133,25 +136,33 @@ class BluetoothManager(var context : Context) {
 
 
 
-     fun playMusic() {
+     fun playMusic(path : String) {
+
+         if (mPlayer != null) {
+             mPlayer?.stop()
+             try {
+                 mPlayer?.prepare()
+             }  catch (e: IOException) {
+                 e.printStackTrace()
+             }
+         }
+
         //streaming music on the connected A2DP device
         mPlayer = MediaPlayer()
-        try {
-            mPlayer?.setAudioAttributes(
-                AudioAttributes.Builder()
-                    .setContentType(AudioAttributes.CONTENT_TYPE_MUSIC).build()
-            )
-            val descriptor = context.assets.openFd("testsong.mp3")
-            mPlayer?.setDataSource(descriptor.fileDescriptor, descriptor.startOffset, descriptor.length);
-//            mPlayer?.setDataSource(
-//                this,
-//                descriptor.fileDescriptor
-//            )
-            mPlayer?.prepare()
-            mPlayer?.start()
-        } catch (e: IOException) {
-            e.printStackTrace()
-        }
+         try {
+             mPlayer?.setAudioAttributes(
+                 AudioAttributes.Builder()
+                     .setContentType(AudioAttributes.CONTENT_TYPE_MUSIC).build()
+             )
+             val descriptor = context.assets.openFd("testsong.mp3")
+//            mPlayer?.setDataSource(descriptor.fileDescriptor, descriptor.startOffset, descriptor.length);
+             mPlayer?.setDataSource(path)
+             mPlayer?.prepare()
+             mPlayer?.start()
+         } catch (e: IOException) {
+             e.printStackTrace()
+         }
+
     }
 
     fun disConnectUsingBluetoothA2dp(deviceToConnect: BluetoothDevice?) {
