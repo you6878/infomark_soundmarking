@@ -31,7 +31,7 @@
             <TextView
                 android:layout_marginRight="12dp"
                 android:layout_toLeftOf="@+id/arrow_icon"
-                android:id="@+id/content_textview"
+                android:id="@+id/status_connect_textview"
                 android:gravity="center"
                 android:layout_weight="1"
                 android:layout_width="wrap_content"

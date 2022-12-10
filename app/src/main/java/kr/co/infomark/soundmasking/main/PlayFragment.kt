@@ -1,11 +1,19 @@
 package kr.co.infomark.soundmasking.main
 
+import android.graphics.Color
+import android.graphics.PorterDuff
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.databinding.DataBindingUtil
+import androidx.fragment.app.Fragment
+import kr.co.infomark.soundmasking.MainActivity
 import kr.co.infomark.soundmasking.R
+import kr.co.infomark.soundmasking.databinding.FragmentPlayBinding
+import java.util.*
+import java.util.concurrent.TimeUnit
+
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -21,7 +29,8 @@ class PlayFragment : Fragment() {
     // TODO: Rename and change types of parameters
     private var param1: String? = null
     private var param2: String? = null
-
+    private lateinit var binding : FragmentPlayBinding
+    lateinit var timer : Timer
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
@@ -34,9 +43,123 @@ class PlayFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
+        binding = DataBindingUtil.inflate(inflater,R.layout.fragment_play, container, false)
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_play, container, false)
+        binding.progressBar.progressDrawable.setColorFilter(Color.BLACK, PorterDuff.Mode.SRC_IN);
+
+        setMusicPlay()
+        setCheckTime()
+
+        return binding.root
     }
+    fun setMusicPlay(){
+        val musicBox = (requireActivity() as? MainActivity)?.musicBox
+        musicBox?.currentPlayMusicName?.observe(viewLifecycleOwner) {
+            binding.currentPlayTitle.text = it
+        }
+        binding.playBtn.setOnClickListener {
+            if(musicBox?.isPlay?.value == true){
+                musicBox.stopMusic()
+            }else{
+                musicBox?.playMusic()
+            }
+        }
+        binding.randomBtn.setOnClickListener {
+            musicBox?.eventRandomBtn()
+        }
+        binding.repeatBtn.setOnClickListener {
+            musicBox?.eventRepeatBtn()
+        }
+        binding.previewBtn.setOnClickListener {
+            musicBox?.previewMusic()
+        }
+        binding.nextBtn.setOnClickListener {
+            musicBox?.nextMusic()
+        }
+
+
+        musicBox?.isPlay?.observe(viewLifecycleOwner){
+            if(it){
+                binding.playBtn.setImageResource(R.drawable.ico_playlist_black)
+            }else{
+                binding.playBtn.setImageResource(R.drawable.ico_playbutton_play)
+
+            }
+        }
+
+
+        musicBox?.randomPlay?.observe(viewLifecycleOwner) {
+            if(it){
+                binding.randomBtn.setImageResource(R.drawable.ico_light_shuffle_activated)
+            }else{
+                binding.randomBtn.setImageResource(R.drawable.ico_light_shuffle_deactivated)
+            }
+        }
+
+        musicBox?.repeatPlay?.observe(viewLifecycleOwner) {
+            if(it){
+                binding.repeatBtn.setImageResource(R.drawable.ico_light_repeat_activated)
+            }else{
+                binding.repeatBtn.setImageResource(R.drawable.ico_light_repeat_deactivated)
+            }
+        }
+    }
+
+
+    fun setCheckTime(){
+        timer = Timer()
+        timer.scheduleAtFixedRate(object : TimerTask() {
+            override fun run() {
+                var mainActivity = activity as? MainActivity
+                var isPlaying = mainActivity?.musicBox?.isPlay?.value
+                if (isPlaying == true) {
+                    getCurrentTime()
+                }
+            }
+        }, 0, 1000)
+    }
+
+    fun getCurrentTime(){
+        try {
+            val mainActivity = requireActivity() as? MainActivity
+            val currentTime = mainActivity?.musicBox?.getMPlayerCurrentTime() ?: 0
+            val durationTime = mainActivity?.musicBox?.getMPlayerDurationTime() ?: 0
+            val seekbarGuage = (currentTime.toFloat() / durationTime.toFloat()) * 100
+            println(seekbarGuage)
+            mainActivity?.runOnUiThread {
+                binding.currentTimeTextview.text = setTime(currentTime.toLong());
+                binding.remainTimeTextview.text = setTime(durationTime.toLong());
+                binding.progressBar.progress = seekbarGuage.toInt()
+            }
+
+        }catch (e : Exception){
+
+        }
+    }
+
+    fun setTime(millis : Long) : String{
+        var res = ""
+        var minutes = TimeUnit.MILLISECONDS.toMinutes(millis)
+        var secounds = TimeUnit.MILLISECONDS.toSeconds(millis) -
+                TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(millis))
+
+
+        if(minutes.toString().count() == 2){
+            res += minutes.toString()
+        }else{
+            res += "0$minutes"
+        }
+        res += ":"
+
+        if(secounds.toString().count() == 2){
+            res += secounds.toString()
+        }else{
+            res += "0$secounds"
+        }
+        return res
+
+    }
+
 
     companion object {
         /**

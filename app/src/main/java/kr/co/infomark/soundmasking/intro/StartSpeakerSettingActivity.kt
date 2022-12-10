@@ -52,7 +52,7 @@ class StartSpeakerSettingActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(
             this,
-            kr.co.infomark.soundmasking.R.layout.activity_start_speaker_setting
+            R.layout.activity_start_speaker_setting
         )
         gson = Gson()
         bt = BluetoothSPP.getInstance(this)

@@ -1,11 +1,17 @@
 package kr.co.infomark.soundmasking.main
 
+import android.content.Intent
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.databinding.DataBindingUtil
+import kr.co.infomark.soundmasking.LogActivity
+import kr.co.infomark.soundmasking.MainActivity
 import kr.co.infomark.soundmasking.R
+import kr.co.infomark.soundmasking.databinding.FragmentMyPageBinding
+import kr.co.infomark.soundmasking.databinding.MypageItemBinding
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -21,6 +27,7 @@ class MyPageFragment : Fragment() {
     // TODO: Rename and change types of parameters
     private var param1: String? = null
     private var param2: String? = null
+    lateinit var binding: FragmentMyPageBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -35,7 +42,19 @@ class MyPageFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_my_page, container, false)
+        binding = DataBindingUtil.inflate(inflater, R.layout.fragment_my_page, container, false)
+        binding.logMenu.setOnClickListener {
+            startActivity(Intent(activity, LogActivity::class.java))
+        }
+        var mainActivity = requireActivity() as? MainActivity
+        mainActivity?.bluetoothManager?.bluetoothConnected?.observe(viewLifecycleOwner) {
+            if (it) {
+                binding.statusConnectTextview.text = "연결됨"
+            } else {
+                binding.statusConnectTextview.text = "연결 대기중"
+            }
+        }
+        return binding.root
     }
 
     companion object {

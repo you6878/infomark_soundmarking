@@ -2,40 +2,33 @@ package kr.co.infomark.soundmasking
 
 import android.bluetooth.BluetoothAdapter
 import android.bluetooth.BluetoothDevice
-import android.content.Intent
-import android.os.Build.VERSION_CODES.P
 import android.os.Bundle
 import android.os.Environment
 import android.os.Handler
 import android.os.Looper
-import android.util.Log
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import com.google.gson.Gson
-import kotlinx.coroutines.Delay
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
 import kr.co.infomark.soundmasking.bluetooth.BluetoothManager
 import kr.co.infomark.soundmasking.bluetooth.BluetoothSPP
-import kr.co.infomark.soundmasking.bluetooth.BluetoothState
 import kr.co.infomark.soundmasking.databinding.ActivityMainBinding
-import kr.co.infomark.soundmasking.intro.StartSpeakerSettingActivity
 import kr.co.infomark.soundmasking.main.HomeFragment
 import kr.co.infomark.soundmasking.main.ListFragment
 import kr.co.infomark.soundmasking.main.MyPageFragment
 import kr.co.infomark.soundmasking.main.PlayFragment
-import kr.co.infomark.soundmasking.model.*
+import kr.co.infomark.soundmasking.model.RemoveCommandModel
+import kr.co.infomark.soundmasking.model.WlanRemoveNetwork
+import kr.co.infomark.soundmasking.util.MusicBox
 import kr.co.infomark.soundmasking.util.Util
-import org.json.JSONObject
+import org.apache.tika.Tika
 import java.io.File
-import java.lang.reflect.Method
 
 
 class MainActivity : AppCompatActivity() {
     lateinit var binding : ActivityMainBinding
     lateinit var gson: Gson
+    val tika = Tika()
     var bluetoothManager = BluetoothManager(this)
     lateinit var bt: BluetoothSPP
     lateinit var selectDeivice: BluetoothDevice
@@ -46,9 +39,9 @@ class MainActivity : AppCompatActivity() {
     var list = ListFragment()
     var mypage = MyPageFragment()
 
+    val storageFiles = mutableListOf<File>()
 
-    val files = mutableListOf<String>()
-
+    val musicBox = MusicBox()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_main)
@@ -90,20 +83,22 @@ class MainActivity : AppCompatActivity() {
 
     fun lsDir(dir: File) {
         //contains list of all files ending with
-
-
         val listFile = dir.listFiles()
         if (listFile != null) {
             for (i in listFile.indices) {
                 if (listFile[i].isDirectory) { // if its a directory need to get the files under that directory
                     lsDir(listFile[i])
                 } else { // add path of  files to your arraylist for later use
-
                     //Do what ever u want
-                    files.add(listFile[i].absolutePath)
+                    val file = listFile[i]
+                    val mimeType = tika.detect(file)
+                    if(mimeType == "audio/mpeg"){
+                        storageFiles.add(File(listFile[i].absolutePath))
+                    }
                 }
             }
         }
+        musicBox.setPlayList(storageFiles)
     }
 
     fun resetDevice(){
@@ -115,7 +110,7 @@ class MainActivity : AppCompatActivity() {
         Handler(Looper.getMainLooper()).postDelayed({
             BluetoothAdapter.getDefaultAdapter().cancelDiscovery()
             bt.stopService()
-            bluetoothManager.releaseMediaPlayer()
+            musicBox.releaseMediaPlayer()
             bluetoothManager.disConnectUsingBluetoothA2dp(selectDeivice)
             removeBond(selectDeivice)
             Util.clearSharedPreference(this@MainActivity)
@@ -133,13 +128,12 @@ class MainActivity : AppCompatActivity() {
     override fun onDestroy() {
 
         bt.stopService()
-        bluetoothManager.releaseMediaPlayer()
+        musicBox.releaseMediaPlayer()
         bluetoothManager.disConnectUsingBluetoothA2dp(selectDeivice)
         super.onDestroy()
     }
 
     override fun onPause() {
-        bluetoothManager.releaseMediaPlayer()
         super.onPause()
     }
 }

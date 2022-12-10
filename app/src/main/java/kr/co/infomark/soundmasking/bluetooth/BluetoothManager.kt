@@ -9,6 +9,8 @@ import android.media.AudioAttributes
 import android.media.MediaPlayer
 import android.os.IBinder
 import androidx.core.content.PackageManagerCompat.LOG_TAG
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import kr.co.infomark.soundmasking.IBluetoothA2dp
 import java.io.IOException
 import java.lang.reflect.Method
@@ -19,20 +21,21 @@ class BluetoothManager(var context : Context) {
 
     private var isEnabled: Boolean = false
     private var REQUEST_ENABLE_BT = 0
-    private var mPlayer: MediaPlayer? = null
+
     private var device: BluetoothDevice? = null
     private var b: IBinder? = null
     private lateinit var a2dp: BluetoothA2dp  //class to connect to an A2dp device
     private lateinit var ia2dp: IBluetoothA2dp
     private var mIsA2dpReady = false
-
+    var bluetoothConnected : MutableLiveData<Boolean> = MutableLiveData(false)
 
     fun setIsA2dpReady(ready: Boolean) {
         mIsA2dpReady = ready
     }
 
 
-    fun connectUsingBluetoothA2dpCallback(deviceToConnect: BluetoothDevice, callback: (Boolean) -> Unit) {
+    fun connectUsingBluetoothA2dpCallback(deviceToConnect: BluetoothDevice) {
+
         try {
             val c2 = Class.forName("android.os.ServiceManager")
             val m2: Method = c2.getDeclaredMethod("getService", String::class.java)
@@ -63,7 +66,7 @@ class BluetoothManager(var context : Context) {
                             } catch (e: Exception) {
                                 e.printStackTrace()
                             }
-                            callback(true)
+                            bluetoothConnected.value = true
 
                         }
                     }, BluetoothProfile.A2DP
@@ -119,8 +122,7 @@ class BluetoothManager(var context : Context) {
                     }, BluetoothProfile.A2DP
                 )
             } else {
-                val c3 =
-                    Class.forName("android.bluetooth.IBluetoothA2dp")
+                val c3 = Class.forName("android.bluetooth.IBluetoothA2dp")
                 val s2 = c3.declaredClasses
                 val c = s2[0]
                 val m: Method = c.getDeclaredMethod("asInterface", IBinder::class.java)
@@ -136,34 +138,7 @@ class BluetoothManager(var context : Context) {
 
 
 
-     fun playMusic(path : String) {
 
-         if (mPlayer != null) {
-             mPlayer?.stop()
-             try {
-                 mPlayer?.prepare()
-             }  catch (e: IOException) {
-                 e.printStackTrace()
-             }
-         }
-
-        //streaming music on the connected A2DP device
-        mPlayer = MediaPlayer()
-         try {
-             mPlayer?.setAudioAttributes(
-                 AudioAttributes.Builder()
-                     .setContentType(AudioAttributes.CONTENT_TYPE_MUSIC).build()
-             )
-             val descriptor = context.assets.openFd("testsong.mp3")
-//            mPlayer?.setDataSource(descriptor.fileDescriptor, descriptor.startOffset, descriptor.length);
-             mPlayer?.setDataSource(path)
-             mPlayer?.prepare()
-             mPlayer?.start()
-         } catch (e: IOException) {
-             e.printStackTrace()
-         }
-
-    }
 
     fun disConnectUsingBluetoothA2dp(deviceToConnect: BluetoothDevice?) {
         try {
@@ -188,9 +163,7 @@ class BluetoothManager(var context : Context) {
         }
     }
 
-     fun releaseMediaPlayer() {
-        mPlayer?.release()
-    }
+
 
     fun enableBluetooth() {
 

@@ -11,6 +11,7 @@
 
 
         <ImageView
+            android:src="@drawable/ico_music_image"
             android:layout_alignParentLeft="true"
             android:id="@+id/iocn_imageview"
             android:layout_width="48dp"

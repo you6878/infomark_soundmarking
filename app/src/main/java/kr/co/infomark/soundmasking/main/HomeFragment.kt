@@ -58,6 +58,14 @@ class HomeFragment : Fragment() {
         // Inflate the layout for this fragment
         gson = Gson()
         binding = DataBindingUtil.inflate(inflater,R.layout.fragment_home,container,false)
+        var mainActivity = requireActivity() as? MainActivity
+        mainActivity?.bluetoothManager?.bluetoothConnected?.observe(viewLifecycleOwner) {
+            if (it) {
+                binding.speakerStatusTextview.text = "Connected"
+            } else {
+                binding.speakerStatusTextview.text = "Connecting"
+            }
+        }
         initView()
         return binding.root
     }
@@ -66,11 +74,11 @@ class HomeFragment : Fragment() {
         super.onResume()
         binding.ssidTextview.text = Util.getSharedPreferenceString(activity,Util.MAC)
         binding.wifiNameTextview.text = Util.getSharedPreferenceString(activity,Util.WIFI_NAME)
-        var bt = (activity as MainActivity).bt
-        if (!bt.isBluetoothEnabled) {
+        var bt = (activity as? MainActivity)?.bt
+        if (bt?.isBluetoothEnabled == false) {
             bt.enable()
         } else {
-            if (!bt.isServiceAvailable) {
+            if (bt?.isServiceAvailable == false) {
                 bt.setupService()
                 bt.startService(BluetoothState.DEVICE_OTHER)
                 //Auto Connect in exceoption
@@ -92,16 +100,16 @@ class HomeFragment : Fragment() {
 //            bluetoothManager.playMusic()
         }
         binding.logBtn.setOnClickListener {
-            startActivity(Intent(activity, LogActivity::class.java))
+//            startActivity(Intent(activity, LogActivity::class.java))
         }
         binding.startSpeakerSettingBtn.setOnClickListener {
-            var mainActivity = activity as MainActivity
-            mainActivity.resetDevice()
+            var mainActivity = activity as? MainActivity
+            mainActivity?.resetDevice()
         }
     }
     fun setBTListener(){
-        var bt = (activity as MainActivity).bt
-        bt.setOnDataReceivedListener { data, message ->
+        var bt = (activity as? MainActivity)?.bt
+        bt?.setOnDataReceivedListener { data, message ->
             println(message)
             var isLog = JSONObject(message).isNull("log")
             if(!isLog){
@@ -117,29 +125,24 @@ class HomeFragment : Fragment() {
         }
     }
     fun checkWifiState(){
-        var bt = (activity as MainActivity).bt
+        var bt = (activity as? MainActivity)?.bt
         GlobalScope.launch {
             delay(2000)
             var commandModel = CommandModel(WlanState)
-            bt.send(gson.toJson(commandModel))
+            bt?.send(gson.toJson(commandModel))
         }.start()
     }
 
     fun deviceCallback(){
-
         //Bluetooth Status
-        var  mainActivity = (activity as MainActivity)
+        var  mainActivity = (activity as? MainActivity)
         val mac = Util.getSharedPreferenceString(activity,Util.MAC)
-        mainActivity.selectDeivice = BluetoothAdapter.getDefaultAdapter().getRemoteDevice(mac)
-        mainActivity.bluetoothManager.enableBluetooth()
-        mainActivity.bluetoothManager.connectUsingBluetoothA2dpCallback(mainActivity.selectDeivice) {
-            if(it){
-                binding.speakerStatusTextview.text = "Connected"
-            }
-        }
+        mainActivity?.selectDeivice = BluetoothAdapter.getDefaultAdapter().getRemoteDevice(mac)
+        mainActivity?.bluetoothManager?.enableBluetooth()
+        mainActivity?.bluetoothManager?.connectUsingBluetoothA2dpCallback(mainActivity.selectDeivice)
         //Wifi Status
-        var bt = (activity as MainActivity).bt
-        bt.setBluetoothConnectionListener(object : BluetoothSPP.BluetoothConnectionListener {
+        var bt = (activity as? MainActivity)?.bt
+        bt?.setBluetoothConnectionListener(object : BluetoothSPP.BluetoothConnectionListener {
             override fun onDeviceConnected(name: String, address: String) {
                 checkWifiState()
             }

@@ -1,7 +1,7 @@
 package kr.co.infomark.soundmasking.main
 
+import android.media.MediaMetadataRetriever
 import android.os.Bundle
-import android.os.Environment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -14,7 +14,7 @@ import kr.co.infomark.soundmasking.R
 import kr.co.infomark.soundmasking.databinding.FragmentListBinding
 import kr.co.infomark.soundmasking.databinding.PlaylistItemBinding
 import java.io.File
-import java.net.URL
+
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -37,7 +37,7 @@ class ListFragment : Fragment() {
             param2 = it.getString(ARG_PARAM2)
         }
     }
-
+    val metaRetriever = MediaMetadataRetriever()
     lateinit var binding : FragmentListBinding
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -47,8 +47,8 @@ class ListFragment : Fragment() {
         binding = DataBindingUtil.inflate(inflater,R.layout.fragment_list,container,false)
         binding.fileRecyclerview.layoutManager = LinearLayoutManager(requireContext())
         binding.fileRecyclerview.apply {
-            val mainActivity = requireActivity() as MainActivity
-            adapter = PlayListAdapter(mainActivity.files)
+            val mainActivity = requireActivity() as? MainActivity
+            adapter = PlayListAdapter(mainActivity?.storageFiles)
         }
         return binding.root
     }
@@ -74,7 +74,7 @@ class ListFragment : Fragment() {
             }
     }
 
-    inner class PlayListAdapter(var files: MutableList<String>) : RecyclerView.Adapter<PlayListAdapter.PlayListItemViewHolder>() {
+    inner class PlayListAdapter(var files: MutableList<File>?) : RecyclerView.Adapter<PlayListAdapter.PlayListItemViewHolder>() {
 
         inner class PlayListItemViewHolder(val binding: PlaylistItemBinding) : RecyclerView.ViewHolder(binding.root)
 
@@ -85,19 +85,43 @@ class ListFragment : Fragment() {
         }
 
         override fun onBindViewHolder(holder: PlayListItemViewHolder, position: Int) {
-            var file = File(files[position])
-
-            holder.binding.contentTextview.text = file.name
-            holder.itemView.setOnClickListener {
-                var mainActivity = requireActivity() as MainActivity
-                mainActivity.bluetoothManager.playMusic(file.path)
+            files?.get(position)?.let { file ->
+                holder.binding.contentTextview.text = file.name
+                holder.binding.timelineTextview.text = getDurationWithMp3Spi(file.absolutePath)
+                holder.itemView.setOnClickListener {
+                    var mainActivity = requireActivity() as? MainActivity
+                    mainActivity?.musicBox?.playMusic(file.path)
+                }
             }
+
+
         }
 
         override fun getItemCount(): Int {
-            return files.size
+            return files?.size ?: 0
         }
 
+        private fun getDurationWithMp3Spi(path: String) : String {
 
+            metaRetriever.setDataSource(path)
+
+            var out = ""
+
+            val duration =
+                metaRetriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION)
+            val dur = duration!!.toLong()
+            val seconds = (dur % 60000 / 1000).toString()
+
+            val minutes = (dur / 60000).toString()
+
+            if (seconds.length == 1) {
+
+                    out =  "0$minutes:0$seconds"
+            } else {
+                out = "0$minutes:$seconds"
+
+            }
+            return out
+        }
     }
 }
