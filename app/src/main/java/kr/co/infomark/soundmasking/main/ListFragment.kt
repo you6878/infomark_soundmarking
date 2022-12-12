@@ -50,6 +50,10 @@ class ListFragment : Fragment() {
             val mainActivity = requireActivity() as? MainActivity
             adapter = PlayListAdapter(mainActivity?.storageFiles)
         }
+        var mainActivity = requireActivity() as? MainActivity
+        mainActivity?.musicBox?.currentPlayMusicName?.observe(viewLifecycleOwner) {
+            binding.fileRecyclerview.adapter?.notifyDataSetChanged()
+        }
         return binding.root
     }
 
@@ -86,6 +90,14 @@ class ListFragment : Fragment() {
 
         override fun onBindViewHolder(holder: PlayListItemViewHolder, position: Int) {
             files?.get(position)?.let { file ->
+                var mainActivity = requireActivity() as? MainActivity
+
+                if(mainActivity?.musicBox?.currentIndex == position){
+                    holder.binding.arrowIcon.setImageResource(R.drawable.ico_playlist_pause)
+                }else{
+                    holder.binding.arrowIcon.setImageResource(R.drawable.icon_playlist_play)
+                }
+
                 holder.binding.contentTextview.text = file.name
                 holder.binding.timelineTextview.text = getDurationWithMp3Spi(file.absolutePath)
                 holder.itemView.setOnClickListener {

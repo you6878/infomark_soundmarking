@@ -80,7 +80,7 @@ class PlayFragment : Fragment() {
 
         musicBox?.isPlay?.observe(viewLifecycleOwner){
             if(it){
-                binding.playBtn.setImageResource(R.drawable.ico_playlist_black)
+                binding.playBtn.setImageResource(R.drawable.ico_playbutton_pause)
             }else{
                 binding.playBtn.setImageResource(R.drawable.ico_playbutton_play)
 
