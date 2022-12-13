@@ -9,19 +9,25 @@ import android.os.Looper
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import com.google.gson.Gson
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import kr.co.infomark.soundmasking.bluetooth.BluetoothManager
 import kr.co.infomark.soundmasking.bluetooth.BluetoothSPP
+import kr.co.infomark.soundmasking.bluetooth.BluetoothState
 import kr.co.infomark.soundmasking.databinding.ActivityMainBinding
 import kr.co.infomark.soundmasking.main.HomeFragment
 import kr.co.infomark.soundmasking.main.ListFragment
 import kr.co.infomark.soundmasking.main.MyPageFragment
 import kr.co.infomark.soundmasking.main.PlayFragment
-import kr.co.infomark.soundmasking.model.RemoveCommandModel
-import kr.co.infomark.soundmasking.model.WlanRemoveNetwork
+import kr.co.infomark.soundmasking.model.*
 import kr.co.infomark.soundmasking.util.MusicBox
 import kr.co.infomark.soundmasking.util.Util
 import org.apache.tika.Tika
+import org.json.JSONObject
 import java.io.File
 
 
@@ -42,6 +48,11 @@ class MainActivity : AppCompatActivity() {
     val storageFiles = mutableListOf<File>()
 
     val musicBox = MusicBox()
+
+
+    /*ViewModel*/
+
+    var wifiConnectStatus : MutableLiveData<String> = MutableLiveData("Connecting")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_main)
@@ -100,6 +111,23 @@ class MainActivity : AppCompatActivity() {
         }
         musicBox.setPlayList(storageFiles)
     }
+    fun setBTListener(){
+
+        bt?.setOnDataReceivedListener { data, message ->
+            println(message)
+            var isLog = JSONObject(message).isNull("log")
+            if(!isLog){
+                return@setOnDataReceivedListener
+            }
+            var cmd = JSONObject(message).getString("cmd")
+            if(cmd == WlanState){
+                var model = gson.fromJson(message, DefaultModel::class.java)
+                if(model.result == "ok"){
+                    wifiConnectStatus.value = model.state
+                }
+            }
+        }
+    }
 
     fun resetDevice(){
         Toast.makeText(this,"장비 초기화를 시작합니다.", Toast.LENGTH_LONG).show()
@@ -123,6 +151,53 @@ class MainActivity : AppCompatActivity() {
         } catch (e: Exception) {
 
         }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        if (bt?.isBluetoothEnabled == false) {
+            bt.enable()
+        } else {
+            if (bt?.isServiceAvailable == false) {
+                bt.setupService()
+                bt.startService(BluetoothState.DEVICE_OTHER)
+                //Auto Connect in exceoption
+                if(bt.connectedDeviceAddress == null){
+                    val mac = Util.MAC
+                    bt.connect(Util.getSharedPreferenceString(this,mac))
+                }
+            }
+            deviceCallback()
+            setBTListener()
+        }
+    }
+    fun deviceCallback(){
+        //Bluetooth Status
+        val mac = Util.getSharedPreferenceString(this,Util.MAC)
+        selectDeivice = BluetoothAdapter.getDefaultAdapter().getRemoteDevice(mac)
+        bluetoothManager?.enableBluetooth()
+        bluetoothManager?.connectUsingBluetoothA2dpCallback(selectDeivice)
+        //Wifi Status
+        bt?.setBluetoothConnectionListener(object : BluetoothSPP.BluetoothConnectionListener {
+            override fun onDeviceConnected(name: String, address: String) {
+                checkWifiState()
+            }
+
+            override fun onDeviceDisconnected() {
+
+            }
+
+            override fun onDeviceConnectionFailed() {
+
+            }
+        })
+    }
+    fun checkWifiState(){
+        GlobalScope.launch {
+            delay(2000)
+            var commandModel = CommandModel(WlanState)
+            bt?.send(gson.toJson(commandModel))
+        }.start()
     }
 
     override fun onDestroy() {

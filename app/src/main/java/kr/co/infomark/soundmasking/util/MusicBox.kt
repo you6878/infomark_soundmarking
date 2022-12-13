@@ -50,6 +50,9 @@ class MusicBox :OnCompletionListener {
 
     }
     fun playMusic() {
+        if(playFiles.size == 0){
+            return
+        }
         val file = playFiles[currentIndex]
         if (mPlayer != null) {
             try {
@@ -99,6 +102,9 @@ class MusicBox :OnCompletionListener {
         playFiles = lists
     }
     fun nextMusic(){
+        if(playFiles.size == 0){
+            return
+        }
         val maxSize = playFiles.size - 1
         if(randomPlay.value == true){
             currentIndex = makeRandom(maxSize)
@@ -112,6 +118,9 @@ class MusicBox :OnCompletionListener {
         playMusic(file.absolutePath)
     }
     fun previewMusic(){
+        if(playFiles.size == 0){
+            return
+        }
         val maxSize = playFiles.size - 1
         if(randomPlay.value == true){
             currentIndex = makeRandom(maxSize)

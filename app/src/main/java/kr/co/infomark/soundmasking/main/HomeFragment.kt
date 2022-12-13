@@ -74,25 +74,17 @@ class HomeFragment : Fragment() {
         super.onResume()
         binding.ssidTextview.text = Util.getSharedPreferenceString(activity,Util.MAC)
         binding.wifiNameTextview.text = Util.getSharedPreferenceString(activity,Util.WIFI_NAME)
-        var bt = (activity as? MainActivity)?.bt
-        if (bt?.isBluetoothEnabled == false) {
-            bt.enable()
-        } else {
-            if (bt?.isServiceAvailable == false) {
-                bt.setupService()
-                bt.startService(BluetoothState.DEVICE_OTHER)
-                //Auto Connect in exceoption
-                if(bt.connectedDeviceAddress == null){
-                    val mac = Util.MAC
-                    bt.connect(Util.getSharedPreferenceString(activity,mac))
-                }
-            }
-            deviceCallback()
+        var mainActivity = requireActivity() as? MainActivity
+        mainActivity?.wifiConnectStatus?.observe(viewLifecycleOwner){
+            binding.wifiStatusTextview.text = it
         }
-        checkWifiState()
-        setBTListener()
+
 
     }
+    fun setConnectWifi(){
+        binding.wifiStatusTextview.text = "Connected"
+    }
+
 
 
     fun initView(){
@@ -107,55 +99,9 @@ class HomeFragment : Fragment() {
             mainActivity?.resetDevice()
         }
     }
-    fun setBTListener(){
-        var bt = (activity as? MainActivity)?.bt
-        bt?.setOnDataReceivedListener { data, message ->
-            println(message)
-            var isLog = JSONObject(message).isNull("log")
-            if(!isLog){
-                return@setOnDataReceivedListener
-            }
-            var cmd = JSONObject(message).getString("cmd")
-            if(cmd == WlanState){
-                var model = gson.fromJson(message, DefaultModel::class.java)
-                if(model.result == "ok"){
-                    binding.wifiStatusTextview.text = model.state
-                }
-            }
-        }
-    }
-    fun checkWifiState(){
-        var bt = (activity as? MainActivity)?.bt
-        GlobalScope.launch {
-            delay(2000)
-            var commandModel = CommandModel(WlanState)
-            bt?.send(gson.toJson(commandModel))
-        }.start()
-    }
 
-    fun deviceCallback(){
-        //Bluetooth Status
-        var  mainActivity = (activity as? MainActivity)
-        val mac = Util.getSharedPreferenceString(activity,Util.MAC)
-        mainActivity?.selectDeivice = BluetoothAdapter.getDefaultAdapter().getRemoteDevice(mac)
-        mainActivity?.bluetoothManager?.enableBluetooth()
-        mainActivity?.bluetoothManager?.connectUsingBluetoothA2dpCallback(mainActivity.selectDeivice)
-        //Wifi Status
-        var bt = (activity as? MainActivity)?.bt
-        bt?.setBluetoothConnectionListener(object : BluetoothSPP.BluetoothConnectionListener {
-            override fun onDeviceConnected(name: String, address: String) {
-                checkWifiState()
-            }
 
-            override fun onDeviceDisconnected() {
 
-            }
-
-            override fun onDeviceConnectionFailed() {
-
-            }
-        })
-    }
     companion object {
         /**
          * Use this factory method to create a new instance of

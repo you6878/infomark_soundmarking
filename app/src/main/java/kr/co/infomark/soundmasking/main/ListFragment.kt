@@ -92,7 +92,7 @@ class ListFragment : Fragment() {
             files?.get(position)?.let { file ->
                 var mainActivity = requireActivity() as? MainActivity
 
-                if(mainActivity?.musicBox?.currentIndex == position){
+                if(mainActivity?.musicBox?.currentIndex == position && mainActivity?.musicBox?.isPlay?.value == true){
                     holder.binding.arrowIcon.setImageResource(R.drawable.ico_playlist_pause)
                 }else{
                     holder.binding.arrowIcon.setImageResource(R.drawable.icon_playlist_play)
@@ -103,6 +103,8 @@ class ListFragment : Fragment() {
                 holder.itemView.setOnClickListener {
                     var mainActivity = requireActivity() as? MainActivity
                     mainActivity?.musicBox?.playMusic(file.path)
+                    mainActivity?.musicBox?.currentIndex = position
+                    notifyDataSetChanged()
                 }
             }
 
