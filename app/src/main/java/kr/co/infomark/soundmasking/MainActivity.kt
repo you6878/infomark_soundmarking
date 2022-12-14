@@ -181,6 +181,7 @@ class MainActivity : AppCompatActivity() {
         bt?.setBluetoothConnectionListener(object : BluetoothSPP.BluetoothConnectionListener {
             override fun onDeviceConnected(name: String, address: String) {
                 checkWifiState()
+
             }
 
             override fun onDeviceDisconnected() {

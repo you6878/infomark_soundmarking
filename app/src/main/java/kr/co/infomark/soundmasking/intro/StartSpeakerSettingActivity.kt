@@ -57,27 +57,30 @@ class StartSpeakerSettingActivity : AppCompatActivity() {
         gson = Gson()
         bt = BluetoothSPP.getInstance(this)
         mBTAdapter = BluetoothAdapter.getDefaultAdapter() // get a handle on the bluetooth radio
+        for (item in BluetoothAdapter.getDefaultAdapter().bondedDevices){
+            removeBond(item)
+        }
+
         devicesAdapter = PairedDevicesAdapter(::connectDevice)
         setRecyclerview()
         setButton()
 
         if (!bt.isBluetoothAvailable) { //블루투스 사용 불가라면
-            // 사용불가라고 토스트 띄워줌
-            Toast.makeText(
-                this, "Bluetooth is not available", Toast.LENGTH_SHORT
-            ).show();
-            // 화면 종료
+
             finish();
         }
-
         val searchFilter = IntentFilter()
-//        searchFilter.addAction(BluetoothAdapter.ACTION_DISCOVERY_STARTED) //BluetoothAdapter.ACTION_DISCOVERY_STARTED : 블루투스 검색 시작
-//        searchFilter.addAction(BluetoothDevice.ACTION_FOUND) //BluetoothDevice.ACTION_FOUND : 블루투스 디바이스 찾음
-//        searchFilter.addAction(BluetoothAdapter.ACTION_DISCOVERY_FINISHED) //BluetoothAdapter.ACTION_DISCOVERY_FINISHED : 블루투스 검색 종료
 
         searchFilter.addAction(BluetoothDevice.ACTION_BOND_STATE_CHANGED)
         setBTListener()
 
+    }
+    fun removeBond(device: BluetoothDevice) {
+        try {
+            device::class.java.getMethod("removeBond").invoke(device)
+        } catch (e: Exception) {
+
+        }
     }
     fun setBTListener(){
         bt.setOnDataReceivedListener { data, message ->
@@ -123,15 +126,15 @@ class StartSpeakerSettingActivity : AppCompatActivity() {
             }
 
             override fun onDeviceDisconnected() {
-                Toast.makeText(
-                    applicationContext, "Connection lost", Toast.LENGTH_SHORT
-                ).show()
+//                Toast.makeText(
+//                    applicationContext, "Connection lost", Toast.LENGTH_SHORT
+//                ).show()
             }
 
             override fun onDeviceConnectionFailed() {
-                Toast.makeText(
-                    applicationContext, "Try to connect", Toast.LENGTH_SHORT
-                ).show()
+//                Toast.makeText(
+//                    applicationContext, "Try to connect", Toast.LENGTH_SHORT
+//                ).show()
             }
         })
 
@@ -163,13 +166,10 @@ class StartSpeakerSettingActivity : AppCompatActivity() {
             if (!bt.isServiceAvailable) {
                 bt.setupService()
                 bt.startService(BluetoothState.DEVICE_OTHER)
+
             }
         }
-
         discover()
-
-
-
     }
 
     private fun setRecyclerview() {
@@ -214,8 +214,8 @@ class StartSpeakerSettingActivity : AppCompatActivity() {
         // Check if the device is already discovering
         if (mBTAdapter.isDiscovering) {
             mBTAdapter.cancelDiscovery()
-            Toast.makeText(applicationContext, getString(R.string.DisStop), Toast.LENGTH_SHORT)
-                .show()
+//            Toast.makeText(applicationContext, getString(R.string.DisStop), Toast.LENGTH_SHORT)
+//                .show()
         }
         if (mBTAdapter.isEnabled) {
             mBTAdapter.startDiscovery()
@@ -226,11 +226,11 @@ class StartSpeakerSettingActivity : AppCompatActivity() {
             ).show()
             registerReceiver(blReceiver, IntentFilter(BluetoothDevice.ACTION_FOUND))
         } else {
-            Toast.makeText(
-                applicationContext,
-                getString(R.string.BTnotOn),
-                Toast.LENGTH_SHORT
-            ).show()
+//            Toast.makeText(
+//                applicationContext,
+//                getString(R.string.BTnotOn),
+//                Toast.LENGTH_SHORT
+//            ).show()
         }
     }
     fun handleDialogClose(handleDialogClose: DialogFragment) {

@@ -3,6 +3,8 @@ package kr.co.infomark.soundmasking.intro
 import android.Manifest
 import android.Manifest.permission.READ_EXTERNAL_STORAGE
 import android.Manifest.permission.WRITE_EXTERNAL_STORAGE
+import android.bluetooth.BluetoothAdapter
+import android.bluetooth.BluetoothDevice
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
@@ -76,6 +78,7 @@ class SplashActivity : AppCompatActivity() {
             }else{
                 finish()
                 if(mac.isEmpty()){
+                    removeBond()
                     startActivity(Intent(this, StartSpeakerSettingActivity::class.java))
                 }else if(wifiName.isEmpty()){
                     startActivity(Intent(this, SelectSpeakerWifiActivity::class.java))
@@ -89,6 +92,7 @@ class SplashActivity : AppCompatActivity() {
             }else{
                 finish()
                 if(mac.isEmpty()){
+                    removeBond()
                     startActivity(Intent(this, StartSpeakerSettingActivity::class.java))
                 }else if(wifiName.isEmpty()){
                     startActivity(Intent(this, SelectSpeakerWifiActivity::class.java))
@@ -107,6 +111,17 @@ class SplashActivity : AppCompatActivity() {
             }
         }
         return true
+    }
+
+    fun removeBond() {
+        for (device in BluetoothAdapter.getDefaultAdapter().bondedDevices){
+            device::class.java.getMethod("removeBond").invoke(device)
+        }
+//        try {
+//
+//        } catch (e: Exception) {
+//
+//        }
     }
 
     private fun checkStoragePermission(): Boolean {

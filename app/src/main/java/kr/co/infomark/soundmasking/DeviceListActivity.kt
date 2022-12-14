@@ -40,9 +40,9 @@ class DeviceListActivity : Activity() {
         bt = BluetoothSPP.getInstance(this)
         gson = Gson()
         if (!bt.isBluetoothAvailable) {
-            Toast.makeText(
-                applicationContext, "Bluetooth is not available", Toast.LENGTH_SHORT
-            ).show()
+//            Toast.makeText(
+//                applicationContext, "Bluetooth is not available", Toast.LENGTH_SHORT
+//            ).show()
             finish()
         }
         bt.setOnDataReceivedListener { data, message ->
@@ -59,20 +59,20 @@ class DeviceListActivity : Activity() {
         bt.setBluetoothConnectionListener(object : BluetoothConnectionListener {
             override fun onDeviceConnected(name: String, address: String) {
                 Toast.makeText(
-                    applicationContext, "Connected to $name\n$address", Toast.LENGTH_SHORT
+                    applicationContext, "Pairing $name\n$address", Toast.LENGTH_SHORT
                 ).show()
             }
 
             override fun onDeviceDisconnected() {
-                Toast.makeText(
-                    applicationContext, "Connection lost", Toast.LENGTH_SHORT
-                ).show()
+//                Toast.makeText(
+//                    applicationContext, "Connection lost", Toast.LENGTH_SHORT
+//                ).show()
             }
 
             override fun onDeviceConnectionFailed() {
-                Toast.makeText(
-                    applicationContext, "Unable to connect", Toast.LENGTH_SHORT
-                ).show()
+//                Toast.makeText(
+//                    applicationContext, "Unable to connect", Toast.LENGTH_SHORT
+//                ).show()
             }
         })
         val btnConnect = findViewById<View>(R.id.btnConnect) as Button
@@ -120,9 +120,9 @@ class DeviceListActivity : Activity() {
             if (resultCode == RESULT_OK) {
                 bt.setupService()
             } else {
-                Toast.makeText(
-                    applicationContext, "Bluetooth was not enabled.", Toast.LENGTH_SHORT
-                ).show()
+//                Toast.makeText(
+//                    applicationContext, "Bluetooth was not enabled.", Toast.LENGTH_SHORT
+//                ).show()
                 finish()
             }
         }

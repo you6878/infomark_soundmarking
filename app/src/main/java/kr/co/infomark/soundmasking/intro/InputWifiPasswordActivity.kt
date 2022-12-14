@@ -68,6 +68,10 @@ class InputWifiPasswordActivity : AppCompatActivity() {
                     val mac = Util.MAC
                     bt.connect(Util.getSharedPreferenceString(this,mac))
                 }
+            }else{
+                var commandModel = RemoveCommandModel(WlanRemoveNetwork,binding.wifiIdTextview.text.toString())
+                println(commandModel)
+                bt.send(gson.toJson(commandModel));
             }
         }
         bt.setBluetoothConnectionListener(object : BluetoothSPP.BluetoothConnectionListener {

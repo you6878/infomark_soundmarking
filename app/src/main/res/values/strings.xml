@@ -15,8 +15,8 @@
     <string name="BTturOff">Bluetooth turned off</string>
     <string name="cConnet">Connecting…</string>
     <string name="ErrSockCrea">Socket creation failed</string>
-    <string name="DisStart">Discovery started</string>
-    <string name="DisStop">Discovery stopped</string>
+    <string name="DisStart">블루투스 검색 시작</string>
+    <string name="DisStop">블루투스 검색 정지</string>
     <string name="status">"Status: "</string>
     <string name="discover_new_devices">Discover new device</string>
     <string name="off">OFF</string>

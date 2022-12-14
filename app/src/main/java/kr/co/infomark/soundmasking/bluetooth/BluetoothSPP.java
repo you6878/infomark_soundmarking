@@ -350,8 +350,10 @@ public class BluetoothSPP {
         		mAutoConnectionListener.onNewConnection(arr_name[c], arr_address[c]);
         	if(arr_filter_address.size() > 0) 
         		connect(arr_filter_address.get(c));
-        	else 
-        		Toast.makeText(mContext, "Device name mismatch", Toast.LENGTH_SHORT).show();
+        	else {
+
+			}
+//        		Toast.makeText(mContext, "Device name mismatch", Toast.LENGTH_SHORT).show();
     	}
     }
 }
