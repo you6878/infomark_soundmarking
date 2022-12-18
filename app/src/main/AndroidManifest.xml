@@ -16,8 +16,7 @@
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
     <uses-permission android:name="android.permission.CHANGE_WIFI_STATE" />
-
-    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
 
     <permission
         android:name="android.permission.BLUETOOTH"
@@ -35,17 +34,21 @@
 
     <application
         android:allowBackup="true"
-        android:requestLegacyExternalStorage="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
         android:fullBackupContent="@xml/backup_rules"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
+        android:requestLegacyExternalStorage="true"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.SoundMasking"
         tools:targetApi="31">
         <activity
-            android:name=".LogActivity"
+            android:name=".main.DevelopActivity"
+            android:exported="false">
+        </activity>
+        <activity
+            android:name=".main.LogActivity"
             android:exported="false" />
         <activity
             android:name=".intro.SpeakerConnectCompleteActivity"
@@ -58,10 +61,10 @@
             android:exported="false" />
         <activity
             android:name=".intro.SelectSpeakerWifiActivity"
-            android:exported="true"></activity>
+            android:exported="true" />
         <activity
             android:name=".intro.StartSpeakerSettingActivity"
-            android:exported="true"></activity>
+            android:exported="true" />
         <activity android:name=".DeviceListActivity" />
         <activity
             android:name=".bluetooth.DeviceList"
@@ -71,14 +74,13 @@
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
         <activity
             android:name=".MainActivity"
-            android:exported="true">
-
-        </activity>
+            android:exported="true"></activity>
     </application>
 
 </manifest>

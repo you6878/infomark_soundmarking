@@ -197,6 +197,44 @@
                 android:layout_marginLeft="30dp"/>
         </RelativeLayout>
 
+        <RelativeLayout
+            android:id="@+id/dev_menu"
+            android:layout_width="match_parent"
+            android:layout_height="55dp">
+
+
+            <TextView
+                android:layout_marginLeft="36dp"
+                android:id="@+id/dev_textview"
+                android:gravity="center"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:textStyle="normal"
+                android:textSize="16dp"
+                android:textColor="#b8000000"
+                android:text="개발자 모드"/>
+
+
+
+            <ImageView
+                android:id="@+id/dev_icon"
+                android:layout_marginRight="32dp"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:src="@drawable/icon_arrow_right"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+
+
+            <View
+                android:layout_alignParentBottom="true"
+                android:background="@color/gray_background"
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginRight="30dp"
+                android:layout_marginLeft="30dp"/>
+        </RelativeLayout>
+
 
     </LinearLayout>
 </layout>

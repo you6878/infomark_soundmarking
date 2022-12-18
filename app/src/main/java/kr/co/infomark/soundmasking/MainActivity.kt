@@ -2,6 +2,7 @@ package kr.co.infomark.soundmasking
 
 import android.bluetooth.BluetoothAdapter
 import android.bluetooth.BluetoothDevice
+import android.content.Intent
 import android.os.Bundle
 import android.os.Environment
 import android.os.Handler
@@ -19,6 +20,8 @@ import kr.co.infomark.soundmasking.bluetooth.BluetoothManager
 import kr.co.infomark.soundmasking.bluetooth.BluetoothSPP
 import kr.co.infomark.soundmasking.bluetooth.BluetoothState
 import kr.co.infomark.soundmasking.databinding.ActivityMainBinding
+import kr.co.infomark.soundmasking.intro.SelectSpeakerWifiActivity
+import kr.co.infomark.soundmasking.intro.StartSpeakerSettingActivity
 import kr.co.infomark.soundmasking.main.HomeFragment
 import kr.co.infomark.soundmasking.main.ListFragment
 import kr.co.infomark.soundmasking.main.MyPageFragment
@@ -68,21 +71,25 @@ class MainActivity : AppCompatActivity() {
             disalbeGrayEvent()
             binding.homeImage.setImageResource(R.drawable.ico_home_black)
             supportFragmentManager.beginTransaction().replace(R.id.main_content,home).commit()
+            binding.titleTextview.text = "홈"
         }
         binding.playBtn.setOnClickListener {
             disalbeGrayEvent()
             binding.playImage.setImageResource(R.drawable.ico_player_black)
             supportFragmentManager.beginTransaction().replace(R.id.main_content,play).commit()
+            binding.titleTextview.text = "플레이어"
         }
         binding.listBtn.setOnClickListener {
             disalbeGrayEvent()
             binding.listImage.setImageResource(R.drawable.ico_playlist_black)
             supportFragmentManager.beginTransaction().replace(R.id.main_content,list).commit()
+            binding.titleTextview.text = "재생목록"
         }
         binding.mypageBtn.setOnClickListener {
             disalbeGrayEvent()
             binding.mypageImage.setImageResource(R.drawable.ico_mypage_black)
             supportFragmentManager.beginTransaction().replace(R.id.main_content,mypage).commit()
+            binding.titleTextview.text = "마이페이지"
         }
     }
     fun disalbeGrayEvent(){
@@ -126,6 +133,11 @@ class MainActivity : AppCompatActivity() {
                     wifiConnectStatus.value = model.state
                 }
             }
+            if(cmd == WlanRemoveNetwork){
+                var i = Intent(this, SelectSpeakerWifiActivity::class.java)
+                i.putExtra("RESET",true)
+                startActivity(i)
+            }
         }
     }
 
@@ -144,6 +156,40 @@ class MainActivity : AppCompatActivity() {
             Util.clearSharedPreference(this@MainActivity)
             finish()
         },1000)
+    }
+    fun resetWifi(){
+        Toast.makeText(this,"와이파이 초기화를 시작합니다.", Toast.LENGTH_LONG).show()
+        var wifiName = Util.getSharedPreferenceString(this, Util.WIFI_NAME)
+        if(wifiName == "설정 대기 중"){
+            var i = Intent(this, SelectSpeakerWifiActivity::class.java)
+            startActivity(i)
+
+        }else{
+
+            var commandModel = RemoveCommandModel(WlanRemoveNetwork, Util.getSharedPreferenceString(this, Util.WIFI_NAME))
+            bt.send(gson.toJson(commandModel));
+        }
+
+
+
+    }
+    fun resetBluetoothDevice(){
+        Toast.makeText(this,"스피커 연결을 초기화를 시작합니다.", Toast.LENGTH_LONG).show()
+        removeBond(selectDeivice)
+
+        Handler(Looper.getMainLooper()).postDelayed({
+            BluetoothAdapter.getDefaultAdapter().cancelDiscovery()
+            bt.stopService()
+            musicBox.releaseMediaPlayer()
+            bluetoothManager.disConnectUsingBluetoothA2dp(selectDeivice)
+
+            Util.clearSharedPreference(this@MainActivity)
+            finish()
+            val i = Intent(this,StartSpeakerSettingActivity::class.java);
+            startActivity(i)
+        },3000)
+
+
     }
     fun removeBond(device: BluetoothDevice) {
         try {
@@ -180,7 +226,6 @@ class MainActivity : AppCompatActivity() {
         //Wifi Status
         bt?.setBluetoothConnectionListener(object : BluetoothSPP.BluetoothConnectionListener {
             override fun onDeviceConnected(name: String, address: String) {
-                checkWifiState()
 
             }
 
@@ -192,6 +237,7 @@ class MainActivity : AppCompatActivity() {
 
             }
         })
+        checkWifiState()
     }
     fun checkWifiState(){
         GlobalScope.launch {

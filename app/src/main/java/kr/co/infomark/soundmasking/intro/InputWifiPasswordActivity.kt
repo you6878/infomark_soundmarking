@@ -33,25 +33,7 @@ class InputWifiPasswordActivity : AppCompatActivity() {
 
         initView()
 
-        bt.setOnDataReceivedListener { data, message ->
-            var isLog = JSONObject(message).isNull("log")
-            if(!isLog){
-                return@setOnDataReceivedListener
-            }
-            println(message)
 
-            var cmd = JSONObject(message).getString("cmd")
-            if(cmd == WlanAddNetwork){
-                var model = gson.fromJson(message, DefaultModel::class.java)
-                if(model.result == "ok"){
-                    setResult(RESULT_OK)
-                    finish()
-                }else{
-                    Toast.makeText(this,"와이파이 정보가 정확하지 않습니다.",Toast.LENGTH_LONG).show()
-                }
-            }
-
-        }
     }
 
     override fun onResume() {
@@ -59,7 +41,7 @@ class InputWifiPasswordActivity : AppCompatActivity() {
         if (!bt.isBluetoothEnabled) {
             bt.enable()
         } else {
-            if (!bt.isServiceAvailable) {
+            if (!bt.isServiceAvailable && !bt.isConnected) {
                 bt.setupService()
                 bt.startService(BluetoothState.DEVICE_OTHER)
 
@@ -76,9 +58,7 @@ class InputWifiPasswordActivity : AppCompatActivity() {
         }
         bt.setBluetoothConnectionListener(object : BluetoothSPP.BluetoothConnectionListener {
             override fun onDeviceConnected(name: String, address: String) {
-                var commandModel = RemoveCommandModel(WlanRemoveNetwork,binding.wifiIdTextview.text.toString())
-                println(commandModel)
-                bt.send(gson.toJson(commandModel));
+
             }
 
             override fun onDeviceDisconnected() {
@@ -89,6 +69,23 @@ class InputWifiPasswordActivity : AppCompatActivity() {
 
             }
         })
+        bt.setOnDataReceivedListener { data, message ->
+            var isLog = JSONObject(message).isNull("log")
+            if(!isLog){
+                return@setOnDataReceivedListener
+            }
+
+            var cmd = JSONObject(message).getString("cmd")
+            if(cmd == WlanAddNetwork){
+                var model = gson.fromJson(message, DefaultModel::class.java)
+                if(model.result == "ok"){
+                    setResult(RESULT_OK)
+                    finish()
+                }else{
+                    Toast.makeText(this,"와이파이 정보가 정확하지 않습니다.",Toast.LENGTH_LONG).show()
+                }
+            }
+        }
     }
     fun initView(){
         val id =  intent.getStringExtra("SSID")
@@ -105,7 +102,6 @@ class InputWifiPasswordActivity : AppCompatActivity() {
         binding.speakerStartPopupCancel.setOnClickListener { finish() }
         binding.toolbarBackLeft.setOnClickListener { finish() }
         binding.speakerStartPopupApply.setOnClickListener {
-
             var commandModel = CommandModel(WlanAddNetwork,binding.wifiIdTextview.text.toString(),binding.passwordWifiEdittext.text.toString())
             bt.send(gson.toJson(commandModel));
         }

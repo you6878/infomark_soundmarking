@@ -1,29 +1,16 @@
 package kr.co.infomark.soundmasking.main
 
-import android.bluetooth.BluetoothAdapter
-import android.content.Intent
 import android.os.Bundle
-import android.os.Handler
-import android.os.Looper
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.databinding.DataBindingUtil
 import com.google.gson.Gson
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
-import kr.co.infomark.soundmasking.LogActivity
 import kr.co.infomark.soundmasking.MainActivity
 import kr.co.infomark.soundmasking.R
-import kr.co.infomark.soundmasking.bluetooth.BluetoothSPP
-import kr.co.infomark.soundmasking.bluetooth.BluetoothState
 import kr.co.infomark.soundmasking.databinding.FragmentHomeBinding
-import kr.co.infomark.soundmasking.model.*
 import kr.co.infomark.soundmasking.util.Util
-import org.json.JSONObject
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -65,6 +52,17 @@ class HomeFragment : Fragment() {
             } else {
                 binding.speakerStatusTextview.text = "Connecting"
             }
+        }
+        binding.wifiLinear.setOnLongClickListener {
+
+            mainActivity?.resetWifi()
+            true
+        }
+        binding.speakerLinear.setOnLongClickListener {
+
+            var mainActivity = requireActivity() as? MainActivity
+            mainActivity?.resetBluetoothDevice()
+            true
         }
         initView()
         return binding.root

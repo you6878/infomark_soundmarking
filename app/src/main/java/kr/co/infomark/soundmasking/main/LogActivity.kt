@@ -1,4 +1,4 @@
-package kr.co.infomark.soundmasking
+package kr.co.infomark.soundmasking.main
 
 import android.os.Bundle
 import android.widget.LinearLayout
@@ -7,13 +7,14 @@ import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.gson.Gson
+import kr.co.infomark.soundmasking.LogListAdapter
+import kr.co.infomark.soundmasking.R
 import kr.co.infomark.soundmasking.bluetooth.BluetoothSPP
 import kr.co.infomark.soundmasking.databinding.ActivityLogBinding
 import kr.co.infomark.soundmasking.model.LogModel
 import kr.co.infomark.soundmasking.util.Util
 import org.json.JSONObject
 import java.util.*
-import kotlin.collections.ArrayList
 
 
 class LogActivity : AppCompatActivity() {
@@ -25,7 +26,7 @@ class LogActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         gson = Gson()
         bt =  BluetoothSPP.getInstance(this)
-        binding = DataBindingUtil.setContentView(this,R.layout.activity_log)
+        binding = DataBindingUtil.setContentView(this, R.layout.activity_log)
         binding.toolbarBackLeft.setOnClickListener { finish() }
         binding.logRecyclerview.layoutManager = LinearLayoutManager(this)
         binding.logRecyclerview.addItemDecoration(DividerItemDecoration(this, LinearLayout.VERTICAL))

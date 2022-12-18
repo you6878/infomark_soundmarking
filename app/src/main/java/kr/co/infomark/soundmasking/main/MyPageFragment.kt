@@ -6,12 +6,11 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.databinding.DataBindingUtil
-import kr.co.infomark.soundmasking.LogActivity
 import kr.co.infomark.soundmasking.MainActivity
 import kr.co.infomark.soundmasking.R
 import kr.co.infomark.soundmasking.databinding.FragmentMyPageBinding
-import kr.co.infomark.soundmasking.databinding.MypageItemBinding
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -45,6 +44,13 @@ class MyPageFragment : Fragment() {
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_my_page, container, false)
         binding.logMenu.setOnClickListener {
             startActivity(Intent(activity, LogActivity::class.java))
+        }
+        binding.devMenu.setOnClickListener {
+            var mainActivity = requireActivity() as? MainActivity
+            if(mainActivity?.bt?.isConnected == true){
+                startActivity(Intent(activity, DevelopActivity::class.java))
+            }
+
         }
         var mainActivity = requireActivity() as? MainActivity
         mainActivity?.bluetoothManager?.bluetoothConnected?.observe(viewLifecycleOwner) {

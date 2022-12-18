@@ -20,7 +20,7 @@ class SpeakerConnectCompleteActivity : AppCompatActivity() {
         gson = Gson()
         binding.wifiConnectCompleteButton.setOnClickListener {
 
-            val fromMainActivity = intent.getBooleanExtra("fromMain",false);
+            val fromMainActivity = intent.getBooleanExtra("RESET",false);
             if(!fromMainActivity){
                 startActivity(Intent(this,MainActivity::class.java))
             }

@@ -110,7 +110,13 @@ class StartSpeakerSettingActivity : AppCompatActivity() {
                 var wifis = gson.fromJson(message, WlanNetworkListModel::class.java)
                 for (item in wifis.data){
                     if(item.status == "current"){
-                        Util.putSharedPreferenceString(this@StartSpeakerSettingActivity,Util.WIFI_NAME, item.ssid)
+                        var ssid = item.ssid
+
+                        if(ssid.length > 1){
+                            ssid = ssid.substring(1,ssid.length - 1)
+                        }
+
+                        Util.putSharedPreferenceString(this@StartSpeakerSettingActivity,Util.WIFI_NAME, ssid)
                         binding.progressCir.visibility = View.GONE
                         val dialog = CanUseSpeakerDialogFragment()
                         dialog.show(supportFragmentManager, "CanUseSpeakerDialogFragment")
@@ -163,7 +169,7 @@ class StartSpeakerSettingActivity : AppCompatActivity() {
         if (!bt.isBluetoothEnabled) {
             bt.enable()
         } else {
-            if (!bt.isServiceAvailable) {
+            if (!bt.isServiceAvailable ) {
                 bt.setupService()
                 bt.startService(BluetoothState.DEVICE_OTHER)
 

@@ -57,20 +57,43 @@
             android:layout_marginLeft="16dp"
             android:layout_marginTop="40dp"
             android:layout_marginRight="16dp"
-            android:layout_marginBottom="40dp"
+            android:layout_marginBottom="100dp"
             tools:listitem="@layout/select_wifi_item" />
-
-        <androidx.appcompat.widget.AppCompatButton
-            android:id="@+id/wifi_refresh_button"
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="40dp"
             android:layout_alignParentBottom="true"
             android:layout_marginLeft="16dp"
             android:layout_marginRight="16dp"
             android:layout_marginBottom="24dp"
-            android:background="@drawable/black_btn"
-            android:text="새로고침"
-            android:textColor="@color/white" />
+            >
+            <androidx.appcompat.widget.AppCompatButton
+                android:id="@+id/wifi_cancle_button"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="40dp"
+                android:layout_alignParentBottom="true"
+                android:layout_marginLeft="16dp"
+                android:layout_marginRight="16dp"
+                android:layout_marginBottom="24dp"
+                android:background="@drawable/black_btn"
+                android:text="건너뛰기"
+                android:textColor="@color/white" />
+            <androidx.appcompat.widget.AppCompatButton
+                android:id="@+id/wifi_refresh_button"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="40dp"
+                android:layout_alignParentBottom="true"
+                android:layout_marginLeft="16dp"
+                android:layout_marginRight="16dp"
+                android:layout_marginBottom="24dp"
+                android:background="@drawable/black_btn"
+                android:text="새로고침"
+                android:textColor="@color/white" />
+
+        </LinearLayout>
+
 
         <com.google.android.material.progressindicator.CircularProgressIndicator
             android:id="@+id/progress_cir"

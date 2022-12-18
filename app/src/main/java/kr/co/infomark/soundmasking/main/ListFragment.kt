@@ -94,18 +94,26 @@ class ListFragment : Fragment() {
 
                 if(mainActivity?.musicBox?.currentIndex == position && mainActivity?.musicBox?.isPlay?.value == true){
                     holder.binding.arrowIcon.setImageResource(R.drawable.ico_playlist_pause)
+                    holder.itemView.setOnClickListener {
+                        var mainActivity = requireActivity() as? MainActivity
+                        mainActivity?.musicBox?.stopMusic()
+                        mainActivity?.musicBox?.currentPlayMusicName?.value = ""
+                        mainActivity?.musicBox?.currentIndex = -1
+                        notifyDataSetChanged()
+                    }
                 }else{
                     holder.binding.arrowIcon.setImageResource(R.drawable.icon_playlist_play)
+                    holder.itemView.setOnClickListener {
+                        var mainActivity = requireActivity() as? MainActivity
+                        mainActivity?.musicBox?.playMusic(file.path)
+                        mainActivity?.musicBox?.currentIndex = position
+                        notifyDataSetChanged()
+                    }
                 }
 
                 holder.binding.contentTextview.text = file.name
                 holder.binding.timelineTextview.text = getDurationWithMp3Spi(file.absolutePath)
-                holder.itemView.setOnClickListener {
-                    var mainActivity = requireActivity() as? MainActivity
-                    mainActivity?.musicBox?.playMusic(file.path)
-                    mainActivity?.musicBox?.currentIndex = position
-                    notifyDataSetChanged()
-                }
+
             }
 
 
@@ -123,7 +131,7 @@ class ListFragment : Fragment() {
 
             val duration =
                 metaRetriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION)
-            val dur = duration!!.toLong()
+            val dur = duration?.toLong() ?: 0L
             val seconds = (dur % 60000 / 1000).toString()
 
             val minutes = (dur / 60000).toString()

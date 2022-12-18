@@ -36,7 +36,7 @@ public class BluetoothSPP {
 
     private boolean isAutoConnecting = false;
     private boolean isAutoConnectionEnabled = false;
-    private boolean isConnected = false;
+	public boolean isConnected = false;
 	private boolean isConnecting = false;
 	private boolean isServiceRunning = false;
     
@@ -225,6 +225,9 @@ public class BluetoothSPP {
     }
     
     public void connect(String address) {
+		if(mChatService == null){
+			setupService();
+		}
         BluetoothDevice device = mBluetoothAdapter.getRemoteDevice(address);
         mChatService.connect(device);
     }

@@ -37,6 +37,15 @@ class SelectSpeakerWifiActivity : AppCompatActivity() {
         binding.wifiRefreshButton.setOnClickListener {
             scanWifiList()
         }
+        binding.wifiCancleButton.setOnClickListener {
+            var Empty = "설정 대기 중"
+            val i = Intent(this, SpeakerConnectCompleteActivity::class.java)
+            i.putExtra("RESET",intent.getBooleanExtra("RESET",false))
+            Util.putSharedPreferenceString(this@SelectSpeakerWifiActivity,Util.WIFI_NAME, Empty)
+            i.putExtra("SSID",Empty)
+            startActivity(i)
+            finish()
+        }
 
         setRecyclerview()
 
@@ -55,9 +64,11 @@ class SelectSpeakerWifiActivity : AppCompatActivity() {
             // There are no request codes
             val i = Intent(this, SpeakerConnectCompleteActivity::class.java)
             i.putExtra("fromMain",intent.getBooleanExtra("fromMain",false))
+            i.putExtra("RESET",intent.getBooleanExtra("RESET",false))
             intent.getStringExtra("SSID")?.let {
                 Util.putSharedPreferenceString(this@SelectSpeakerWifiActivity,Util.WIFI_NAME, it)
             }
+
             startActivity(i)
             finish()
         }
