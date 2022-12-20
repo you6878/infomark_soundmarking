@@ -63,7 +63,7 @@ class MainActivity : AppCompatActivity() {
         bt =  BluetoothSPP.getInstance(this); //Initializing
         supportFragmentManager.beginTransaction().replace(R.id.main_content,home).commit()
         initTabbar()
-        val dir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS)
+        val dir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_MUSIC)
         lsDir(dir)
     }
     fun initTabbar(){
@@ -110,7 +110,7 @@ class MainActivity : AppCompatActivity() {
                     //Do what ever u want
                     val file = listFile[i]
                     val mimeType = tika.detect(file)
-                    if(mimeType == "audio/mpeg"){
+                    if(mimeType == "audio/mpeg" || mimeType == "audio/vnd.wave"){
                         storageFiles.add(File(listFile[i].absolutePath))
                     }
                 }
