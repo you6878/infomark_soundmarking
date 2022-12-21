@@ -27,7 +27,7 @@ class BluetoothManager(var context : Context) {
     private lateinit var a2dp: BluetoothA2dp  //class to connect to an A2dp device
     private lateinit var ia2dp: IBluetoothA2dp
     private var mIsA2dpReady = false
-    var bluetoothConnected : MutableLiveData<Boolean> = MutableLiveData(false)
+//    var bluetoothConnected : MutableLiveData<Boolean> = MutableLiveData(false)
 
     fun setIsA2dpReady(ready: Boolean) {
         mIsA2dpReady = ready
@@ -66,7 +66,7 @@ class BluetoothManager(var context : Context) {
                             } catch (e: Exception) {
                                 e.printStackTrace()
                             }
-                            bluetoothConnected.value = true
+//                            bluetoothConnected.value = true
 
                         }
                     }, BluetoothProfile.A2DP

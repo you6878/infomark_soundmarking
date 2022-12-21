@@ -38,23 +38,23 @@ class ListFragment : Fragment() {
         }
     }
     val metaRetriever = MediaMetadataRetriever()
-    lateinit var binding : FragmentListBinding
+    var binding : FragmentListBinding? = null
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
         binding = DataBindingUtil.inflate(inflater,R.layout.fragment_list,container,false)
-        binding.fileRecyclerview.layoutManager = LinearLayoutManager(requireContext())
-        binding.fileRecyclerview.apply {
+        binding?.fileRecyclerview?.layoutManager = LinearLayoutManager(requireContext())
+        binding?.fileRecyclerview?.apply {
             val mainActivity = requireActivity() as? MainActivity
             adapter = PlayListAdapter(mainActivity?.storageFiles)
         }
         var mainActivity = requireActivity() as? MainActivity
         mainActivity?.musicBox?.currentPlayMusicName?.observe(viewLifecycleOwner) {
-            binding.fileRecyclerview.adapter?.notifyDataSetChanged()
+            binding?.fileRecyclerview?.adapter?.notifyDataSetChanged()
         }
-        return binding.root
+        return binding?.root
     }
 
 
@@ -98,7 +98,7 @@ class ListFragment : Fragment() {
                         var mainActivity = requireActivity() as? MainActivity
                         mainActivity?.musicBox?.stopMusic()
                         mainActivity?.musicBox?.currentPlayMusicName?.value = ""
-                        mainActivity?.musicBox?.currentIndex = -1
+                        mainActivity?.musicBox?.currentIndex = 0
                         notifyDataSetChanged()
                     }
                 }else{

@@ -15,7 +15,7 @@ import kr.co.infomark.soundmasking.databinding.FragmentCanUseSpeakerDialogBindin
 
 class CanUseSpeakerDialogFragment : DialogFragment() {
 
-    lateinit var binding : FragmentCanUseSpeakerDialogBinding
+    var binding : FragmentCanUseSpeakerDialogBinding? = null
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -24,10 +24,10 @@ class CanUseSpeakerDialogFragment : DialogFragment() {
         dialog?.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
         binding = DataBindingUtil.inflate(inflater,R.layout.fragment_can_use_speaker_dialog, container, false)
         // Inflate the layout for this fragment
-        binding.applyBtn.setOnClickListener {
+        binding?.applyBtn?.setOnClickListener {
             if (activity is StartSpeakerSettingActivity) (activity as StartSpeakerSettingActivity?)?.handleDialogClose(this)
         }
-        return binding.root
+        return binding?.root
     }
 
 }

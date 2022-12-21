@@ -37,9 +37,9 @@ class StartSpeakerSettingActivity : AppCompatActivity() {
 
     }
 
-    lateinit var bt: BluetoothSPP
+    var bt: BluetoothSPP? = null
     lateinit var gson: Gson
-    lateinit var binding: ActivityStartSpeakerSettingBinding
+    var binding: ActivityStartSpeakerSettingBinding? = null
     lateinit var mHandler: Handler
     lateinit var devicesAdapter: PairedDevicesAdapter
     var bluetoothManager = BluetoothManager(this)
@@ -65,7 +65,7 @@ class StartSpeakerSettingActivity : AppCompatActivity() {
         setRecyclerview()
         setButton()
 
-        if (!bt.isBluetoothAvailable) { //블루투스 사용 불가라면
+        if (bt?.isBluetoothAvailable == false) { //블루투스 사용 불가라면
 
             finish();
         }
@@ -82,11 +82,22 @@ class StartSpeakerSettingActivity : AppCompatActivity() {
 
         }
     }
+    fun saveLog(item : LogModel){
+        var logs = Util.getSharedPreferenceString(this, Util.LOGS)
+        var list : MutableList<LogModel> = mutableListOf()
+        if(!logs.isEmpty()){
+            list = gson.fromJson(logs,Array<LogModel>::class.java).asList().toMutableList()
+        }
+        list.add(item)
+        Util.putSharedPreferenceString(this, Util.LOGS,gson.toJson(list))
+    }
     fun setBTListener(){
-        bt.setOnDataReceivedListener { data, message ->
+        bt?.setOnDataReceivedListener { data, message ->
             println(message)
             var isLog = JSONObject(message).isNull("log")
             if(!isLog){
+                val item = gson.fromJson(message,LogModel::class.java)
+                saveLog(item)
                 return@setOnDataReceivedListener
             }
             var cmd = JSONObject(message).getString("cmd")
@@ -96,9 +107,9 @@ class StartSpeakerSettingActivity : AppCompatActivity() {
                 //이미 연결된 상태
                 if(model.result == "ok" && model.state == "connected"){
                     var command = CommandModel(WlanNetworkList)
-                    bt.send(gson.toJson(command))
+                    bt?.send(gson.toJson(command))
                 }else if(model.result == "ok" && model.state == "enabled"){
-                    binding.progressCir.visibility = View.GONE
+                    binding?.progressCir?.visibility = View.GONE
                     val dialog = CanUseSpeakerDialogFragment()
                     dialog.show(supportFragmentManager, "CanUseSpeakerDialogFragment")
                 }else if(model.result == "ok" && model.state == "disabled"){
@@ -111,13 +122,14 @@ class StartSpeakerSettingActivity : AppCompatActivity() {
                 for (item in wifis.data){
                     if(item.status == "current"){
                         var ssid = item.ssid
+                        var bssid = item.bssid
 
                         if(ssid.length > 1){
                             ssid = ssid.substring(1,ssid.length - 1)
                         }
 
                         Util.putSharedPreferenceString(this@StartSpeakerSettingActivity,Util.WIFI_NAME, ssid)
-                        binding.progressCir.visibility = View.GONE
+                        binding?.progressCir?.visibility = View.GONE
                         val dialog = CanUseSpeakerDialogFragment()
                         dialog.show(supportFragmentManager, "CanUseSpeakerDialogFragment")
                     }
@@ -125,10 +137,10 @@ class StartSpeakerSettingActivity : AppCompatActivity() {
 
             }
         }
-        bt.setBluetoothConnectionListener(object : BluetoothSPP.BluetoothConnectionListener {
+        bt?.setBluetoothConnectionListener(object : BluetoothSPP.BluetoothConnectionListener {
             override fun onDeviceConnected(name: String, address: String) {
                 var commandModel = CommandModel(WlanState)
-                bt.send(gson.toJson(commandModel))
+                bt?.send(gson.toJson(commandModel))
             }
 
             override fun onDeviceDisconnected() {
@@ -149,15 +161,15 @@ class StartSpeakerSettingActivity : AppCompatActivity() {
 
 
     fun setButton() {
-        binding.speakerStartPopupCancel.setOnClickListener {
-            binding.speakerStartPopupRela.visibility = View.GONE
-            binding.bluetoothRefreshButton.visibility = View.VISIBLE
+        binding?.speakerStartPopupCancel?.setOnClickListener {
+            binding?.speakerStartPopupRela?.visibility = View.GONE
+            binding?.bluetoothRefreshButton?.visibility = View.VISIBLE
         }
-        binding.speakerStartPopupApply.setOnClickListener {
-            binding.speakerStartPopupRela.visibility = View.GONE
-            binding.speakerSelectPopupRela.visibility = View.VISIBLE
+        binding?.speakerStartPopupApply?.setOnClickListener {
+            binding?.speakerStartPopupRela?.visibility = View.GONE
+            binding?.speakerSelectPopupRela?.visibility = View.VISIBLE
         }
-        binding.bluetoothRefreshButton.setOnClickListener {
+        binding?.bluetoothRefreshButton?.setOnClickListener {
             Toast.makeText(this, "블루투스 재검색을 시작합니다.", Toast.LENGTH_SHORT).show()
             discover()
         }
@@ -166,12 +178,12 @@ class StartSpeakerSettingActivity : AppCompatActivity() {
 
     override fun onResume() {
         super.onResume()
-        if (!bt.isBluetoothEnabled) {
-            bt.enable()
+        if (bt?.isBluetoothEnabled == false) {
+            bt?.enable()
         } else {
-            if (!bt.isServiceAvailable ) {
-                bt.setupService()
-                bt.startService(BluetoothState.DEVICE_OTHER)
+            if (bt?.isServiceAvailable == false) {
+                bt?.setupService()
+                bt?.startService(BluetoothState.DEVICE_OTHER)
 
             }
         }
@@ -180,14 +192,14 @@ class StartSpeakerSettingActivity : AppCompatActivity() {
 
     private fun setRecyclerview() {
         devicesAdapter = PairedDevicesAdapter(::connectDevice)
-        binding.deviceRecyclerview.layoutManager = LinearLayoutManager(this)
-        binding.deviceRecyclerview.addItemDecoration(
+        binding?.deviceRecyclerview?.layoutManager = LinearLayoutManager(this)
+        binding?.deviceRecyclerview?.addItemDecoration(
             DividerItemDecoration(
                 this,
                 LinearLayout.VERTICAL
             )
         )
-        binding.deviceRecyclerview.apply {
+        binding?.deviceRecyclerview?.apply {
             adapter = devicesAdapter
         }
     }
@@ -206,9 +218,9 @@ class StartSpeakerSettingActivity : AppCompatActivity() {
                 println(device?.address)
                 if (device?.name == "FRIENDS") {
 
-                    binding.progressCir.visibility = View.GONE
-                    binding.bluetoothRefreshButton.visibility = View.GONE
-                    binding.speakerStartPopupRela.visibility = View.VISIBLE
+                    binding?.progressCir?.visibility = View.GONE
+                    binding?.bluetoothRefreshButton?.visibility = View.GONE
+                    binding?.speakerStartPopupRela?.visibility = View.VISIBLE
                     devicesAdapter.addItem(device)
                 }
             }
@@ -258,8 +270,8 @@ class StartSpeakerSettingActivity : AppCompatActivity() {
     fun connectDevice(deviceToConnect: BluetoothDevice?) {
         deviceToConnect?.let {
             BluetoothAdapter.getDefaultAdapter().cancelDiscovery()
-            binding.progressCir.visibility = View.VISIBLE
-            bt.connect(it.address ?: "")
+            binding?.progressCir?.visibility = View.VISIBLE
+            bt?.connect(it.address ?: "")
             selectDevice = it
         }
     }

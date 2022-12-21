@@ -7,13 +7,16 @@ import android.os.Bundle
 import android.os.Environment
 import android.os.Handler
 import android.os.Looper
+import android.view.View
+import android.view.Window
+import android.view.WindowManager
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
-import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.google.gson.Gson
 import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kr.co.infomark.soundmasking.bluetooth.BluetoothManager
@@ -27,19 +30,21 @@ import kr.co.infomark.soundmasking.main.ListFragment
 import kr.co.infomark.soundmasking.main.MyPageFragment
 import kr.co.infomark.soundmasking.main.PlayFragment
 import kr.co.infomark.soundmasking.model.*
+import kr.co.infomark.soundmasking.popup.CanUseSpeakerDialogFragment
 import kr.co.infomark.soundmasking.util.MusicBox
 import kr.co.infomark.soundmasking.util.Util
 import org.apache.tika.Tika
 import org.json.JSONObject
 import java.io.File
+import kotlin.math.min
 
 
 class MainActivity : AppCompatActivity() {
-    lateinit var binding : ActivityMainBinding
+    var binding: ActivityMainBinding? = null
     lateinit var gson: Gson
     val tika = Tika()
     var bluetoothManager = BluetoothManager(this)
-    lateinit var bt: BluetoothSPP
+    var bt: BluetoothSPP? = null
     lateinit var selectDeivice: BluetoothDevice
 
 
@@ -52,51 +57,88 @@ class MainActivity : AppCompatActivity() {
 
     val musicBox = MusicBox()
 
-
+    var stateJob : Job? = null
+    var stateThreadWhile = true
     /*ViewModel*/
 
-    var wifiConnectStatus : MutableLiveData<String> = MutableLiveData("Connecting")
+
+    var bluetoothConnectStatus: MutableLiveData<String>? = MutableLiveData("Connecting")
+    var bluetoothNameStatus: MutableLiveData<String>? = MutableLiveData("")
+    var bluetoothFirmwareVersion: MutableLiveData<String>? = MutableLiveData("")
+
+
+
+    var wifiName: MutableLiveData<String>? = MutableLiveData("")
+    var wifiBssid: MutableLiveData<String>? = MutableLiveData("")
+    var wifiConnectStatus: MutableLiveData<String>? = MutableLiveData("Connecting")
+
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_main)
         gson = Gson()
-        bt =  BluetoothSPP.getInstance(this); //Initializing
-        supportFragmentManager.beginTransaction().replace(R.id.main_content,home).commit()
+        bt = BluetoothSPP.getInstance(this); //Initializing
+        supportFragmentManager.beginTransaction().replace(R.id.main_content, home).commitAllowingStateLoss()
         initTabbar()
         val dir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_MUSIC)
         lsDir(dir)
+        checkWifiState()
     }
-    fun initTabbar(){
-        binding.homeBtn.setOnClickListener {
+    fun displayOn(){
+        val win: Window = window
+        win.addFlags(
+            WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED or
+                    WindowManager.LayoutParams.FLAG_DISMISS_KEYGUARD or
+                    WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON or
+                    WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON or
+                    WindowManager.LayoutParams.FLAG_ALLOW_LOCK_WHILE_SCREEN_ON
+        )
+    }
+    fun displayOff(){
+        val win: Window = window
+        win.clearFlags(WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED or
+                WindowManager.LayoutParams.FLAG_DISMISS_KEYGUARD or
+                WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON or
+                WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON or
+                WindowManager.LayoutParams.FLAG_ALLOW_LOCK_WHILE_SCREEN_ON)
+    }
+
+    fun initTabbar() {
+        binding?.homeBtn?.setOnClickListener {
             disalbeGrayEvent()
-            binding.homeImage.setImageResource(R.drawable.ico_home_black)
-            supportFragmentManager.beginTransaction().replace(R.id.main_content,home).commit()
-            binding.titleTextview.text = "홈"
+            binding?.homeImage?.setImageResource(R.drawable.ico_home_black)
+            supportFragmentManager.beginTransaction().replace(R.id.main_content, home).commitAllowingStateLoss()
+            binding?.titleTextview?.text = "홈"
+            displayOff()
         }
-        binding.playBtn.setOnClickListener {
+        binding?.playBtn?.setOnClickListener {
             disalbeGrayEvent()
-            binding.playImage.setImageResource(R.drawable.ico_player_black)
-            supportFragmentManager.beginTransaction().replace(R.id.main_content,play).commit()
-            binding.titleTextview.text = "플레이어"
+            binding?.playImage?.setImageResource(R.drawable.ico_player_black)
+            supportFragmentManager.beginTransaction().replace(R.id.main_content, play).commitAllowingStateLoss()
+            binding?.titleTextview?.text = "플레이어"
+            displayOn()
         }
-        binding.listBtn.setOnClickListener {
+        binding?.listBtn?.setOnClickListener {
             disalbeGrayEvent()
-            binding.listImage.setImageResource(R.drawable.ico_playlist_black)
-            supportFragmentManager.beginTransaction().replace(R.id.main_content,list).commit()
-            binding.titleTextview.text = "재생목록"
+            binding?.listImage?.setImageResource(R.drawable.ico_playlist_black)
+            supportFragmentManager.beginTransaction().replace(R.id.main_content, list).commit()
+            binding?.titleTextview?.text = "재생목록"
+            displayOn()
         }
-        binding.mypageBtn.setOnClickListener {
+        binding?.mypageBtn?.setOnClickListener {
             disalbeGrayEvent()
-            binding.mypageImage.setImageResource(R.drawable.ico_mypage_black)
-            supportFragmentManager.beginTransaction().replace(R.id.main_content,mypage).commit()
-            binding.titleTextview.text = "마이페이지"
+            binding?.mypageImage?.setImageResource(R.drawable.ico_mypage_black)
+            supportFragmentManager.beginTransaction().replace(R.id.main_content, mypage).commit()
+            binding?.titleTextview?.text = "마이페이지"
+            displayOff()
         }
     }
-    fun disalbeGrayEvent(){
-        binding.homeImage.setImageResource(R.drawable.ico_home_gray)
-        binding.playImage.setImageResource(R.drawable.ico_player_gray )
-        binding.listImage.setImageResource(R.drawable.ico_playlist_gray)
-        binding.mypageImage.setImageResource(R.drawable.ico_mypage_gray)
+
+    fun disalbeGrayEvent() {
+        binding?.homeImage?.setImageResource(R.drawable.ico_home_gray)
+        binding?.playImage?.setImageResource(R.drawable.ico_player_gray)
+        binding?.listImage?.setImageResource(R.drawable.ico_playlist_gray)
+        binding?.mypageImage?.setImageResource(R.drawable.ico_mypage_gray)
     }
 
     fun lsDir(dir: File) {
@@ -118,79 +160,126 @@ class MainActivity : AppCompatActivity() {
         }
         musicBox.setPlayList(storageFiles)
     }
-    fun setBTListener(){
+
+    fun setBTListener() {
 
         bt?.setOnDataReceivedListener { data, message ->
             println(message)
             var isLog = JSONObject(message).isNull("log")
-            if(!isLog){
+            if (!isLog) {
+                val item = gson.fromJson(message, LogModel::class.java)
+                saveLog(item)
                 return@setOnDataReceivedListener
             }
             var cmd = JSONObject(message).getString("cmd")
-            if(cmd == WlanState){
+            if (cmd == WlanState) {
                 var model = gson.fromJson(message, DefaultModel::class.java)
-                if(model.result == "ok"){
-                    wifiConnectStatus.value = model.state
+                if (model.result == "ok") {
+                    wifiConnectStatus?.value = model.state
                 }
             }
-            if(cmd == WlanRemoveNetwork){
+            if (cmd == WlanNetworkList) {
+                var model = gson.fromJson(message, WlanNetworkListModel::class.java)
+                if (model.result == "ok") {
+                    selectWifiConnectInfo(model.data)
+                }
+            }
+            if (cmd == WlanRemoveNetwork) {
                 var i = Intent(this, SelectSpeakerWifiActivity::class.java)
-                i.putExtra("RESET",true)
+                i.putExtra("RESET", true)
                 startActivity(i)
+            }
+            if(cmd == SystemInfo){
+                var model = gson.fromJson(message, SystemInfoResultModel::class.java)
+                if(model.result == "ok"){
+                    bluetoothFirmwareVersion?.value = "FirmwareVersion : " +  model.revision +", Serial : "  + model.serialno
+                    bluetoothNameStatus?.value = model.model +"(" + model.brand + "-" + model.brand + ")"
+                }
+            }
+        }
+    }
+    fun selectWifiConnectInfo(datas : MutableList<WlanNetworkListModel.Data>){
+        for (item in datas){
+            if(item.status == "current"){
+                var ssid = item.ssid
+                var bssid = item.bssid
+
+                if(ssid.length > 1){
+                    ssid = ssid.substring(1,ssid.length - 1)
+                }
+                wifiName?.value = ssid
+                wifiBssid?.value = bssid
             }
         }
     }
 
-    fun resetDevice(){
-        Toast.makeText(this,"장비 초기화를 시작합니다.", Toast.LENGTH_LONG).show()
+    fun resetDevice() {
+        Toast.makeText(this, "장비 초기화를 시작합니다.", Toast.LENGTH_LONG).show()
         var commandModel = RemoveCommandModel(
             WlanRemoveNetwork,
-            Util.getSharedPreferenceString(this, Util.WIFI_NAME))
-        bt.send(gson.toJson(commandModel));
+            Util.getSharedPreferenceString(this, Util.WIFI_NAME)
+        )
+        bt?.send(gson.toJson(commandModel));
         Handler(Looper.getMainLooper()).postDelayed({
             BluetoothAdapter.getDefaultAdapter().cancelDiscovery()
-            bt.stopService()
+            bt?.stopService()
             musicBox.releaseMediaPlayer()
             bluetoothManager.disConnectUsingBluetoothA2dp(selectDeivice)
             removeBond(selectDeivice)
             Util.clearSharedPreference(this@MainActivity)
             finish()
-        },1000)
+        }, 1000)
     }
-    fun resetWifi(){
-        Toast.makeText(this,"와이파이 초기화를 시작합니다.", Toast.LENGTH_LONG).show()
+
+    fun resetWifi() {
+        Toast.makeText(this, "와이파이 초기화를 시작합니다.", Toast.LENGTH_LONG).show()
         var wifiName = Util.getSharedPreferenceString(this, Util.WIFI_NAME)
-        if(wifiName == "설정 대기 중"){
+        if (wifiName == "설정 대기 중") {
             var i = Intent(this, SelectSpeakerWifiActivity::class.java)
+            i.putExtra("RESET", true)
             startActivity(i)
 
-        }else{
+        } else {
 
-            var commandModel = RemoveCommandModel(WlanRemoveNetwork, Util.getSharedPreferenceString(this, Util.WIFI_NAME))
-            bt.send(gson.toJson(commandModel));
+            var commandModel = RemoveCommandModel(
+                WlanRemoveNetwork,
+                Util.getSharedPreferenceString(this, Util.WIFI_NAME)
+            )
+            bt?.send(gson.toJson(commandModel));
         }
 
 
-
     }
-    fun resetBluetoothDevice(){
-        Toast.makeText(this,"스피커 연결을 초기화를 시작합니다.", Toast.LENGTH_LONG).show()
+
+    fun saveLog(item: LogModel) {
+        var logs = Util.getSharedPreferenceString(this, Util.LOGS)
+        var list: MutableList<LogModel> = mutableListOf()
+        if (!logs.isEmpty()) {
+            list = gson.fromJson(logs, Array<LogModel>::class.java).asList().toMutableList()
+        }
+        list.add(item)
+        Util.putSharedPreferenceString(this, Util.LOGS, gson.toJson(list))
+    }
+
+    fun resetBluetoothDevice() {
+        Toast.makeText(this, "스피커 연결을 초기화를 시작합니다.", Toast.LENGTH_LONG).show()
         removeBond(selectDeivice)
 
         Handler(Looper.getMainLooper()).postDelayed({
             BluetoothAdapter.getDefaultAdapter().cancelDiscovery()
-            bt.stopService()
+            bt?.stopService()
             musicBox.releaseMediaPlayer()
             bluetoothManager.disConnectUsingBluetoothA2dp(selectDeivice)
 
             Util.clearSharedPreference(this@MainActivity)
             finish()
-            val i = Intent(this,StartSpeakerSettingActivity::class.java);
+            val i = Intent(this, StartSpeakerSettingActivity::class.java);
             startActivity(i)
-        },3000)
+        }, 3000)
 
 
     }
+
     fun removeBond(device: BluetoothDevice) {
         try {
             device::class.java.getMethod("removeBond").invoke(device)
@@ -202,24 +291,25 @@ class MainActivity : AppCompatActivity() {
     override fun onResume() {
         super.onResume()
         if (bt?.isBluetoothEnabled == false) {
-            bt.enable()
+            bt?.enable()
         } else {
             if (bt?.isServiceAvailable == false) {
-                bt.setupService()
-                bt.startService(BluetoothState.DEVICE_OTHER)
+                bt?.setupService()
+                bt?.startService(BluetoothState.DEVICE_OTHER)
                 //Auto Connect in exceoption
-                if(bt.connectedDeviceAddress == null){
+                if (bt?.connectedDeviceAddress == null) {
                     val mac = Util.MAC
-                    bt.connect(Util.getSharedPreferenceString(this,mac))
+                    bt?.connect(Util.getSharedPreferenceString(this, mac))
                 }
             }
             deviceCallback()
             setBTListener()
         }
     }
-    fun deviceCallback(){
+
+    fun deviceCallback() {
         //Bluetooth Status
-        val mac = Util.getSharedPreferenceString(this,Util.MAC)
+        val mac = Util.getSharedPreferenceString(this, Util.MAC)
         selectDeivice = BluetoothAdapter.getDefaultAdapter().getRemoteDevice(mac)
         bluetoothManager?.enableBluetooth()
         bluetoothManager?.connectUsingBluetoothA2dpCallback(selectDeivice)
@@ -237,21 +327,62 @@ class MainActivity : AppCompatActivity() {
 
             }
         })
-        checkWifiState()
+
     }
-    fun checkWifiState(){
-        GlobalScope.launch {
-            delay(2000)
-            var commandModel = CommandModel(WlanState)
-            bt?.send(gson.toJson(commandModel))
-        }.start()
+
+    fun checkWifiState() {
+        stateJob = GlobalScope.launch {
+            while (stateThreadWhile) {
+                delay(100)
+                wifiState()
+                delay(100)
+                bluetoothState()
+                delay(100)
+                spearkInfoState()
+                delay(1700)
+
+            }
+        }
+        stateJob?.start()
+    }
+    fun wifiState(){
+        var commandModel = CommandModel(WlanState)
+        bt?.send(gson.toJson(commandModel))
+    }
+    fun spearkInfoState(){
+        var commandModel = CommandModel(SystemInfo)
+        bt?.send(gson.toJson(commandModel))
+    }
+
+    fun bluetoothState() {
+        var state = false
+        var devices = bt?.pairedDeviceName
+        for (item in devices ?: arrayOf()) {
+            if(item == "FRIENDS"){
+                state = true
+            }
+        }
+
+        if (state) {
+            runOnUiThread {
+                bluetoothConnectStatus?.value = "Connected"
+            }
+
+        } else {
+            runOnUiThread {
+                bluetoothConnectStatus?.value = "Connecting"
+            }
+        }
+
     }
 
     override fun onDestroy() {
 
-        bt.stopService()
+        bt?.stopService()
         musicBox.releaseMediaPlayer()
         bluetoothManager.disConnectUsingBluetoothA2dp(selectDeivice)
+        stateJob?.cancel()
+        stateThreadWhile = false
         super.onDestroy()
     }
 

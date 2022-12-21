@@ -9,6 +9,7 @@ object Util {
     const val LOGS = "LOGS"
     const val MAC = "MAC"
     const val WIFI_NAME = "WIFI_NAME"
+    const val BSSID_NAME = "BSSID_NAME"
 
 
     fun putSharedClear(context: Context) {

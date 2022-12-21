@@ -26,7 +26,7 @@ class MyPageFragment : Fragment() {
     // TODO: Rename and change types of parameters
     private var param1: String? = null
     private var param2: String? = null
-    lateinit var binding: FragmentMyPageBinding
+    var binding: FragmentMyPageBinding? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -42,25 +42,28 @@ class MyPageFragment : Fragment() {
     ): View? {
         // Inflate the layout for this fragment
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_my_page, container, false)
-        binding.logMenu.setOnClickListener {
+        binding?.logMenu?.setOnClickListener {
             startActivity(Intent(activity, LogActivity::class.java))
         }
-        binding.devMenu.setOnClickListener {
+        binding?.devMenu?.setOnClickListener {
             var mainActivity = requireActivity() as? MainActivity
             if(mainActivity?.bt?.isConnected == true){
                 startActivity(Intent(activity, DevelopActivity::class.java))
+            }else{
+                Toast.makeText(requireActivity(),"현재 SPP 블루투스 연결 중 입니다. 잠시만 기달려주세요.",Toast.LENGTH_LONG).show()
             }
 
         }
         var mainActivity = requireActivity() as? MainActivity
-        mainActivity?.bluetoothManager?.bluetoothConnected?.observe(viewLifecycleOwner) {
-            if (it) {
-                binding.statusConnectTextview.text = "연결됨"
-            } else {
-                binding.statusConnectTextview.text = "연결 대기중"
-            }
+        mainActivity?.bluetoothConnectStatus?.observe(viewLifecycleOwner) {
+            binding?.statusConnectTextview?.text = it
         }
-        return binding.root
+        binding?.updateAppStatusTextview?.text = getVersionName()
+        return binding?.root
+    }
+    fun getVersionName() : String{
+        val pInfo = context?.packageName?.let { context?.packageManager?.getPackageInfo(it, 0) }
+        return pInfo?.versionName ?: ""
     }
 
     companion object {

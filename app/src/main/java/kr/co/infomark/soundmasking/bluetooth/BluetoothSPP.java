@@ -269,6 +269,9 @@ public class BluetoothSPP {
     }
     
     public void send(String data) {
+		if(mChatService == null){
+			return;
+		}
     	if(mChatService.getState() == BluetoothState.STATE_CONNECTED)
     		mChatService.write(data.getBytes());
     }

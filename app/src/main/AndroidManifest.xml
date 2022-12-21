@@ -6,7 +6,7 @@
     <permission
         android:name="android.permission.BLUETOOTH"
         android:label="BLUETOOTH" />
-
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
     <uses-permission android:name="android.permission.BLUETOOTH" />
     <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />
     <uses-permission android:name="android.permission.BLUETOOTH_ADVERTISE" />
@@ -44,32 +44,41 @@
         android:theme="@style/Theme.SoundMasking"
         tools:targetApi="31">
         <activity
+            android:screenOrientation="portrait"
             android:name=".main.DevelopActivity"
             android:exported="false">
         </activity>
         <activity
+            android:screenOrientation="portrait"
             android:name=".main.LogActivity"
             android:exported="false" />
         <activity
+            android:screenOrientation="portrait"
             android:name=".intro.SpeakerConnectCompleteActivity"
             android:exported="false" />
         <activity
+            android:screenOrientation="portrait"
             android:name=".intro.InputWifiPasswordActivity"
             android:exported="false" />
         <activity
+            android:screenOrientation="portrait"
             android:name=".intro.SpeakerWifiCofirmActivity"
             android:exported="false" />
         <activity
+            android:screenOrientation="portrait"
             android:name=".intro.SelectSpeakerWifiActivity"
             android:exported="true" />
         <activity
+            android:screenOrientation="portrait"
             android:name=".intro.StartSpeakerSettingActivity"
             android:exported="true" />
         <activity android:name=".DeviceListActivity" />
         <activity
+            android:screenOrientation="portrait"
             android:name=".bluetooth.DeviceList"
             android:exported="false" />
         <activity
+            android:screenOrientation="portrait"
             android:name=".intro.SplashActivity"
             android:exported="true">
             <intent-filter>
@@ -79,6 +88,7 @@
             </intent-filter>
         </activity>
         <activity
+            android:screenOrientation="portrait"
             android:name=".MainActivity"
             android:exported="true"></activity>
     </application>

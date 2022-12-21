@@ -21,8 +21,8 @@ import org.json.JSONObject
 
 
 class InputWifiPasswordActivity : AppCompatActivity() {
-    private lateinit var bt: BluetoothSPP
-    lateinit var binding : ActivityInputWifiPasswordBinding
+    private var bt: BluetoothSPP? = null
+    var binding : ActivityInputWifiPasswordBinding? = null
     lateinit var gson : Gson
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -38,25 +38,25 @@ class InputWifiPasswordActivity : AppCompatActivity() {
 
     override fun onResume() {
         super.onResume()
-        if (!bt.isBluetoothEnabled) {
-            bt.enable()
+        if (bt?.isBluetoothEnabled == false) {
+            bt?.enable()
         } else {
-            if (!bt.isServiceAvailable && !bt.isConnected) {
-                bt.setupService()
-                bt.startService(BluetoothState.DEVICE_OTHER)
+            if (bt?.isServiceAvailable  == false && bt?.isConnected == false) {
+                bt?.setupService()
+                bt?.startService(BluetoothState.DEVICE_OTHER)
 
                 //Auto Connect in exceoption
-                if(bt.connectedDeviceAddress == null){
+                if(bt?.connectedDeviceAddress == null){
                     val mac = Util.MAC
-                    bt.connect(Util.getSharedPreferenceString(this,mac))
+                    bt?.connect(Util.getSharedPreferenceString(this,mac))
                 }
             }else{
-                var commandModel = RemoveCommandModel(WlanRemoveNetwork,binding.wifiIdTextview.text.toString())
+                var commandModel = RemoveCommandModel(WlanRemoveNetwork,binding?.wifiIdTextview?.text.toString())
                 println(commandModel)
-                bt.send(gson.toJson(commandModel));
+                bt?.send(gson.toJson(commandModel));
             }
         }
-        bt.setBluetoothConnectionListener(object : BluetoothSPP.BluetoothConnectionListener {
+        bt?.setBluetoothConnectionListener(object : BluetoothSPP.BluetoothConnectionListener {
             override fun onDeviceConnected(name: String, address: String) {
 
             }
@@ -69,9 +69,11 @@ class InputWifiPasswordActivity : AppCompatActivity() {
 
             }
         })
-        bt.setOnDataReceivedListener { data, message ->
+        bt?.setOnDataReceivedListener { data, message ->
             var isLog = JSONObject(message).isNull("log")
             if(!isLog){
+                val item = gson.fromJson(message,LogModel::class.java)
+                saveLog(item)
                 return@setOnDataReceivedListener
             }
 
@@ -87,23 +89,32 @@ class InputWifiPasswordActivity : AppCompatActivity() {
             }
         }
     }
+    fun saveLog(item : LogModel){
+        var logs = Util.getSharedPreferenceString(this,Util.LOGS)
+        var list : MutableList<LogModel> = mutableListOf()
+        if(!logs.isEmpty()){
+            list = gson.fromJson(logs,Array<LogModel>::class.java).asList().toMutableList()
+        }
+        list.add(item)
+        Util.putSharedPreferenceString(this,Util.LOGS,gson.toJson(list))
+    }
     fun initView(){
         val id =  intent.getStringExtra("SSID")
-        binding.wifiIdTextview.text = id
-        binding.eyePassowrdImageview.setOnClickListener {
-            val psEditText = binding.passwordWifiEdittext
-            if (psEditText.inputType === InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD) {
+        binding?.wifiIdTextview?.text = id
+        binding?.eyePassowrdImageview?.setOnClickListener {
+            val psEditText = binding?.passwordWifiEdittext
+            if (psEditText?.inputType === InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD) {
                 psEditText.inputType = InputType.TYPE_CLASS_TEXT or
                         InputType.TYPE_TEXT_VARIATION_PASSWORD
             } else {
-                psEditText.inputType = InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD
+                psEditText?.inputType = InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD
             }
         }
-        binding.speakerStartPopupCancel.setOnClickListener { finish() }
-        binding.toolbarBackLeft.setOnClickListener { finish() }
-        binding.speakerStartPopupApply.setOnClickListener {
-            var commandModel = CommandModel(WlanAddNetwork,binding.wifiIdTextview.text.toString(),binding.passwordWifiEdittext.text.toString())
-            bt.send(gson.toJson(commandModel));
+        binding?.speakerStartPopupCancel?.setOnClickListener { finish() }
+        binding?.toolbarBackLeft?.setOnClickListener { finish() }
+        binding?.speakerStartPopupApply?.setOnClickListener {
+            var commandModel = CommandModel(WlanAddNetwork,binding?.wifiIdTextview?.text.toString(),binding?.passwordWifiEdittext?.text.toString())
+            bt?.send(gson.toJson(commandModel));
         }
     }
 }

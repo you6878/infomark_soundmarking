@@ -13,7 +13,7 @@ class MusicBox :OnCompletionListener {
 
     var playFiles = mutableListOf<File>()
     var currentPlayMusicName : MutableLiveData<String> = MutableLiveData("")
-    var currentIndex = -1
+    var currentIndex = 0
 
     var isPlay : MutableLiveData<Boolean> = MutableLiveData(false)
     var randomPlay : MutableLiveData<Boolean> = MutableLiveData(false)

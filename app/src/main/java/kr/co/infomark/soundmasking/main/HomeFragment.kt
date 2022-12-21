@@ -1,16 +1,20 @@
 package kr.co.infomark.soundmasking.main
 
+import android.app.AlertDialog
+import android.content.DialogInterface
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
+import androidx.fragment.app.Fragment
 import com.google.gson.Gson
 import kr.co.infomark.soundmasking.MainActivity
 import kr.co.infomark.soundmasking.R
 import kr.co.infomark.soundmasking.databinding.FragmentHomeBinding
+import kr.co.infomark.soundmasking.util.Costant
 import kr.co.infomark.soundmasking.util.Util
+
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -24,7 +28,7 @@ private const val ARG_PARAM2 = "param2"
  */
 class HomeFragment : Fragment() {
 
-    lateinit var binding : FragmentHomeBinding
+    var binding : FragmentHomeBinding? = null
     lateinit var gson : Gson
     // TODO: Rename and change types of parameters
     private var param1: String? = null
@@ -43,56 +47,87 @@ class HomeFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
+
         gson = Gson()
         binding = DataBindingUtil.inflate(inflater,R.layout.fragment_home,container,false)
         var mainActivity = requireActivity() as? MainActivity
-        mainActivity?.bluetoothManager?.bluetoothConnected?.observe(viewLifecycleOwner) {
-            if (it) {
-                binding.speakerStatusTextview.text = "Connected"
-            } else {
-                binding.speakerStatusTextview.text = "Connecting"
-            }
+        mainActivity?.bluetoothConnectStatus?.observe(viewLifecycleOwner) {
+            binding?.speakerStatusTextview?.text = it
         }
-        binding.wifiLinear.setOnLongClickListener {
+        mainActivity?.wifiConnectStatus?.observe(viewLifecycleOwner){
+            binding?.wifiStatusTextview?.text = it
+        }
+        mainActivity?.bluetoothNameStatus?.observe(viewLifecycleOwner){
+            binding?.ssidTextview?.text = it
+        }
+        mainActivity?.bluetoothFirmwareVersion?.observe(viewLifecycleOwner){
+            binding?.fwVersionTextview?.text = it
+        }
+//        mainActivity?.wifiName?.observe(viewLifecycleOwner){
+//            binding.wifiNameTextview.text = it
+//        }
+//        mainActivity?.wifiBssid?.observe(viewLifecycleOwner){
+//            binding.bssidTextview.text = it
+//        }
+
+        binding?.wifiLinear?.setOnLongClickListener {
 
             mainActivity?.resetWifi()
             true
         }
-        binding.speakerLinear.setOnLongClickListener {
+        binding?.speakerLinear?.setOnLongClickListener {
+            if(binding?.speakerStatusTextview?.text == "Connected"){
+                AlertDialog.Builder(requireActivity())
+                    .setTitle("경고")
+                    .setMessage("블루투스 스피커 재설정을 진행하시겠습니까?")
+                    .setPositiveButton("확인", object : DialogInterface.OnClickListener {
+                        override fun onClick(dialog: DialogInterface, which: Int) {
+                            var mainActivity = requireActivity() as? MainActivity
+                            mainActivity?.resetBluetoothDevice()
+                        }
+                    })
+                    .setNegativeButton("취소", object : DialogInterface.OnClickListener {
+                        override fun onClick(dialog: DialogInterface, which: Int) {
 
-            var mainActivity = requireActivity() as? MainActivity
-            mainActivity?.resetBluetoothDevice()
+                        }
+                    })
+                    .create()
+                    .show()
+
+            }else{
+                var mainActivity = requireActivity() as? MainActivity
+                mainActivity?.resetBluetoothDevice()
+            }
+
             true
         }
         initView()
-        return binding.root
+        return binding?.root
     }
 
     override fun onResume() {
         super.onResume()
-        binding.ssidTextview.text = Util.getSharedPreferenceString(activity,Util.MAC)
-        binding.wifiNameTextview.text = Util.getSharedPreferenceString(activity,Util.WIFI_NAME)
-        var mainActivity = requireActivity() as? MainActivity
-        mainActivity?.wifiConnectStatus?.observe(viewLifecycleOwner){
-            binding.wifiStatusTextview.text = it
-        }
 
-
+        binding?.wifiNameTextview?.text = Util.getSharedPreferenceString(activity,Util.WIFI_NAME)
+        binding?.bssidTextview?.text = Util.getSharedPreferenceString(activity,Util.BSSID_NAME)
+        binding?.appversionTextview?.text = getVersionName()
+        binding?.updateDateTextview?.text = Costant.updateDate
     }
-    fun setConnectWifi(){
-        binding.wifiStatusTextview.text = "Connected"
+    fun getVersionName() : String{
+        val pInfo = context?.packageName?.let { context?.packageManager?.getPackageInfo(it, 0) }
+        return pInfo?.versionName ?: ""
     }
 
 
 
     fun initView(){
-        binding.playMusic.setOnClickListener {
+        binding?.playMusic?.setOnClickListener {
 //            bluetoothManager.playMusic()
         }
-        binding.logBtn.setOnClickListener {
+        binding?.logBtn?.setOnClickListener {
 //            startActivity(Intent(activity, LogActivity::class.java))
         }
-        binding.startSpeakerSettingBtn.setOnClickListener {
+        binding?.startSpeakerSettingBtn?.setOnClickListener {
             var mainActivity = activity as? MainActivity
             mainActivity?.resetDevice()
         }

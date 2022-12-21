@@ -29,7 +29,7 @@ class PlayFragment : Fragment() {
     // TODO: Rename and change types of parameters
     private var param1: String? = null
     private var param2: String? = null
-    private lateinit var binding : FragmentPlayBinding
+    var binding : FragmentPlayBinding? = null
     lateinit var timer : Timer
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -45,44 +45,44 @@ class PlayFragment : Fragment() {
     ): View? {
         binding = DataBindingUtil.inflate(inflater,R.layout.fragment_play, container, false)
         // Inflate the layout for this fragment
-        binding.progressBar.progressDrawable.setColorFilter(Color.BLACK, PorterDuff.Mode.SRC_IN);
+        binding?.progressBar?.progressDrawable?.setColorFilter(Color.BLACK, PorterDuff.Mode.SRC_IN);
 
         setMusicPlay()
         setCheckTime()
 
-        return binding.root
+        return binding?.root
     }
     fun setMusicPlay(){
         val musicBox = (requireActivity() as? MainActivity)?.musicBox
         musicBox?.currentPlayMusicName?.observe(viewLifecycleOwner) {
-            binding.currentPlayTitle.text = it
+            binding?.currentPlayTitle?.text = it
         }
-        binding.playBtn.setOnClickListener {
+        binding?.playBtn?.setOnClickListener {
             if(musicBox?.isPlay?.value == true){
                 musicBox.stopMusic()
             }else{
                 musicBox?.playMusic()
             }
         }
-        binding.randomBtn.setOnClickListener {
+        binding?.randomBtn?.setOnClickListener {
             musicBox?.eventRandomBtn()
         }
-        binding.repeatBtn.setOnClickListener {
+        binding?.repeatBtn?.setOnClickListener {
             musicBox?.eventRepeatBtn()
         }
-        binding.previewBtn.setOnClickListener {
+        binding?.previewBtn?.setOnClickListener {
             musicBox?.previewMusic()
         }
-        binding.nextBtn.setOnClickListener {
+        binding?.nextBtn?.setOnClickListener {
             musicBox?.nextMusic()
         }
 
 
         musicBox?.isPlay?.observe(viewLifecycleOwner){
             if(it){
-                binding.playBtn.setImageResource(R.drawable.ico_playbutton_pause)
+                binding?.playBtn?.setImageResource(R.drawable.ico_playbutton_pause)
             }else{
-                binding.playBtn.setImageResource(R.drawable.ico_playbutton_play)
+                binding?.playBtn?.setImageResource(R.drawable.ico_playbutton_play)
 
             }
         }
@@ -90,17 +90,17 @@ class PlayFragment : Fragment() {
 
         musicBox?.randomPlay?.observe(viewLifecycleOwner) {
             if(it){
-                binding.randomBtn.setImageResource(R.drawable.ico_light_shuffle_activated)
+                binding?.randomBtn?.setImageResource(R.drawable.ico_light_shuffle_activated)
             }else{
-                binding.randomBtn.setImageResource(R.drawable.ico_light_shuffle_deactivated)
+                binding?.randomBtn?.setImageResource(R.drawable.ico_light_shuffle_deactivated)
             }
         }
 
         musicBox?.repeatPlay?.observe(viewLifecycleOwner) {
             if(it){
-                binding.repeatBtn.setImageResource(R.drawable.ico_light_repeat_activated)
+                binding?.repeatBtn?.setImageResource(R.drawable.ico_light_repeat_activated)
             }else{
-                binding.repeatBtn.setImageResource(R.drawable.ico_light_repeat_deactivated)
+                binding?.repeatBtn?.setImageResource(R.drawable.ico_light_repeat_deactivated)
             }
         }
     }
@@ -127,9 +127,9 @@ class PlayFragment : Fragment() {
             val seekbarGuage = (currentTime.toFloat() / durationTime.toFloat()) * 100
             println(seekbarGuage)
             mainActivity?.runOnUiThread {
-                binding.currentTimeTextview.text = setTime(currentTime.toLong());
-                binding.remainTimeTextview.text = setTime(durationTime.toLong());
-                binding.progressBar.progress = seekbarGuage.toInt()
+                binding?.currentTimeTextview?.text = setTime(currentTime.toLong());
+                binding?.remainTimeTextview?.text = setTime(durationTime.toLong());
+                binding?.progressBar?.progress = seekbarGuage.toInt()
             }
 
         }catch (e : Exception){

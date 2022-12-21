@@ -18,19 +18,19 @@ import java.util.*
 
 
 class LogActivity : AppCompatActivity() {
-    lateinit var binding : ActivityLogBinding
+    var binding : ActivityLogBinding? = null
     lateinit var gson: Gson
-    lateinit var bt: BluetoothSPP
+    var bt: BluetoothSPP? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         gson = Gson()
         bt =  BluetoothSPP.getInstance(this)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_log)
-        binding.toolbarBackLeft.setOnClickListener { finish() }
-        binding.logRecyclerview.layoutManager = LinearLayoutManager(this)
-        binding.logRecyclerview.addItemDecoration(DividerItemDecoration(this, LinearLayout.VERTICAL))
-        binding.logRecyclerview.apply {
+        binding?.toolbarBackLeft?.setOnClickListener { finish() }
+        binding?.logRecyclerview?.layoutManager = LinearLayoutManager(this)
+        binding?.logRecyclerview?.addItemDecoration(DividerItemDecoration(this, LinearLayout.VERTICAL))
+        binding?.logRecyclerview?.apply {
             var logs = Util.getSharedPreferenceString(this@LogActivity,Util.LOGS)
             if(logs.isEmpty()){
                 adapter = LogListAdapter(mutableListOf())
@@ -48,14 +48,14 @@ class LogActivity : AppCompatActivity() {
         setBTListener()
     }
     fun setBTListener(){
-        bt.setOnDataReceivedListener { data, message ->
+        bt?.setOnDataReceivedListener { data, message ->
             var isLog = JSONObject(message).isNull("log")
             if (!isLog) {
                 println(message)
                 val item = gson.fromJson(message,LogModel::class.java)
-                var adapter : LogListAdapter = binding.logRecyclerview.adapter as LogListAdapter
-                adapter.addItem(item)
                 saveLog(item)
+                var adapter : LogListAdapter = binding?.logRecyclerview?.adapter as LogListAdapter
+                adapter.addItem(item)
                 return@setOnDataReceivedListener
             }
         }

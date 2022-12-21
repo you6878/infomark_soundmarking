@@ -61,7 +61,7 @@
                 android:layout_marginLeft="30dp"/>
         </RelativeLayout>
 
-        <RelativeLayout
+        <!--<RelativeLayout
             android:id="@+id/speaker_menu"
             android:layout_width="match_parent"
             android:layout_height="55dp">
@@ -108,7 +108,7 @@
                 android:layout_height="1dp"
                 android:layout_marginRight="30dp"
                 android:layout_marginLeft="30dp"/>
-        </RelativeLayout>
+        </RelativeLayout>-->
 
         <RelativeLayout
             android:id="@+id/app_menu"
@@ -127,6 +127,7 @@
                 android:textColor="#b8000000"
                 android:text="업데이트 (어플)"/>
             <TextView
+
                 android:layout_marginRight="12dp"
                 android:layout_toLeftOf="@+id/update_app_arrow_icon"
                 android:id="@+id/update_app_status_textview"

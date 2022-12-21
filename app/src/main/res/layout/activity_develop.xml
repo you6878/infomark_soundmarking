@@ -61,7 +61,7 @@
                     android:layout_height="match_parent"
 
                     android:gravity="center"
-                    android:text="블루투스 연결 대기 중"
+                    android:text="응답값 대기 중."
                     android:textColor="#b8000000"
                     android:textSize="16dp"
                     android:textStyle="normal" />
@@ -99,7 +99,7 @@
                     android:layout_height="match_parent"
 
                     android:gravity="center"
-                    android:text="블루투스 연결 대기 중"
+                    android:text="응답값 대기 중"
                     android:textColor="#b8000000"
                     android:textSize="16dp"
                     android:textStyle="normal" />
@@ -284,7 +284,7 @@
             android:textColor="@color/white" />
 
         <androidx.appcompat.widget.AppCompatButton
-            android:id="@+id/noise_report_able_btn"
+            android:id="@+id/noise_report_enable_btn"
             android:layout_width="match_parent"
             android:layout_height="40dp"
             android:layout_alignParentBottom="true"
@@ -306,6 +306,5 @@
             android:background="@drawable/black_btn"
             android:text="Noise Report Disable"
             android:textColor="@color/white" />
-
     </LinearLayout>
 </layout>

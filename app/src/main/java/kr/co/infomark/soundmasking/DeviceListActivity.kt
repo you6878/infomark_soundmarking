@@ -28,26 +28,30 @@ import com.google.gson.Gson
 import kr.co.infomark.soundmasking.bluetooth.DeviceList
 import kr.co.infomark.soundmasking.model.CommandModel
 import kr.co.infomark.soundmasking.model.DefaultModel
+import kr.co.infomark.soundmasking.model.LogModel
 import kr.co.infomark.soundmasking.model.WlanState
+import kr.co.infomark.soundmasking.util.Util
 import org.json.JSONObject
 
 class DeviceListActivity : Activity() {
-    lateinit var bt: BluetoothSPP
+    var bt: BluetoothSPP? = null
     lateinit var gson : Gson
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_devicelist)
         bt = BluetoothSPP.getInstance(this)
         gson = Gson()
-        if (!bt.isBluetoothAvailable) {
+        if (bt?.isBluetoothAvailable == false) {
 //            Toast.makeText(
 //                applicationContext, "Bluetooth is not available", Toast.LENGTH_SHORT
 //            ).show()
             finish()
         }
-        bt.setOnDataReceivedListener { data, message ->
+        bt?.setOnDataReceivedListener { data, message ->
             var isLog = JSONObject(message).isNull("log")
             if(!isLog){
+                val item = gson.fromJson(message, LogModel::class.java)
+                saveLog(item)
                 return@setOnDataReceivedListener
             }
             var cmd = JSONObject(message).getString("cmd")
@@ -56,7 +60,8 @@ class DeviceListActivity : Activity() {
                 println(model)
             }
         }
-        bt.setBluetoothConnectionListener(object : BluetoothConnectionListener {
+
+        bt?.setBluetoothConnectionListener(object : BluetoothConnectionListener {
             override fun onDeviceConnected(name: String, address: String) {
                 Toast.makeText(
                     applicationContext, "Pairing $name\n$address", Toast.LENGTH_SHORT
@@ -78,8 +83,8 @@ class DeviceListActivity : Activity() {
         val btnConnect = findViewById<View>(R.id.btnConnect) as Button
         btnConnect.setOnClickListener(object : View.OnClickListener {
             override fun onClick(v: View) {
-                if (bt.serviceState == BluetoothState.STATE_CONNECTED) {
-                    bt.disconnect()
+                if (bt?.serviceState == BluetoothState.STATE_CONNECTED) {
+                    bt?.disconnect()
                 } else {
                     val intent = Intent(this@DeviceListActivity, DeviceList::class.java)
                     intent.putExtra("bluetooth_devices", "Bluetooth devices")
@@ -94,20 +99,28 @@ class DeviceListActivity : Activity() {
             }
         })
     }
-
+    fun saveLog(item : LogModel){
+        var logs = Util.getSharedPreferenceString(this, Util.LOGS)
+        var list : MutableList<LogModel> = mutableListOf()
+        if(!logs.isEmpty()){
+            list = gson.fromJson(logs,Array<LogModel>::class.java).asList().toMutableList()
+        }
+        list.add(item)
+        Util.putSharedPreferenceString(this, Util.LOGS,gson.toJson(list))
+    }
     public override fun onDestroy() {
         super.onDestroy()
-        bt.stopService()
+        bt?.stopService()
     }
 
     public override fun onStart() {
         super.onStart()
-        if (!bt.isBluetoothEnabled) {
-            bt.enable()
+        if (bt?.isBluetoothEnabled == false) {
+            bt?.enable()
         } else {
-            if (!bt.isServiceAvailable) {
-                bt.setupService()
-                bt.startService(BluetoothState.DEVICE_OTHER)
+            if (bt?.isServiceAvailable == false) {
+                bt?.setupService()
+                bt?.startService(BluetoothState.DEVICE_OTHER)
                 setup()
             }
         }
@@ -115,10 +128,10 @@ class DeviceListActivity : Activity() {
 
     public override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent) {
         if (requestCode == BluetoothState.REQUEST_CONNECT_DEVICE) {
-            if (resultCode == RESULT_OK) bt.connect(data)
+            if (resultCode == RESULT_OK) bt?.connect(data)
         } else if (requestCode == BluetoothState.REQUEST_ENABLE_BT) {
             if (resultCode == RESULT_OK) {
-                bt.setupService()
+                bt?.setupService()
             } else {
 //                Toast.makeText(
 //                    applicationContext, "Bluetooth was not enabled.", Toast.LENGTH_SHORT
@@ -132,7 +145,7 @@ class DeviceListActivity : Activity() {
         val btnSend = findViewById<View>(R.id.btnSend) as Button
         btnSend.setOnClickListener {
             var commandModel = CommandModel(WlanState)
-            bt.send(gson.toJson(commandModel));
+            bt?.send(gson.toJson(commandModel));
         }
     }
 }

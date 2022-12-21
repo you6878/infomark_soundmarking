@@ -20,12 +20,12 @@ import kr.co.infomark.soundmasking.databinding.ActivitySpeakerWifiCofirmBinding
 
 
 class SpeakerWifiCofirmActivity : AppCompatActivity() {
-    lateinit var binding : ActivitySpeakerWifiCofirmBinding
+    var binding : ActivitySpeakerWifiCofirmBinding? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(this,R.layout.activity_speaker_wifi_cofirm)
-        binding.toolbarBackLeft.setOnClickListener { finish() }
+        binding?.toolbarBackLeft?.setOnClickListener { finish() }
     }
 
     override fun onResume() {

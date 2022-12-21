@@ -13,7 +13,7 @@ import kr.co.infomark.soundmasking.R
 import kr.co.infomark.soundmasking.databinding.SelectWifiItemBinding
 import kr.co.infomark.soundmasking.model.WlanNetworkListModel
 
-class WifiListAdapter(var nextPage: (String) -> Unit) : RecyclerView.Adapter<WifiListAdapter.WifiItemViewHolder>() {
+class WifiListAdapter(var nextPage: (String,String) -> Unit) : RecyclerView.Adapter<WifiListAdapter.WifiItemViewHolder>() {
 
     var scanResult = WlanNetworkListModel()
     lateinit var selectDeviceItemBinding : SelectWifiItemBinding
@@ -33,7 +33,7 @@ class WifiListAdapter(var nextPage: (String) -> Unit) : RecyclerView.Adapter<Wif
     override fun onBindViewHolder(holder: WifiItemViewHolder, position: Int) {
         val item = scanResult.data.get(position)
         holder.itemView.setOnClickListener {
-            nextPage(item.ssid)
+            nextPage(item.ssid,item.bssid)
         }
         holder.binding.deviceName.text = item?.ssid
     }

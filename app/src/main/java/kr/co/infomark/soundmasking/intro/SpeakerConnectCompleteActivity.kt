@@ -12,22 +12,19 @@ import kr.co.infomark.soundmasking.model.DeviceModel
 import kr.co.infomark.soundmasking.util.Util
 
 class SpeakerConnectCompleteActivity : AppCompatActivity() {
-    lateinit var binding : ActivitySpeakerConnectCompleteBinding
+    var binding : ActivitySpeakerConnectCompleteBinding? = null
     lateinit var gson : Gson
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(this,R.layout.activity_speaker_connect_complete)
         gson = Gson()
-        binding.wifiConnectCompleteButton.setOnClickListener {
+        binding?.wifiConnectCompleteButton?.setOnClickListener {
 
             val fromMainActivity = intent.getBooleanExtra("RESET",false);
             if(!fromMainActivity){
                 startActivity(Intent(this,MainActivity::class.java))
             }
             finish()
-
-
         }
-
     }
 }
