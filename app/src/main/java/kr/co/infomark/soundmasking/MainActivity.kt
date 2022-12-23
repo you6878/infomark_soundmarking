@@ -7,7 +7,6 @@ import android.os.Bundle
 import android.os.Environment
 import android.os.Handler
 import android.os.Looper
-import android.view.View
 import android.view.Window
 import android.view.WindowManager
 import android.widget.Toast
@@ -30,13 +29,11 @@ import kr.co.infomark.soundmasking.main.ListFragment
 import kr.co.infomark.soundmasking.main.MyPageFragment
 import kr.co.infomark.soundmasking.main.PlayFragment
 import kr.co.infomark.soundmasking.model.*
-import kr.co.infomark.soundmasking.popup.CanUseSpeakerDialogFragment
 import kr.co.infomark.soundmasking.util.MusicBox
 import kr.co.infomark.soundmasking.util.Util
 import org.apache.tika.Tika
 import org.json.JSONObject
 import java.io.File
-import kotlin.math.min
 
 
 class MainActivity : AppCompatActivity() {
@@ -63,13 +60,13 @@ class MainActivity : AppCompatActivity() {
 
 
     var bluetoothConnectStatus: MutableLiveData<String>? = MutableLiveData("Connecting")
-    var bluetoothNameStatus: MutableLiveData<String>? = MutableLiveData("")
-    var bluetoothFirmwareVersion: MutableLiveData<String>? = MutableLiveData("")
+    var bluetoothNameStatus: MutableLiveData<String>? = MutableLiveData("정보 확인 중..")
+    var bluetoothFirmwareVersion: MutableLiveData<String>? = MutableLiveData("정보 확인 중..")
 
 
 
-    var wifiName: MutableLiveData<String>? = MutableLiveData("")
-    var wifiBssid: MutableLiveData<String>? = MutableLiveData("")
+    var wifiName: MutableLiveData<String>? = MutableLiveData("정보 확인 중..")
+    var wifiBssid: MutableLiveData<String>? = MutableLiveData("정보 확인 중..")
     var wifiConnectStatus: MutableLiveData<String>? = MutableLiveData("Connecting")
 
 
@@ -86,6 +83,9 @@ class MainActivity : AppCompatActivity() {
     }
     fun displayOn(){
         val win: Window = window
+        win.addFlags(WindowManager.LayoutParams.FLAG_DISMISS_KEYGUARD)
+        win.addFlags(WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED)
+        win.addFlags(WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON)
         win.addFlags(
             WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED or
                     WindowManager.LayoutParams.FLAG_DISMISS_KEYGUARD or
@@ -96,6 +96,9 @@ class MainActivity : AppCompatActivity() {
     }
     fun displayOff(){
         val win: Window = window
+        win.clearFlags(WindowManager.LayoutParams.FLAG_DISMISS_KEYGUARD)
+        win.clearFlags(WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED)
+        win.clearFlags(WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON)
         win.clearFlags(WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED or
                 WindowManager.LayoutParams.FLAG_DISMISS_KEYGUARD or
                 WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON or
@@ -192,8 +195,8 @@ class MainActivity : AppCompatActivity() {
             if(cmd == SystemInfo){
                 var model = gson.fromJson(message, SystemInfoResultModel::class.java)
                 if(model.result == "ok"){
-                    bluetoothFirmwareVersion?.value = "FirmwareVersion : " +  model.revision +", Serial : "  + model.serialno
-                    bluetoothNameStatus?.value = model.model +"(" + model.brand + "-" + model.brand + ")"
+                    bluetoothFirmwareVersion?.value = "FW Version: " +  model.revision +" Serial No.: "  + model.serialno
+                    bluetoothNameStatus?.value = model.model
                 }
             }
         }
@@ -333,17 +336,26 @@ class MainActivity : AppCompatActivity() {
     fun checkWifiState() {
         stateJob = GlobalScope.launch {
             while (stateThreadWhile) {
-                delay(100)
+                delay(1000)
                 wifiState()
-                delay(100)
-                bluetoothState()
-                delay(100)
+                delay(1000)
                 spearkInfoState()
-                delay(1700)
+                delay(1000)
+                wlanListState()
+                delay(1000)
+                bluetoothState()
+                delay(1000)
 
             }
         }
         stateJob?.start()
+    }
+    fun wlanListState(){
+        if(wifiConnectStatus?.value == "connected"){
+            var commandModel = CommandModel(WlanNetworkList)
+            bt?.send(gson.toJson(commandModel))
+        }
+
     }
     fun wifiState(){
         var commandModel = CommandModel(WlanState)

@@ -4,6 +4,7 @@ import android.media.AudioAttributes
 import android.media.MediaPlayer
 import android.media.MediaPlayer.OnCompletionListener
 import androidx.lifecycle.MutableLiveData
+import com.google.firebase.crashlytics.FirebaseCrashlytics
 import java.io.File
 import java.io.IOException
 import java.util.*
@@ -25,9 +26,11 @@ class MusicBox :OnCompletionListener {
         if (mPlayer != null) {
             try {
                 mPlayer?.stop()
-                mPlayer?.prepare()
+                mPlayer?.reset()
+//                mPlayer?.prepare()
             }  catch (e: Exception) {
                 e.printStackTrace()
+
             }
         }
 
@@ -51,34 +54,30 @@ class MusicBox :OnCompletionListener {
     }
     fun playMusic() {
         if(playFiles.size == 0){
+            FirebaseCrashlytics.getInstance().log(playFiles.size.toString())
             return
         }
         val file = playFiles[currentIndex]
-        if (mPlayer != null) {
-            try {
+        if (mPlayer?.isPlaying == true) {
                 mPlayer?.stop()
-                mPlayer?.prepare()
-            }  catch (e: IOException) {
-                e.printStackTrace()
-            }
         }
 
         //streaming music on the connected A2DP device
-        mPlayer = MediaPlayer()
-        mPlayer?.setOnCompletionListener(this)
-        try {
+        if(mPlayer == null){
+            mPlayer = MediaPlayer()
+            mPlayer?.setOnCompletionListener(this)
             mPlayer?.setAudioAttributes(
                 AudioAttributes.Builder()
                     .setContentType(AudioAttributes.CONTENT_TYPE_MUSIC).build()
             )
             mPlayer?.setDataSource(file.absolutePath)
-            mPlayer?.prepare()
-            mPlayer?.start()
-            isPlay.value = true
-            currentPlayMusicName.value = file.name
-        } catch (e: IOException) {
-            e.printStackTrace()
+
         }
+
+
+        mPlayer?.start()
+        isPlay.value = true
+        currentPlayMusicName.value = file.name
 
     }
     fun releaseMediaPlayer() {
@@ -95,6 +94,7 @@ class MusicBox :OnCompletionListener {
     }
     fun stopMusic(){
         mPlayer?.stop()
+        mPlayer?.prepare()
         isPlay.value = false
     }
 

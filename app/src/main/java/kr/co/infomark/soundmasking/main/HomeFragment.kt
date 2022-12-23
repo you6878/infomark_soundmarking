@@ -63,12 +63,12 @@ class HomeFragment : Fragment() {
         mainActivity?.bluetoothFirmwareVersion?.observe(viewLifecycleOwner){
             binding?.fwVersionTextview?.text = it
         }
-//        mainActivity?.wifiName?.observe(viewLifecycleOwner){
-//            binding.wifiNameTextview.text = it
-//        }
-//        mainActivity?.wifiBssid?.observe(viewLifecycleOwner){
-//            binding.bssidTextview.text = it
-//        }
+        mainActivity?.wifiName?.observe(viewLifecycleOwner){
+            binding?.wifiNameTextview?.text = it
+        }
+        mainActivity?.wifiBssid?.observe(viewLifecycleOwner){
+            binding?.bssidTextview?.text = it
+        }
 
         binding?.wifiLinear?.setOnLongClickListener {
 
@@ -108,8 +108,8 @@ class HomeFragment : Fragment() {
     override fun onResume() {
         super.onResume()
 
-        binding?.wifiNameTextview?.text = Util.getSharedPreferenceString(activity,Util.WIFI_NAME)
-        binding?.bssidTextview?.text = Util.getSharedPreferenceString(activity,Util.BSSID_NAME)
+//        binding?.wifiNameTextview?.text = Util.getSharedPreferenceString(activity,Util.WIFI_NAME)
+//        binding?.bssidTextview?.text = Util.getSharedPreferenceString(activity,Util.BSSID_NAME)
         binding?.appversionTextview?.text = getVersionName()
         binding?.updateDateTextview?.text = Costant.updateDate
     }
