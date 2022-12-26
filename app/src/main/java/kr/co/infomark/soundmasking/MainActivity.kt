@@ -196,7 +196,7 @@ class MainActivity : AppCompatActivity() {
                 var model = gson.fromJson(message, SystemInfoResultModel::class.java)
                 if(model.result == "ok"){
                     bluetoothFirmwareVersion?.value = "FW Version: " +  model.revision +" Serial No.: "  + model.serialno
-                    bluetoothNameStatus?.value = model.model
+                    bluetoothNameStatus?.value = model.model +"(" + model.brand + "-" + model.character + ")"
                 }
             }
         }
