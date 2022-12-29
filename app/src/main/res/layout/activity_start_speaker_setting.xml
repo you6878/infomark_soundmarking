@@ -30,10 +30,18 @@
                 android:text="스피커 연동" />
         </RelativeLayout>
         <ImageView
+            android:id="@+id/speaker_img"
             android:layout_marginTop="64dp"
             android:layout_below="@+id/toolbar"
             android:layout_centerHorizontal="true"
             android:src="@drawable/speaker_img"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+        <ImageView
+            android:src="@drawable/ico_firstlogo"
+            android:layout_marginTop="45dp"
+            android:layout_centerHorizontal="true"
+            android:layout_below="@+id/speaker_img"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"/>
 

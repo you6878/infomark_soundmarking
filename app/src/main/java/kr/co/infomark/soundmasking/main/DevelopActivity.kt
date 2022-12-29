@@ -42,7 +42,7 @@ class DevelopActivity : AppCompatActivity() {
             var commandModel = MaskingSetParameterDTO()
             commandModel.cmd = "masking_set_parameter"
             commandModel.key = "gg_pstep"
-            commandModel.value = binding?.soundGgPsetpTextview?.text.toString()
+            commandModel.value = binding?.soundGgPstepTextview?.text.toString()
             bt?.send(gson.toJson(commandModel))
         }
         binding?.soundGgNstepBtn?.setOnClickListener {
@@ -50,13 +50,15 @@ class DevelopActivity : AppCompatActivity() {
             commandModel.cmd = "masking_set_parameter"
             commandModel.key = "gg_nstep"
             commandModel.value = binding?.soundGgNstepTextview?.text.toString()
+            println(gson.toJson(commandModel))
             bt?.send(gson.toJson(commandModel))
         }
         binding?.soundEqPsetpBtn?.setOnClickListener {
             var commandModel = MaskingSetParameterDTO()
             commandModel.cmd = "masking_set_parameter"
             commandModel.key = "eq_step"
-            commandModel.value = binding?.soundGgPsetpTextview?.text.toString()
+            commandModel.value = binding?.soundGgPstepTextview?.text.toString()
+
             bt?.send(gson.toJson(commandModel))
         }
 
@@ -130,7 +132,7 @@ class DevelopActivity : AppCompatActivity() {
 //                    MaskingGetParameterDTO();
                 var model = gson.fromJson(message, MaskingGetParameterDTO::class.java)
                 if (model.result == "ok") {
-                    binding?.soundGgPsetpTextview?.setText(model.gg_pstep)
+                    binding?.soundGgPstepTextview?.setText(model.gg_pstep)
                     binding?.soundGgNstepTextview?.setText(model.gg_nstep)
                     binding?.soundEqPsetpTextview?.setText(model.eq_step)
                 }

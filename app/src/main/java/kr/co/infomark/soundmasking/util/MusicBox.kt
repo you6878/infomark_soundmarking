@@ -79,7 +79,6 @@ class MusicBox :OnCompletionListener,MediaPlayer.OnPreparedListener {
     }
     fun stopMusic(){
         mPlayer?.stop()
-        mPlayer?.prepare()
         isPlay.value = false
     }
 

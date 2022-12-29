@@ -30,7 +30,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerInParent="true"
-                android:text="로그"
+                android:text="개발자 모드"
                 android:textColor="#000000"
                 android:textSize="20dp"
                 android:textStyle="normal" />
@@ -127,16 +127,15 @@
                     android:layout_height="match_parent"
                     android:layout_marginLeft="36dp"
                     android:gravity="center"
-                    android:text="GG_PSETP : "
+                    android:text="GG_PSTEP : "
                     android:textColor="#b8000000"
                     android:textSize="16dp"
                     android:textStyle="normal" />
                 <EditText
-                    android:inputType="numberSigned"
-                    android:id="@+id/sound_gg_psetp_textview"
+                    android:inputType="numberDecimal"
+                    android:id="@+id/sound_gg_pstep_textview"
                     android:layout_width="100dp"
                     android:layout_height="match_parent"
-
                     android:gravity="center"
                     android:text=""
                     android:textColor="#b8000000"
@@ -179,7 +178,7 @@
                     android:textSize="16dp"
                     android:textStyle="normal" />
                 <EditText
-                    android:inputType="numberSigned"
+                    android:inputType="numberDecimal"
                     android:id="@+id/sound_gg_nstep_textview"
                     android:layout_width="100dp"
                     android:layout_height="match_parent"
@@ -226,7 +225,7 @@
                     android:textSize="16dp"
                     android:textStyle="normal" />
                 <EditText
-                    android:inputType="numberSigned"
+                    android:inputType="numberDecimal"
                     android:id="@+id/sound_eq_psetp_textview"
                     android:layout_width="100dp"
                     android:layout_height="match_parent"

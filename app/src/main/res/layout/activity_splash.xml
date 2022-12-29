@@ -7,17 +7,9 @@
     android:layout_height="match_parent"
     android:background="@color/gray_background"
     tools:context=".intro.SplashActivity">
-    <LinearLayout
-        android:orientation="vertical"
-        android:gravity="center"
-        android:layout_width="150dp"
-        android:layout_height="150dp">
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"/>
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"/>
-    </LinearLayout>
+    <ImageView
+        android:layout_width="wrap_content"
+        android:src="@drawable/ico_firstlogo"
+        android:layout_height="wrap_content"/>
 
 </LinearLayout>
