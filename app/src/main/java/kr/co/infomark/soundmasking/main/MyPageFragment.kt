@@ -50,9 +50,10 @@ class MyPageFragment : Fragment() {
             if(mainActivity?.bt?.isConnected == true){
                 startActivity(Intent(activity, DevelopActivity::class.java))
             }else{
-                Toast.makeText(requireActivity(),"현재 SPP 블루투스 연결 중 입니다. 잠시만 기달려주세요.",Toast.LENGTH_LONG).show()
+                Toast.makeText(requireActivity(),"현재 SPP 블루투스 연결 중 입니다. 잠시 후 다시 시도해주세요.",Toast.LENGTH_LONG).show()
+                val main = activity as? MainActivity
+                main?.buletoothInit()
             }
-
         }
         var mainActivity = requireActivity() as? MainActivity
         mainActivity?.bluetoothConnectStatus?.observe(viewLifecycleOwner) {

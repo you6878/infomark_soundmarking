@@ -38,10 +38,18 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"/>
         <ImageView
-            android:src="@drawable/ico_firstlogo"
+            android:id="@+id/logo_imageview"
+            android:src="@drawable/ico_logo_wave"
             android:layout_marginTop="45dp"
             android:layout_centerHorizontal="true"
             android:layout_below="@+id/speaker_img"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+        <ImageView
+            android:src="@drawable/ico_logotext"
+            android:layout_marginTop="25dp"
+            android:layout_centerHorizontal="true"
+            android:layout_below="@+id/logo_imageview"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"/>
 

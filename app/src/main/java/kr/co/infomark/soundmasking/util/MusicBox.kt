@@ -17,7 +17,7 @@ class MusicBox :OnCompletionListener,MediaPlayer.OnPreparedListener {
     var isPlay : MutableLiveData<Boolean> = MutableLiveData(false)
     var randomPlay : MutableLiveData<Boolean> = MutableLiveData(false)
 
-    var repeatPlay : MutableLiveData<Boolean> = MutableLiveData(false)
+    var repeatPlay : MutableLiveData<Int> = MutableLiveData(0)
 
     fun playMusic(path : String) {
 
@@ -119,7 +119,7 @@ class MusicBox :OnCompletionListener,MediaPlayer.OnPreparedListener {
     }
     fun eventRandomBtn(){
         if(randomPlay.value == false){
-            repeatPlay.value = false
+            repeatPlay.value = 0
             randomPlay.value = true
         }else{
             randomPlay.value = false
@@ -127,12 +127,15 @@ class MusicBox :OnCompletionListener,MediaPlayer.OnPreparedListener {
 
     }
     fun eventRepeatBtn(){
+        randomPlay.value = false
 
-        if(repeatPlay.value == false) {
-            repeatPlay.value = true
-            randomPlay.value = false
-        }else{
-            repeatPlay.value = false
+        if(repeatPlay.value == 0) {
+            repeatPlay.value = 1
+
+        }else if(repeatPlay.value == 1) {
+            repeatPlay.value = 2
+        } else{
+            repeatPlay.value = 0
         }
     }
 
@@ -145,10 +148,16 @@ class MusicBox :OnCompletionListener,MediaPlayer.OnPreparedListener {
     }
 
     override fun onCompletion(p0: MediaPlayer?) {
-        if(repeatPlay.value == true){
+        if(repeatPlay.value == 1){
+            //한곡
             playMusic()
-        }else{
+        }else if(repeatPlay.value == 2){
+            //여러곡반복
             nextMusic()
+        } else {
+            if(currentIndex < playFiles.size - 1){
+                nextMusic()
+            }
         }
     }
 }

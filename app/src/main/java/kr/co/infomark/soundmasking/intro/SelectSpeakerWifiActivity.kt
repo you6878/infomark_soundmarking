@@ -147,15 +147,18 @@ class SelectSpeakerWifiActivity : AppCompatActivity() {
                 saveLog(item)
                 return@setOnDataReceivedListener
             }
-            var cmd = JSONObject(message).getString("cmd")
-            if(cmd == WlanScanResult){
-                println(message)
-                binding?.progressCir?.visibility = View.GONE
-                var res = gson.fromJson(message, WlanNetworkListModel::class.java)
-                if(res.result == "ok"){
-                    wifiListAdapter.addItems(res)
-                }else{
-                    println(res.toString())
+            var isCmd = JSONObject(message).isNull("cmd")
+            if(!isCmd){
+                var cmd = JSONObject(message).getString("cmd")
+                if(cmd == WlanScanResult){
+                    println(message)
+                    binding?.progressCir?.visibility = View.GONE
+                    var res = gson.fromJson(message, WlanNetworkListModel::class.java)
+                    if(res.result == "ok"){
+                        wifiListAdapter.addItems(res)
+                    }else{
+                        println(res.toString())
+                    }
                 }
             }
         }

@@ -100,42 +100,46 @@ class StartSpeakerSettingActivity : AppCompatActivity() {
                 saveLog(item)
                 return@setOnDataReceivedListener
             }
-            var cmd = JSONObject(message).getString("cmd")
-            if(cmd == WlanState){
-                var model = gson.fromJson(message, DefaultModel::class.java)
+            var isCmd = JSONObject(message).isNull("cmd")
+            if(!isCmd){
+                var cmd = JSONObject(message).getString("cmd")
+                if(cmd == WlanState){
+                    var model = gson.fromJson(message, DefaultModel::class.java)
 
-                //이미 연결된 상태
-                if(model.result == "ok" && model.state == "connected"){
-                    var command = CommandModel(WlanNetworkList)
-                    bt?.send(gson.toJson(command))
-                }else if(model.result == "ok" && model.state == "enabled"){
-                    binding?.progressCir?.visibility = View.GONE
-                    val dialog = CanUseSpeakerDialogFragment()
-                    dialog.show(supportFragmentManager, "CanUseSpeakerDialogFragment")
-                }else if(model.result == "ok" && model.state == "disabled"){
-                    Toast.makeText(this, "프렌즈 스피커의 WIFI가 꺼져있어 설정할 수 없습니다.",Toast.LENGTH_LONG).show()
-                }
-            }
-            if(cmd == WlanNetworkList){
-                moveMainPage = true
-                var wifis = gson.fromJson(message, WlanNetworkListModel::class.java)
-                for (item in wifis.data){
-                    if(item.status == "current"){
-                        var ssid = item.ssid
-                        var bssid = item.bssid
-
-                        if(ssid.length > 1){
-                            ssid = ssid.substring(1,ssid.length - 1)
-                        }
-
-                        Util.putSharedPreferenceString(this@StartSpeakerSettingActivity,Util.WIFI_NAME, ssid)
+                    //이미 연결된 상태
+                    if(model.result == "ok" && model.state == "connected"){
+                        var command = CommandModel(WlanNetworkList)
+                        bt?.send(gson.toJson(command))
+                    }else if(model.result == "ok" && model.state == "enabled"){
                         binding?.progressCir?.visibility = View.GONE
                         val dialog = CanUseSpeakerDialogFragment()
                         dialog.show(supportFragmentManager, "CanUseSpeakerDialogFragment")
+                    }else if(model.result == "ok" && model.state == "disabled"){
+                        Toast.makeText(this, "프렌즈 스피커의 WIFI가 꺼져있어 설정할 수 없습니다.",Toast.LENGTH_LONG).show()
                     }
                 }
+                if(cmd == WlanNetworkList){
+                    moveMainPage = true
+                    var wifis = gson.fromJson(message, WlanNetworkListModel::class.java)
+                    for (item in wifis.data){
+                        if(item.status == "current"){
+                            var ssid = item.ssid
+                            var bssid = item.bssid
 
+                            if(ssid.length > 1){
+                                ssid = ssid.substring(1,ssid.length - 1)
+                            }
+
+                            Util.putSharedPreferenceString(this@StartSpeakerSettingActivity,Util.WIFI_NAME, ssid)
+                            binding?.progressCir?.visibility = View.GONE
+                            val dialog = CanUseSpeakerDialogFragment()
+                            dialog.show(supportFragmentManager, "CanUseSpeakerDialogFragment")
+                        }
+                    }
+
+                }
             }
+
         }
         bt?.setBluetoothConnectionListener(object : BluetoothSPP.BluetoothConnectionListener {
             override fun onDeviceConnected(name: String, address: String) {

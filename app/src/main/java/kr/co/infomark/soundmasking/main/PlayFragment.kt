@@ -97,9 +97,13 @@ class PlayFragment : Fragment() {
         }
 
         musicBox?.repeatPlay?.observe(viewLifecycleOwner) {
-            if(it){
+
+            //0 반복해제, 1:한곡반복, 2:여러곡반복
+            if(it == 1){
                 binding?.repeatBtn?.setImageResource(R.drawable.ico_light_repeat_activated)
-            }else{
+            }else if(it == 2){
+                binding?.repeatBtn?.setImageResource(R.drawable.ico_light_all_repeat_activated)
+            } else{
                 binding?.repeatBtn?.setImageResource(R.drawable.ico_light_repeat_deactivated)
             }
         }

@@ -21,23 +21,26 @@ class DevelopActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_develop)
-        binding?.soundMaskingEnable?.setOnClickListener {
-            var commandModel = CommandModel(MaskingEnable)
-            bt?.send(gson.toJson(commandModel))
+        binding?.noiseReportTextview?.setOnClickListener {
+            if(binding?.noiseReportTextview?.text == "enabled"){
+                var commandModel = CommandModel(ReportingDisable)
+                bt?.send(gson.toJson(commandModel))
+            }else{
+                var commandModel = CommandModel(ReportingEnable)
+                bt?.send(gson.toJson(commandModel))
+            }
         }
-        binding?.soundMaskingDisable?.setOnClickListener {
-            var commandModel = CommandModel(MaskingDisable)
-            bt?.send(gson.toJson(commandModel))
+        binding?.soundMaskingTextview?.setOnClickListener {
+            if(binding?.soundMaskingTextview?.text == "enabled"){
+                var commandModel = CommandModel(MaskingDisable)
+                bt?.send(gson.toJson(commandModel))
+            }else{
+                var commandModel = CommandModel(MaskingEnable)
+                bt?.send(gson.toJson(commandModel))
+            }
+
         }
 
-        binding?.noiseReportEnableBtn?.setOnClickListener {
-            var commandModel = CommandModel(ReportingEnable)
-            bt?.send(gson.toJson(commandModel))
-        }
-        binding?.noiseReportDisableBtn?.setOnClickListener {
-            var commandModel = CommandModel(ReportingDisable)
-            bt?.send(gson.toJson(commandModel))
-        }
         binding?.soundGgPstepBtn?.setOnClickListener {
             var commandModel = MaskingSetParameterDTO()
             commandModel.cmd = "masking_set_parameter"
@@ -57,7 +60,34 @@ class DevelopActivity : AppCompatActivity() {
             var commandModel = MaskingSetParameterDTO()
             commandModel.cmd = "masking_set_parameter"
             commandModel.key = "eq_step"
-            commandModel.value = binding?.soundGgPstepTextview?.text.toString()
+            commandModel.value = binding?.soundEqPsetpTextview?.text.toString()
+
+            bt?.send(gson.toJson(commandModel))
+        }
+
+        binding?.soundGgPclipBtn?.setOnClickListener {
+            var commandModel = MaskingSetParameterDTO()
+            commandModel.cmd = "masking_set_parameter"
+            commandModel.key = "gg_pclip"
+            commandModel.value = binding?.soundGgPclipTextview?.text.toString()
+
+            bt?.send(gson.toJson(commandModel))
+        }
+
+        binding?.soundGgNclipBtn?.setOnClickListener {
+            var commandModel = MaskingSetParameterDTO()
+            commandModel.cmd = "masking_set_parameter"
+            commandModel.key = "gg_nclip"
+            commandModel.value = binding?.soundGgNclipTextview?.text.toString()
+
+            bt?.send(gson.toJson(commandModel))
+        }
+
+        binding?.soundEqClipBtn?.setOnClickListener {
+            var commandModel = MaskingSetParameterDTO()
+            commandModel.cmd = "masking_set_parameter"
+            commandModel.key = "eq_clip"
+            commandModel.value = binding?.soundEqClipTextview?.text.toString()
 
             bt?.send(gson.toJson(commandModel))
         }
@@ -77,7 +107,6 @@ class DevelopActivity : AppCompatActivity() {
 
     fun getSoundMaskingState() {
         GlobalScope.launch {
-
             var maskingState = CommandModel(MaskingState)
             bt?.send(gson.toJson(maskingState))
             var reportingState = CommandModel(ReportingState)
@@ -105,62 +134,76 @@ class DevelopActivity : AppCompatActivity() {
                 return@setOnDataReceivedListener
             }
             println(message)
-            var cmd = JSONObject(message).getString("cmd")
-            if(cmd == ReportingState){
-                var model = gson.fromJson(message, DefaultModel::class.java)
-                if (model.result == "ok") {
-                    binding?.noiseReportTextview?.text = model.state
-                }
-            }
-            if(cmd == ReportingEnable){
-                var model = gson.fromJson(message, DefaultModel::class.java)
-                if (model.result == "ok") {
-                    binding?.noiseReportTextview?.text = "enable"
-                    Toast.makeText(this@DevelopActivity,"정상적으로 적용 되었습니다",Toast.LENGTH_LONG).show()
-                }
-            }
 
-            if(cmd == ReportingDisable){
-                var model = gson.fromJson(message, DefaultModel::class.java)
-                if (model.result == "ok") {
-                    binding?.noiseReportTextview?.text = "disable"
-                    Toast.makeText(this@DevelopActivity,"정상적으로 적용 되었습니다",Toast.LENGTH_LONG).show()
-                }
-            }
 
-            if (cmd == MaskingGetParameter) {
+
+
+            var isCmd = JSONObject(message).isNull("cmd")
+            if(!isCmd){
+                var cmd = JSONObject(message).getString("cmd")
+                if(cmd == ReportingState){
+                    var model = gson.fromJson(message, DefaultModel::class.java)
+                    if (model.result == "ok") {
+                        binding?.noiseReportTextview?.text = model.state
+                    }
+                }
+                if(cmd == ReportingEnable){
+                    var model = gson.fromJson(message, DefaultModel::class.java)
+                    if (model.result == "ok") {
+                        binding?.noiseReportTextview?.text = "enabled"
+                        Toast.makeText(this@DevelopActivity,"정상적으로 적용 되었습니다",Toast.LENGTH_LONG).show()
+                    }
+                }
+
+                if(cmd == ReportingDisable){
+                    var model = gson.fromJson(message, DefaultModel::class.java)
+                    if (model.result == "ok") {
+                        binding?.noiseReportTextview?.text = "disabled"
+                        Toast.makeText(this@DevelopActivity,"정상적으로 적용 되었습니다",Toast.LENGTH_LONG).show()
+                    }
+                }
+
+                if (cmd == MaskingGetParameter) {
 //                    MaskingGetParameterDTO();
-                var model = gson.fromJson(message, MaskingGetParameterDTO::class.java)
-                if (model.result == "ok") {
-                    binding?.soundGgPstepTextview?.setText(model.gg_pstep)
-                    binding?.soundGgNstepTextview?.setText(model.gg_nstep)
-                    binding?.soundEqPsetpTextview?.setText(model.eq_step)
+                    var model = gson.fromJson(message, MaskingGetParameterDTO::class.java)
+                    if (model.result == "ok") {
+                        binding?.soundGgPstepTextview?.setText(model.gg_pstep)
+                        binding?.soundGgNstepTextview?.setText(model.gg_nstep)
+                        binding?.soundEqPsetpTextview?.setText(model.eq_step)
+
+                        //gg_pclip
+                        binding?.soundGgPclipTextview?.setText(model.gg_pclip)
+                        //gg_nclip
+                        binding?.soundGgNclipTextview?.setText(model.gg_nclip)
+                        //eq_clip
+                        binding?.soundEqClipTextview?.setText(model.eq_clip)
+                    }
                 }
-            }
-            if (cmd == MaskingSetParameter) {
-                var model = gson.fromJson(message, DefaultModel::class.java)
-                if (model.result == "ok") {
-                    Toast.makeText(this@DevelopActivity,"정상적으로 적용 되었습니다",Toast.LENGTH_LONG).show()
+                if (cmd == MaskingSetParameter) {
+                    var model = gson.fromJson(message, DefaultModel::class.java)
+                    if (model.result == "ok") {
+                        Toast.makeText(this@DevelopActivity,"정상적으로 적용 되었습니다",Toast.LENGTH_LONG).show()
+                    }
                 }
-            }
-            if (cmd == MaskingDisable) {
-                var model = gson.fromJson(message, DefaultModel::class.java)
-                if (model.result == "ok") {
-                    binding?.soundMaskingTextview?.text = "disable"
-                    Toast.makeText(this@DevelopActivity,"정상적으로 적용 되었습니다",Toast.LENGTH_LONG).show()
+                if (cmd == MaskingDisable) {
+                    var model = gson.fromJson(message, DefaultModel::class.java)
+                    if (model.result == "ok") {
+                        binding?.soundMaskingTextview?.text = "disabled"
+                        Toast.makeText(this@DevelopActivity,"정상적으로 적용 되었습니다",Toast.LENGTH_LONG).show()
+                    }
                 }
-            }
-            if (cmd == MaskingEnable) {
-                var model = gson.fromJson(message, DefaultModel::class.java)
-                if (model.result == "ok") {
-                    binding?.soundMaskingTextview?.text = "enable"
-                    Toast.makeText(this@DevelopActivity,"정상적으로 적용 되었습니다",Toast.LENGTH_LONG).show()
+                if (cmd == MaskingEnable) {
+                    var model = gson.fromJson(message, DefaultModel::class.java)
+                    if (model.result == "ok") {
+                        binding?.soundMaskingTextview?.text = "enabled"
+                        Toast.makeText(this@DevelopActivity,"정상적으로 적용 되었습니다",Toast.LENGTH_LONG).show()
+                    }
                 }
-            }
-            if (cmd == MaskingState) {
-                var model = gson.fromJson(message, DefaultModel::class.java)
-                if (model.result == "ok") {
-                    binding?.soundMaskingTextview?.text = model.state
+                if (cmd == MaskingState) {
+                    var model = gson.fromJson(message, DefaultModel::class.java)
+                    if (model.result == "ok") {
+                        binding?.soundMaskingTextview?.text = model.state
+                    }
                 }
             }
         }

@@ -76,17 +76,20 @@ class InputWifiPasswordActivity : AppCompatActivity() {
                 saveLog(item)
                 return@setOnDataReceivedListener
             }
-
-            var cmd = JSONObject(message).getString("cmd")
-            if(cmd == WlanAddNetwork){
-                var model = gson.fromJson(message, DefaultModel::class.java)
-                if(model.result == "ok"){
-                    setResult(RESULT_OK)
-                    finish()
-                }else{
-                    Toast.makeText(this,"와이파이 정보가 정확하지 않습니다.",Toast.LENGTH_LONG).show()
+            var isCmd = JSONObject(message).isNull("cmd")
+            if(!isCmd){
+                var cmd = JSONObject(message).getString("cmd")
+                if(cmd == WlanAddNetwork){
+                    var model = gson.fromJson(message, DefaultModel::class.java)
+                    if(model.result == "ok"){
+                        setResult(RESULT_OK)
+                        finish()
+                    }else{
+                        Toast.makeText(this,"와이파이 정보가 정확하지 않습니다.",Toast.LENGTH_LONG).show()
+                    }
                 }
             }
+
         }
     }
     fun saveLog(item : LogModel){

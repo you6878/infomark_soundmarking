@@ -174,31 +174,36 @@ class MainActivity : AppCompatActivity() {
                 saveLog(item)
                 return@setOnDataReceivedListener
             }
-            var cmd = JSONObject(message).getString("cmd")
-            if (cmd == WlanState) {
-                var model = gson.fromJson(message, DefaultModel::class.java)
-                if (model.result == "ok") {
-                    wifiConnectStatus?.value = model.state
+
+            var isCmd = JSONObject(message).isNull("cmd")
+            if(!isCmd){
+                var cmd = JSONObject(message).getString("cmd")
+                if (cmd == WlanState) {
+                    var model = gson.fromJson(message, DefaultModel::class.java)
+                    if (model.result == "ok") {
+                        wifiConnectStatus?.value = model.state
+                    }
+                }
+                if (cmd == WlanNetworkList) {
+                    var model = gson.fromJson(message, WlanNetworkListModel::class.java)
+                    if (model.result == "ok") {
+                        selectWifiConnectInfo(model.data)
+                    }
+                }
+                if (cmd == WlanRemoveNetwork) {
+                    var i = Intent(this, SelectSpeakerWifiActivity::class.java)
+                    i.putExtra("RESET", true)
+                    startActivity(i)
+                }
+                if(cmd == SystemInfo){
+                    var model = gson.fromJson(message, SystemInfoResultModel::class.java)
+                    if(model.result == "ok"){
+                        bluetoothFirmwareVersion?.value = "FW Version: " +  model.revision +" Serial No.: "  + model.serialno
+                        bluetoothNameStatus?.value = model.model +"(" + model.brand + "-" + model.character + ")"
+                    }
                 }
             }
-            if (cmd == WlanNetworkList) {
-                var model = gson.fromJson(message, WlanNetworkListModel::class.java)
-                if (model.result == "ok") {
-                    selectWifiConnectInfo(model.data)
-                }
-            }
-            if (cmd == WlanRemoveNetwork) {
-                var i = Intent(this, SelectSpeakerWifiActivity::class.java)
-                i.putExtra("RESET", true)
-                startActivity(i)
-            }
-            if(cmd == SystemInfo){
-                var model = gson.fromJson(message, SystemInfoResultModel::class.java)
-                if(model.result == "ok"){
-                    bluetoothFirmwareVersion?.value = "FW Version: " +  model.revision +" Serial No.: "  + model.serialno
-                    bluetoothNameStatus?.value = model.model +"(" + model.brand + "-" + model.character + ")"
-                }
-            }
+
         }
     }
     fun selectWifiConnectInfo(datas : MutableList<WlanNetworkListModel.Data>){
@@ -293,6 +298,9 @@ class MainActivity : AppCompatActivity() {
 
     override fun onResume() {
         super.onResume()
+        buletoothInit()
+    }
+    fun buletoothInit(){
         if (bt?.isBluetoothEnabled == false) {
             bt?.enable()
         } else {

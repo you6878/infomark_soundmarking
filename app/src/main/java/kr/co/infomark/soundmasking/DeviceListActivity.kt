@@ -48,17 +48,28 @@ class DeviceListActivity : Activity() {
             finish()
         }
         bt?.setOnDataReceivedListener { data, message ->
+
+            var state = JSONObject(message).isNull("state")
+            if(!state){
+
+                return@setOnDataReceivedListener
+            }
+
             var isLog = JSONObject(message).isNull("log")
             if(!isLog){
                 val item = gson.fromJson(message, LogModel::class.java)
                 saveLog(item)
                 return@setOnDataReceivedListener
             }
-            var cmd = JSONObject(message).getString("cmd")
-            if(cmd == "wlan_state"){
-                var model = gson.fromJson(message,DefaultModel::class.java)
-                println(model)
+            var isCmd = JSONObject(message).isNull("cmd")
+            if(!isCmd){
+                var cmd = JSONObject(message).getString("cmd")
+                if(cmd == "wlan_state"){
+                    var model = gson.fromJson(message,DefaultModel::class.java)
+                    println(model)
+                }
             }
+
         }
 
         bt?.setBluetoothConnectionListener(object : BluetoothConnectionListener {
