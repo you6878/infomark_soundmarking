@@ -31,7 +31,7 @@
                 android:layout_height="wrap_content"
                 android:textStyle="normal"
                 android:textSize="20dp"
-                android:textColor="#000000"
+                android:textColor="@color/black"
                 android:layout_centerInParent="true"
                 android:text="스피커 연동" />
         </RelativeLayout>
@@ -50,7 +50,7 @@
             android:layout_height="wrap_content"
             android:textStyle="normal"
             android:textSize="14dp"
-            android:textColor="#cc000000"
+            android:textColor="@color/light_black"
             android:lineSpacingExtra="4sp"
             android:gravity="center_horizontal"
             tools:text="스피커의 원활한 사용을 위해서는\n와이파이 연결이 필요합니다."/>
@@ -67,12 +67,14 @@
             <androidx.appcompat.widget.AppCompatButton
                 android:id="@+id/speaker_start_popup_cancel"
                 android:layout_width="0dp"
-                android:layout_height="wrap_content"
+                android:layout_height="24dp"
                 android:layout_weight="1"
                 android:background="@drawable/white_btn"
-                android:text="이전" />
+                android:text="이전"
+                android:textStyle="bold" />
 
             <androidx.appcompat.widget.AppCompatButton
+                android:textStyle="bold"
                 android:id="@+id/speaker_start_popup_apply"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"

@@ -52,7 +52,7 @@ class MainActivity : AppCompatActivity() {
 
     val storageFiles = mutableListOf<File>()
 
-    val musicBox = MusicBox()
+    val musicBox = MusicBox(this);
 
     var stateJob : Job? = null
     var stateThreadWhile = true
@@ -70,16 +70,29 @@ class MainActivity : AppCompatActivity() {
     var wifiConnectStatus: MutableLiveData<String>? = MutableLiveData("Connecting")
 
 
+    var progress: MutableLiveData<Int>? = MutableLiveData(0)
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_main)
         gson = Gson()
         bt = BluetoothSPP.getInstance(this); //Initializing
+
         supportFragmentManager.beginTransaction().replace(R.id.main_content, home).commitAllowingStateLoss()
         initTabbar()
+        loadFile()
+        checkWifiState()
+    }
+    fun initSetting(){
+
+        musicBox.currentIndex = 0;
+        musicBox.selectFileSize = -1;
+        musicBox.currentPlayMusicName.value = ""
+        progress?.value = 0
+    }
+    fun loadFile(){
         val dir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_MUSIC)
         lsDir(dir)
-        checkWifiState()
     }
     fun displayOn(){
         val win: Window = window
@@ -145,23 +158,31 @@ class MainActivity : AppCompatActivity() {
     }
 
     fun lsDir(dir: File) {
+
         //contains list of all files ending with
         val listFile = dir.listFiles()
         if (listFile != null) {
+
             for (i in listFile.indices) {
                 if (listFile[i].isDirectory) { // if its a directory need to get the files under that directory
                     lsDir(listFile[i])
                 } else { // add path of  files to your arraylist for later use
                     //Do what ever u want
                     val file = listFile[i]
-                    val mimeType = tika.detect(file)
-                    if(mimeType == "audio/mpeg" || mimeType == "audio/vnd.wave"){
+                    val mimeType = file.extension
+                    if(mimeType == "mp3" || mimeType == "wav"){
                         storageFiles.add(File(listFile[i].absolutePath))
                     }
                 }
             }
         }
-        musicBox.setPlayList(storageFiles)
+
+
+        //오룸차순 설정
+        storageFiles.sortBy{ it.name }
+        musicBox.setPlayList(storageFiles.toList())
+        storageFiles.clear()
+
     }
 
     fun setBTListener() {
@@ -309,8 +330,8 @@ class MainActivity : AppCompatActivity() {
                 bt?.startService(BluetoothState.DEVICE_OTHER)
                 //Auto Connect in exceoption
                 if (bt?.connectedDeviceAddress == null) {
-                    val mac = Util.MAC
-                    bt?.connect(Util.getSharedPreferenceString(this, mac))
+                    val address = Util.getSharedPreferenceString(this,Util.MAC)
+                    bt?.connect(address)
                 }
             }
             deviceCallback()

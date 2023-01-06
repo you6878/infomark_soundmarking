@@ -31,7 +31,7 @@
                 android:layout_height="wrap_content"
                 android:textStyle="normal"
                 android:textSize="20dp"
-                android:textColor="#000000"
+                android:textColor="@color/black"
                 android:layout_centerInParent="true"
                 android:text="스피커 연동" />
         </RelativeLayout>
@@ -43,7 +43,7 @@
             android:layout_below="@+id/toolbar"
             android:layout_marginLeft="20dp"
             android:layout_marginTop="16dp"
-            android:textColor="#000000"
+            android:textColor="@color/black"
             android:textSize="18dp"
             android:textStyle="normal"
             android:text="와이파이를 선택해주세요." />
@@ -76,9 +76,10 @@
                 android:layout_marginLeft="16dp"
                 android:layout_marginRight="16dp"
                 android:layout_marginBottom="24dp"
-                android:background="@drawable/black_btn"
+                android:background="@drawable/white_btn"
+                android:textStyle="bold"
                 android:text="건너뛰기"
-                android:textColor="@color/white" />
+                />
             <androidx.appcompat.widget.AppCompatButton
                 android:id="@+id/wifi_refresh_button"
                 android:layout_width="0dp"
@@ -89,6 +90,7 @@
                 android:layout_marginRight="16dp"
                 android:layout_marginBottom="24dp"
                 android:background="@drawable/black_btn"
+                android:textStyle="bold"
                 android:text="새로고침"
                 android:textColor="@color/white" />
 

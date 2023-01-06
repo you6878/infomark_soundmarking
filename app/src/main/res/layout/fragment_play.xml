@@ -37,7 +37,7 @@
                 android:layout_height="wrap_content"
                 android:textStyle="bold"
                 android:textSize="20dp"
-                android:textColor="#cc000000"
+                android:textColor="@color/light_black"
                 android:layout_centerHorizontal="true"
                 android:gravity="center"
                 android:text="" />
@@ -73,7 +73,7 @@
                     android:layout_height="wrap_content"
                     android:textStyle="normal"
                     android:textSize="14dp"
-                    android:textColor="#cc000000"
+                    android:textColor="@color/light_black"
                     android:lineSpacingExtra="0sp"
                     android:text="00:00" />
 
@@ -85,7 +85,7 @@
                     android:layout_height="wrap_content"
                     android:textStyle="normal"
                     android:textSize="14dp"
-                    android:textColor="#cc000000"
+                    android:textColor="@color/light_black"
                     android:text="00:00" />
             </RelativeLayout>
 

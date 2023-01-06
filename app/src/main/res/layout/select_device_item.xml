@@ -16,7 +16,7 @@
             android:layout_centerVertical="true"
             android:layout_marginLeft="8dp"
             android:text="5GXXXXXXXXX "
-            android:textColor="#000000"
+            android:textColor="@color/black"
             android:textSize="16dp" />
         <TextView
             android:layout_alignBaseline="@+id/device_name"
@@ -27,12 +27,12 @@
             android:layout_centerVertical="true"
             android:layout_marginLeft="8dp"
             android:text="5GXXXXXXXXX "
-            android:textColor="#5C000000"
+            android:textColor="@color/wifi_dark_gray"
             android:textSize="12dp" />
 
         <View
             android:layout_alignParentBottom="true"
-            android:background="@color/black"
+            android:background="@color/line_color"
             android:layout_width="match_parent"
             android:layout_height="1dp" />
     </RelativeLayout>

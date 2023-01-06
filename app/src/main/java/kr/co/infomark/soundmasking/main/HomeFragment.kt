@@ -50,7 +50,7 @@ class HomeFragment : Fragment() {
 
         gson = Gson()
         binding = DataBindingUtil.inflate(inflater,R.layout.fragment_home,container,false)
-        var mainActivity = requireActivity() as? MainActivity
+        var mainActivity = activity as? MainActivity
         mainActivity?.bluetoothConnectStatus?.observe(viewLifecycleOwner) {
             binding?.speakerStatusTextview?.text = it
         }
@@ -77,12 +77,12 @@ class HomeFragment : Fragment() {
         }
         binding?.speakerLinear?.setOnLongClickListener {
             if(binding?.speakerStatusTextview?.text == "Connected"){
-                AlertDialog.Builder(requireActivity())
+                AlertDialog.Builder(activity)
                     .setTitle("경고")
                     .setMessage("블루투스 스피커 재설정을 진행하시겠습니까?")
                     .setPositiveButton("확인", object : DialogInterface.OnClickListener {
                         override fun onClick(dialog: DialogInterface, which: Int) {
-                            var mainActivity = requireActivity() as? MainActivity
+                            var mainActivity = activity as? MainActivity
                             mainActivity?.resetBluetoothDevice()
                         }
                     })
@@ -95,7 +95,7 @@ class HomeFragment : Fragment() {
                     .show()
 
             }else{
-                var mainActivity = requireActivity() as? MainActivity
+                var mainActivity = activity as? MainActivity
                 mainActivity?.resetBluetoothDevice()
             }
 

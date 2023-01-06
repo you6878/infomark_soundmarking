@@ -31,7 +31,7 @@
                 android:layout_height="wrap_content"
                 android:layout_centerInParent="true"
                 android:text="로그"
-                android:textColor="#000000"
+                android:textColor="@color/black"
                 android:textSize="20dp"
                 android:textStyle="normal" />
 
@@ -42,7 +42,7 @@
             android:layout_height="32dp">
             <TextView
                 android:textSize="16dp"
-                android:textColor="#cc000000"
+                android:textColor="@color/light_black"
                 android:gravity="center"
                 android:text="날짜시간"
                 android:layout_weight="1"
@@ -50,7 +50,7 @@
                 android:layout_height="match_parent"/>
             <TextView
                 android:textSize="16dp"
-                android:textColor="#cc000000"
+                android:textColor="@color/light_black"
                 android:gravity="center"
                 android:text="내용"
                 android:layout_weight="1"

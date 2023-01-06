@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="white">#1c1c1e</color>
+    <color name="gray_background">#1c1c1e</color>
+    <color name="black">#ffffff</color>
+    <color name="wifi_dark_gray">#C6FFFFFF</color>
+    <color name="light_black">#ccffffff</color>
+    <color name="line_color">#14ffffff</color>
+</resources>

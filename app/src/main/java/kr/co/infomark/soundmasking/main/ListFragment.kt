@@ -2,6 +2,8 @@ package kr.co.infomark.soundmasking.main
 
 import android.media.MediaMetadataRetriever
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -9,6 +11,7 @@ import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout.OnRefreshListener
 import kr.co.infomark.soundmasking.MainActivity
 import kr.co.infomark.soundmasking.R
 import kr.co.infomark.soundmasking.databinding.FragmentListBinding
@@ -39,6 +42,7 @@ class ListFragment : Fragment() {
     }
     val metaRetriever = MediaMetadataRetriever()
     var binding : FragmentListBinding? = null
+    var playListAdapter : PlayListAdapter? = null
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -47,14 +51,44 @@ class ListFragment : Fragment() {
         binding = DataBindingUtil.inflate(inflater,R.layout.fragment_list,container,false)
         binding?.fileRecyclerview?.layoutManager = LinearLayoutManager(requireContext())
         binding?.fileRecyclerview?.apply {
-            val mainActivity = requireActivity() as? MainActivity
-            adapter = PlayListAdapter(mainActivity?.storageFiles)
+            val mainActivity = activity as? MainActivity
+            playListAdapter = PlayListAdapter(mainActivity?.musicBox?.playFilesOrigin)
+            adapter = playListAdapter
         }
-        var mainActivity = requireActivity() as? MainActivity
+        var mainActivity = activity as? MainActivity
         mainActivity?.musicBox?.currentPlayMusicName?.observe(viewLifecycleOwner) {
             binding?.fileRecyclerview?.adapter?.notifyDataSetChanged()
         }
+
+        binding?.swipeRefresh?.setOnRefreshListener(OnRefreshListener { // Your code to refresh the list here.
+            reloadData()
+
+        })
+
         return binding?.root
+    }
+    fun reloadData(){
+        var mainActivity = activity as? MainActivity
+        binding?.swipeRefresh?.isRefreshing = true
+        mainActivity?.musicBox?.stopMusic()
+        mainActivity?.loadFile()
+        Handler(Looper.getMainLooper()).postDelayed({
+            refreshList()
+            mainActivity?.initSetting()
+            binding?.swipeRefresh?.isRefreshing = false
+        },1500)
+    }
+
+    override fun onResume() {
+        super.onResume()
+        binding?.swipeRefresh?.isRefreshing = false
+        refreshList()
+
+    }
+    fun refreshList(){
+        val mainActivity = activity as? MainActivity
+        playListAdapter?.files = mainActivity?.musicBox?.playFilesOrigin
+        playListAdapter?.notifyDataSetChanged()
     }
 
 
@@ -90,21 +124,21 @@ class ListFragment : Fragment() {
 
         override fun onBindViewHolder(holder: PlayListItemViewHolder, position: Int) {
             files?.get(position)?.let { file ->
-                var mainActivity = requireActivity() as? MainActivity
+                var mainActivity = activity as? MainActivity
 
-                if(mainActivity?.musicBox?.currentIndex == position && mainActivity?.musicBox?.isPlay?.value == true){
+                if(mainActivity?.musicBox?.currentPlayMusicName?.value == file.name && mainActivity?.musicBox?.selectFileSize == file.length() && mainActivity?.musicBox?.isPlay?.value == true){
                     holder.binding.arrowIcon.setImageResource(R.drawable.ico_playlist_pause)
                     holder.itemView.setOnClickListener {
-                        var mainActivity = requireActivity() as? MainActivity
+                        var mainActivity = activity as? MainActivity
                         mainActivity?.musicBox?.stopMusic()
                         mainActivity?.musicBox?.currentPlayMusicName?.value = ""
-                        mainActivity?.musicBox?.currentIndex = 0
+//                        mainActivity?.musicBox?.currentIndex = 0
                         notifyDataSetChanged()
                     }
                 }else{
-                    holder.binding.arrowIcon.setImageResource(R.drawable.icon_playlist_play)
+                    holder.binding.arrowIcon.setImageResource(R.drawable.ico_playlist_play)
                     holder.itemView.setOnClickListener {
-                        var mainActivity = requireActivity() as? MainActivity
+                        var mainActivity = activity as? MainActivity
                         mainActivity?.musicBox?.playMusic(file.path)
                         mainActivity?.musicBox?.currentIndex = position
                         notifyDataSetChanged()
@@ -124,8 +158,12 @@ class ListFragment : Fragment() {
         }
 
         private fun getDurationWithMp3Spi(path: String) : String {
+            try {
+                metaRetriever.setDataSource(path)
+            }catch (e : IllegalArgumentException){
+                reloadData()
+            }
 
-            metaRetriever.setDataSource(path)
 
             var out = ""
 
@@ -145,5 +183,6 @@ class ListFragment : Fragment() {
             }
             return out
         }
+
     }
 }

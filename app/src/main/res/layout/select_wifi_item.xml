@@ -15,7 +15,7 @@
             android:layout_centerVertical="true"
             android:text="5GXXXXXXXXX "
             android:textSize="16dp"
-            android:textColor="#000000"
+            android:textColor="@color/black"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
 
@@ -41,7 +41,7 @@
         <View
 
             android:layout_alignParentBottom="true"
-            android:background="@color/black"
+            android:background="@color/line_color"
             android:layout_width="match_parent"
             android:layout_height="1dp" />
     </RelativeLayout>

@@ -21,7 +21,7 @@
             android:layout_marginEnd="16dp"
             android:layout_marginBottom="16dp"
             android:text="연결 상태"
-            android:textColor="#000000"
+            android:textColor="@color/black"
             android:textSize="16dp"
             android:textStyle="bold" />
 
@@ -69,7 +69,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:lineSpacingExtra="4sp"
-                        android:textColor="#000000"
+                        android:textColor="@color/black"
                         android:textSize="20dp"
                         android:textStyle="bold"
                         android:text="-" />
@@ -82,7 +82,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="16dp"
                     android:lineSpacingExtra="0sp"
-                    android:textColor="#000000"
+                    android:textColor="@color/black"
                     android:textSize="14dp"
                     android:textStyle="normal"
                     android:text="FW Version : 0.0.1" />
@@ -107,7 +107,7 @@
                 <ImageView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:src="@drawable/home_icon_wifi" />
+                    android:src="@drawable/icon_wifi" />
 
                 <TextView
                     android:id="@+id/wifi_status_textview"
@@ -131,7 +131,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:lineSpacingExtra="4sp"
-                        android:textColor="#000000"
+                        android:textColor="@color/black"
                         android:textSize="20dp"
                         android:textStyle="bold"
                         android:text="Wi-Fi Name : " />
@@ -143,7 +143,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:lineSpacingExtra="4sp"
-                        android:textColor="#000000"
+                        android:textColor="@color/black"
                         android:textSize="20dp"
                         android:textStyle="bold"
                         android:text="" />
@@ -156,7 +156,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="16dp"
                     android:lineSpacingExtra="0sp"
-                    android:textColor="#000000"
+                    android:textColor="@color/black"
                     android:textSize="14dp"
                     android:textStyle="normal"
                     android:text="Wi-Fi Address" />
@@ -202,7 +202,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:lineSpacingExtra="4sp"
-                    android:textColor="#000000"
+                    android:textColor="@color/black"
                     android:textSize="20dp"
                     android:textStyle="bold"
                     android:text="Update : " />
@@ -212,7 +212,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:lineSpacingExtra="4sp"
-                        android:textColor="#000000"
+                        android:textColor="@color/black"
                         android:textSize="20dp"
                         android:textStyle="bold"
                         android:text="" />
@@ -225,7 +225,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="16dp"
                     android:lineSpacingExtra="0sp"
-                    android:textColor="#000000"
+                    android:textColor="@color/black"
                     android:textSize="14dp"
                     android:textStyle="normal"
                     android:text="AppVersion : " />
@@ -235,7 +235,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="16dp"
                     android:lineSpacingExtra="0sp"
-                    android:textColor="#000000"
+                    android:textColor="@color/black"
                     android:textSize="14dp"
                     android:textStyle="normal"
                     android:text="-" />
@@ -244,6 +244,7 @@
         </LinearLayout>
 
         <androidx.appcompat.widget.AppCompatButton
+            android:textStyle="bold"
             android:visibility="gone"
             android:id="@+id/play_music"
             android:layout_width="match_parent"
@@ -257,6 +258,7 @@
             android:textColor="@color/white" />
 
         <androidx.appcompat.widget.AppCompatButton
+            android:textStyle="bold"
             android:visibility="gone"
             android:id="@+id/log_btn"
             android:layout_width="match_parent"
@@ -270,6 +272,7 @@
             android:textColor="@color/white" />
 
         <androidx.appcompat.widget.AppCompatButton
+            android:textStyle="bold"
             android:visibility="invisible"
             android:id="@+id/start_speaker_setting_btn"
             android:layout_width="match_parent"

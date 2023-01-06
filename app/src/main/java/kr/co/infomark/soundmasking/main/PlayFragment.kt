@@ -1,5 +1,6 @@
 package kr.co.infomark.soundmasking.main
 
+import android.content.res.Configuration
 import android.graphics.Color
 import android.graphics.PorterDuff
 import android.os.Bundle
@@ -45,7 +46,10 @@ class PlayFragment : Fragment() {
     ): View? {
         binding = DataBindingUtil.inflate(inflater,R.layout.fragment_play, container, false)
         // Inflate the layout for this fragment
-        binding?.progressBar?.progressDrawable?.setColorFilter(Color.BLACK, PorterDuff.Mode.SRC_IN);
+
+
+
+
 
         setMusicPlay()
         setCheckTime()
@@ -53,7 +57,8 @@ class PlayFragment : Fragment() {
         return binding?.root
     }
     fun setMusicPlay(){
-        val musicBox = (requireActivity() as? MainActivity)?.musicBox
+        val mainActivity = activity as? MainActivity
+        val musicBox = (activity as? MainActivity)?.musicBox
         musicBox?.currentPlayMusicName?.observe(viewLifecycleOwner) {
             binding?.currentPlayTitle?.text = it
         }
@@ -65,7 +70,7 @@ class PlayFragment : Fragment() {
             }
         }
         binding?.randomBtn?.setOnClickListener {
-            musicBox?.eventRandomBtn()
+            musicBox?.eventRandomBtn(it)
         }
         binding?.repeatBtn?.setOnClickListener {
             musicBox?.eventRepeatBtn()
@@ -107,6 +112,19 @@ class PlayFragment : Fragment() {
                 binding?.repeatBtn?.setImageResource(R.drawable.ico_light_repeat_deactivated)
             }
         }
+        mainActivity?.progress?.observe(viewLifecycleOwner){
+            binding?.progressBar?.progress = it
+        }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        val nightModeFlags = context?.resources?.configuration?.uiMode?.and(Configuration.UI_MODE_NIGHT_MASK)
+        if(nightModeFlags == Configuration.UI_MODE_NIGHT_YES){
+            binding?.progressBar?.progressDrawable?.setColorFilter(Color.WHITE, PorterDuff.Mode.SRC_IN);
+        }else{
+            binding?.progressBar?.progressDrawable?.setColorFilter(Color.BLACK, PorterDuff.Mode.SRC_IN);
+        }
     }
 
 
@@ -125,20 +143,22 @@ class PlayFragment : Fragment() {
 
     fun getCurrentTime(){
         try {
-            val mainActivity = requireActivity() as? MainActivity
+            val mainActivity = activity as? MainActivity
             val currentTime = mainActivity?.musicBox?.getMPlayerCurrentTime() ?: 0
             val durationTime = mainActivity?.musicBox?.getMPlayerDurationTime() ?: 0
             val seekbarGuage = (currentTime.toFloat() / durationTime.toFloat()) * 100
-            println(seekbarGuage)
             mainActivity?.runOnUiThread {
                 binding?.currentTimeTextview?.text = setTime(currentTime.toLong());
                 binding?.remainTimeTextview?.text = setTime(durationTime.toLong());
-                binding?.progressBar?.progress = seekbarGuage.toInt()
+                mainActivity.progress?.value = seekbarGuage.toInt()
             }
 
         }catch (e : Exception){
 
         }
+    }
+    fun emptyProgressBar(){
+        binding?.progressBar?.progress = 0
     }
 
     fun setTime(millis : Long) : String{

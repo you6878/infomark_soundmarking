@@ -20,7 +20,7 @@
             android:layout_marginLeft="16dp"
             android:gravity="center"
             android:text="현재상태"
-            android:textColor="#b8000000"
+            android:textColor="@color/light_black"
             android:textSize="16dp"
             android:textStyle="normal" />
 
@@ -36,7 +36,7 @@
             android:layout_weight="1"
             android:singleLine="true"
             android:text="소나기내리는 숲의 소리"
-            android:textColor="#b8000000"
+            android:textColor="@color/light_black"
             android:textSize="16dp"
             android:textStyle="normal" />
 
@@ -63,13 +63,13 @@
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
             android:layout_marginRight="32dp"
-            android:src="@drawable/icon_playlist_play" />
+            android:src="@drawable/ico_playlist_play" />
 
 
         <View
             android:layout_width="match_parent"
             android:layout_height="1dp"
             android:layout_alignParentBottom="true"
-            android:background="@color/black" />
+            android:background="@color/line_color" />
     </RelativeLayout>
 </layout>

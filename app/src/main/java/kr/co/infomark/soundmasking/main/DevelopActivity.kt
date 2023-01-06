@@ -41,6 +41,13 @@ class DevelopActivity : AppCompatActivity() {
 
         }
 
+        binding?.soundEnOffsetBtn?.setOnClickListener {
+            var commandModel = MaskingSetParameterDTO()
+            commandModel.cmd = "masking_set_parameter"
+            commandModel.key = "en_offset"
+            commandModel.value = binding?.soundEnOffsetTextview?.text.toString()
+            bt?.send(gson.toJson(commandModel))
+        }
         binding?.soundGgPstepBtn?.setOnClickListener {
             var commandModel = MaskingSetParameterDTO()
             commandModel.cmd = "masking_set_parameter"
@@ -167,6 +174,8 @@ class DevelopActivity : AppCompatActivity() {
 //                    MaskingGetParameterDTO();
                     var model = gson.fromJson(message, MaskingGetParameterDTO::class.java)
                     if (model.result == "ok") {
+
+                        binding?.soundEnOffsetTextview?.setText(model.en_offset)
                         binding?.soundGgPstepTextview?.setText(model.gg_pstep)
                         binding?.soundGgNstepTextview?.setText(model.gg_nstep)
                         binding?.soundEqPsetpTextview?.setText(model.eq_step)

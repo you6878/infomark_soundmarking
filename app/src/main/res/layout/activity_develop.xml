@@ -31,7 +31,7 @@
                 android:layout_height="wrap_content"
                 android:layout_centerInParent="true"
                 android:text="개발자 모드"
-                android:textColor="#000000"
+                android:textColor="@color/black"
                 android:textSize="20dp"
                 android:textStyle="normal" />
 
@@ -52,7 +52,7 @@
                     android:layout_marginLeft="36dp"
                     android:gravity="center"
                     android:text="SOUND MASKING : "
-                    android:textColor="#b8000000"
+                    android:textColor="@color/light_black"
                     android:textSize="16dp"
                     android:textStyle="normal" />
                 <androidx.appcompat.widget.AppCompatButton
@@ -66,7 +66,7 @@
                     android:gravity="center"
                     android:text="응답값 대기 중.."
                     android:textSize="16dp"
-                    android:textStyle="normal"
+                    android:textStyle="bold"
                     android:textColor="@color/white"
                     android:background="@drawable/black_btn"
                     />
@@ -95,7 +95,7 @@
                     android:layout_marginLeft="36dp"
                     android:gravity="center"
                     android:text="NOISE Report : "
-                    android:textColor="#b8000000"
+                    android:textColor="@color/light_black"
                     android:textSize="16dp"
                     android:textStyle="normal" />
                 <androidx.appcompat.widget.AppCompatButton
@@ -111,7 +111,60 @@
                     android:textColor="@color/white"
                     android:background="@drawable/black_btn"
                     android:textSize="16dp"
+                    android:textStyle="bold" />
+
+            </RelativeLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_alignParentBottom="true"
+                android:layout_marginLeft="30dp"
+                android:layout_marginRight="30dp"
+                android:background="@color/gray_background" />
+        </RelativeLayout>
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="55dp">
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <TextView
+                    android:id="@+id/en_offset_textview"
+                    android:layout_height="match_parent"
+                    android:layout_marginLeft="36dp"
+                    android:layout_width="100dp"
+                    android:gravity="center_vertical"
+                    android:text="EN_OFFSET : "
+                    android:textColor="@color/light_black"
+                    android:textSize="16dp"
                     android:textStyle="normal" />
+                <EditText
+                    android:layout_marginRight="10dp"
+                    android:layout_toRightOf="@+id/en_offset_textview"
+                    android:layout_toLeftOf="@+id/sound_en_offset_btn"
+                    android:inputType="numberDecimal"
+                    android:id="@+id/sound_en_offset_textview"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:gravity="center"
+                    android:text=""
+                    android:textColor="@color/light_black"
+                    android:textSize="16dp"
+                    android:textStyle="normal" />
+                <androidx.appcompat.widget.AppCompatButton
+                    android:textStyle="bold"
+                    android:layout_alignParentRight="true"
+                    android:layout_marginRight="30dp"
+                    android:layout_centerVertical="true"
+                    android:id="@+id/sound_en_offset_btn"
+                    android:layout_width="100dp"
+                    android:layout_height="40dp"
+                    android:background="@drawable/black_btn"
+                    android:text="적용"
+                    android:textColor="@color/white" />
 
             </RelativeLayout>
 
@@ -138,7 +191,7 @@
                     android:layout_width="100dp"
                     android:gravity="center_vertical"
                     android:text="GG_PSTEP : "
-                    android:textColor="#b8000000"
+                    android:textColor="@color/light_black"
                     android:textSize="16dp"
                     android:textStyle="normal" />
                 <EditText
@@ -151,10 +204,11 @@
                     android:layout_height="match_parent"
                     android:gravity="center"
                     android:text=""
-                    android:textColor="#b8000000"
+                    android:textColor="@color/light_black"
                     android:textSize="16dp"
                     android:textStyle="normal" />
                 <androidx.appcompat.widget.AppCompatButton
+                    android:textStyle="bold"
                     android:layout_alignParentRight="true"
                     android:layout_marginRight="30dp"
                     android:layout_centerVertical="true"
@@ -190,7 +244,7 @@
                     android:layout_height="match_parent"
                     android:layout_marginLeft="36dp"
                     android:text="GG_NSTEP : "
-                    android:textColor="#b8000000"
+                    android:textColor="@color/light_black"
                     android:textSize="16dp"
                     android:textStyle="normal" />
                 <EditText
@@ -205,10 +259,11 @@
 
                     android:gravity="center"
                     android:text=""
-                    android:textColor="#b8000000"
+                    android:textColor="@color/light_black"
                     android:textSize="16dp"
                     android:textStyle="normal" />
                 <androidx.appcompat.widget.AppCompatButton
+                    android:textStyle="bold"
                     android:layout_alignParentRight="true"
                     android:layout_marginRight="30dp"
                     android:layout_centerVertical="true"
@@ -246,7 +301,7 @@
 
 
                     android:text="EQ_STEP : "
-                    android:textColor="#b8000000"
+                    android:textColor="@color/light_black"
                     android:textSize="16dp"
                     android:textStyle="normal" />
                 <EditText
@@ -260,10 +315,11 @@
 
                     android:gravity="center"
                     android:text=""
-                    android:textColor="#b8000000"
+                    android:textColor="@color/light_black"
                     android:textSize="16dp"
                     android:textStyle="normal" />
                 <androidx.appcompat.widget.AppCompatButton
+                    android:textStyle="bold"
                     android:layout_alignParentRight="true"
                     android:layout_marginRight="30dp"
                     android:layout_centerVertical="true"
@@ -299,7 +355,7 @@
                     android:layout_height="match_parent"
                     android:layout_marginLeft="36dp"
                     android:text="GG_PCLIP : "
-                    android:textColor="#b8000000"
+                    android:textColor="@color/light_black"
                     android:textSize="16dp"
                     android:textStyle="normal" />
                 <EditText
@@ -313,10 +369,11 @@
 
                     android:gravity="center"
                     android:text=""
-                    android:textColor="#b8000000"
+                    android:textColor="@color/light_black"
                     android:textSize="16dp"
                     android:textStyle="normal" />
                 <androidx.appcompat.widget.AppCompatButton
+                    android:textStyle="bold"
                     android:id="@+id/sound_gg_pclip_btn"
                     android:layout_width="100dp"
                     android:layout_height="40dp"
@@ -352,7 +409,7 @@
                     android:layout_height="match_parent"
                     android:layout_marginLeft="36dp"
                     android:text="GG_NCLIP : "
-                    android:textColor="#b8000000"
+                    android:textColor="@color/light_black"
                     android:textSize="16dp"
                     android:textStyle="normal" />
                 <EditText
@@ -366,10 +423,11 @@
 
                     android:gravity="center"
                     android:text=""
-                    android:textColor="#b8000000"
+                    android:textColor="@color/light_black"
                     android:textSize="16dp"
                     android:textStyle="normal" />
                 <androidx.appcompat.widget.AppCompatButton
+                    android:textStyle="bold"
                     android:id="@+id/sound_gg_nclip_btn"
                     android:layout_width="100dp"
                     android:layout_height="40dp"
@@ -405,7 +463,7 @@
                     android:layout_height="match_parent"
                     android:layout_marginLeft="36dp"
                     android:text="EQ_CLIP : "
-                    android:textColor="#b8000000"
+                    android:textColor="@color/light_black"
                     android:textSize="16dp"
                     android:textStyle="normal" />
                 <EditText
@@ -419,10 +477,11 @@
 
                     android:gravity="center"
                     android:text=""
-                    android:textColor="#b8000000"
+                    android:textColor="@color/light_black"
                     android:textSize="16dp"
                     android:textStyle="normal" />
                 <androidx.appcompat.widget.AppCompatButton
+                    android:textStyle="bold"
                     android:id="@+id/sound_eq_clip_btn"
                     android:layout_width="100dp"
                     android:layout_height="40dp"

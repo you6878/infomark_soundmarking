@@ -2,6 +2,8 @@ package kr.co.infomark.soundmasking.model
 
 data class MaskingGetParameterDTO(var cmd : String,
                                   var result : String,
+
+                                  var en_offset : String,
                                   var gg_pstep : String,
                                   var gg_nstep : String,
                                   var gg_pclip : String,

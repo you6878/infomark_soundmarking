@@ -26,7 +26,7 @@
                 android:layout_height="match_parent"
                 android:textStyle="normal"
                 android:textSize="16dp"
-                android:textColor="#b8000000"
+                android:textColor="@color/light_black"
                 android:text="현재상태"/>
             <TextView
                 android:layout_marginRight="12dp"
@@ -38,16 +38,17 @@
                 android:layout_height="match_parent"
                 android:textStyle="normal"
                 android:textSize="16dp"
-                android:textColor="#b8000000"
+                android:textColor="@color/light_black"
                 android:text="연결됨"/>
 
 
             <ImageView
+                android:visibility="invisible"
                 android:id="@+id/arrow_icon"
                 android:layout_marginRight="32dp"
                 android:layout_alignParentRight="true"
                 android:layout_centerVertical="true"
-                android:src="@drawable/icon_arrow_right"
+                android:src="@drawable/ico_keyboard_arrow_right"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"/>
 
@@ -124,7 +125,7 @@
                 android:layout_height="match_parent"
                 android:textStyle="normal"
                 android:textSize="16dp"
-                android:textColor="#b8000000"
+                android:textColor="@color/light_black"
                 android:text="업데이트 (어플)"/>
             <TextView
 
@@ -137,16 +138,17 @@
                 android:layout_height="match_parent"
                 android:textStyle="normal"
                 android:textSize="16dp"
-                android:textColor="#b8000000"
+                android:textColor="@color/light_black"
                 android:text="최신"/>
 
 
             <ImageView
+                android:visibility="invisible"
                 android:id="@+id/update_app_arrow_icon"
                 android:layout_marginRight="32dp"
                 android:layout_alignParentRight="true"
                 android:layout_centerVertical="true"
-                android:src="@drawable/icon_arrow_right"
+                android:src="@drawable/ico_keyboard_arrow_right"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"/>
 
@@ -174,7 +176,7 @@
                 android:layout_height="match_parent"
                 android:textStyle="normal"
                 android:textSize="16dp"
-                android:textColor="#b8000000"
+                android:textColor="@color/light_black"
                 android:text="로그 파일"/>
 
 
@@ -184,7 +186,7 @@
                 android:layout_marginRight="32dp"
                 android:layout_alignParentRight="true"
                 android:layout_centerVertical="true"
-                android:src="@drawable/icon_arrow_right"
+                android:src="@drawable/ico_keyboard_arrow_right"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"/>
 
@@ -212,7 +214,7 @@
                 android:layout_height="match_parent"
                 android:textStyle="normal"
                 android:textSize="16dp"
-                android:textColor="#b8000000"
+                android:textColor="@color/light_black"
                 android:text="개발자 모드"/>
 
 
@@ -222,7 +224,7 @@
                 android:layout_marginRight="32dp"
                 android:layout_alignParentRight="true"
                 android:layout_centerVertical="true"
-                android:src="@drawable/icon_arrow_right"
+                android:src="@drawable/ico_keyboard_arrow_right"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"/>
 
