@@ -322,20 +322,21 @@ class MainActivity : AppCompatActivity() {
         buletoothInit()
     }
     fun buletoothInit(){
-        if (bt?.isBluetoothEnabled == false) {
-            bt?.enable()
-        } else {
+        if(bt?.isBluetoothEnabled == true){
             if (bt?.isServiceAvailable == false) {
                 bt?.setupService()
                 bt?.startService(BluetoothState.DEVICE_OTHER)
                 //Auto Connect in exceoption
-                if (bt?.connectedDeviceAddress == null) {
-                    val address = Util.getSharedPreferenceString(this,Util.MAC)
-                    bt?.connect(address)
-                }
+                bluetoothSppConnet()
             }
             deviceCallback()
             setBTListener()
+        }
+    }
+    fun bluetoothSppConnet(){
+        if (bt?.isConnected == false) {
+            val address = Util.getSharedPreferenceString(this,Util.MAC)
+            bt?.connect(address)
         }
     }
 
@@ -365,15 +366,20 @@ class MainActivity : AppCompatActivity() {
     fun checkWifiState() {
         stateJob = GlobalScope.launch {
             while (stateThreadWhile) {
-                delay(1000)
+
+
+                delay(500)
                 wifiState()
-                delay(1000)
+                delay(500)
                 spearkInfoState()
-                delay(1000)
+                delay(500)
                 wlanListState()
-                delay(1000)
+                delay(500)
                 bluetoothState()
+                delay(2000)
                 delay(1000)
+                bluetoothSppConnet()
+
 
             }
         }

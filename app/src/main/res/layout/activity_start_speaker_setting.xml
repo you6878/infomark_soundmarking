@@ -59,7 +59,7 @@
             android:layout_height="152dp"
             android:layout_alignParentBottom="true"
             android:visibility="gone"
-            android:background="@color/white">
+            android:background="@color/list_background_white">
 
             <TextView
                 android:layout_width="328dp"
@@ -110,7 +110,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
-            android:background="@color/white">
+            android:background="@color/list_background_white">
 
             <TextView
                 android:id="@+id/speaker_select_popup_textview"

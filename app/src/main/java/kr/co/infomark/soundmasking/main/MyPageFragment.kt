@@ -54,6 +54,9 @@ class MyPageFragment : Fragment() {
                 mainActivity?.buletoothInit()
             }
         }
+        binding?.settingMenu?.setOnClickListener {
+            startActivity(Intent(android.provider.Settings.ACTION_DISPLAY_SETTINGS));
+        }
         var mainActivity = activity as? MainActivity
         mainActivity?.bluetoothConnectStatus?.observe(viewLifecycleOwner) {
             binding?.statusConnectTextview?.text = it

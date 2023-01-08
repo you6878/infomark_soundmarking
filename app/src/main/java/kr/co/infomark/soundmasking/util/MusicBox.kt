@@ -221,12 +221,6 @@ class MusicBox(var mainActivity : MainActivity) :OnCompletionListener,MediaPlaye
             //여러곡반복
             nextMusic()
         } else {
-//            //랜덤
-//            if(randomPlay.value == true){
-//
-//            }
-
-            println("currentIndex : ${currentIndex}")
 
             //마지막 정지
             if(currentIndex < playFiles.size - 1){

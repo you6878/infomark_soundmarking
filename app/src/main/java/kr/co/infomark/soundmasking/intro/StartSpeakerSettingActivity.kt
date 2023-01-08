@@ -116,6 +116,9 @@ class StartSpeakerSettingActivity : AppCompatActivity() {
                         dialog.show(supportFragmentManager, "CanUseSpeakerDialogFragment")
                     }else if(model.result == "ok" && model.state == "disabled"){
                         Toast.makeText(this, "프렌즈 스피커의 WIFI가 꺼져있어 설정할 수 없습니다.",Toast.LENGTH_LONG).show()
+                        binding?.progressCir?.visibility = View.GONE
+                        val dialog = CanUseSpeakerDialogFragment()
+                        dialog.show(supportFragmentManager, "CanUseSpeakerDialogFragment")
                     }
                 }
                 if(cmd == WlanNetworkList){
