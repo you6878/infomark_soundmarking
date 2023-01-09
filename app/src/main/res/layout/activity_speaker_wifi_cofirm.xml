@@ -67,7 +67,7 @@
             <androidx.appcompat.widget.AppCompatButton
                 android:id="@+id/speaker_start_popup_cancel"
                 android:layout_width="0dp"
-                android:layout_height="24dp"
+                android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:background="@drawable/white_btn"
                 android:text="이전"

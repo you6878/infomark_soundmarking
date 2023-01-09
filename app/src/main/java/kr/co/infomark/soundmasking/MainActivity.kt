@@ -122,28 +122,28 @@ class MainActivity : AppCompatActivity() {
     fun initTabbar() {
         binding?.homeBtn?.setOnClickListener {
             disalbeGrayEvent()
-            binding?.homeImage?.setImageResource(R.drawable.ico_home_black)
+            binding?.homeImage?.setImageResource(R.drawable.ico_playerbar_home_icon_on)
             supportFragmentManager.beginTransaction().replace(R.id.main_content, home).commitAllowingStateLoss()
             binding?.titleTextview?.text = "홈"
             displayOff()
         }
         binding?.playBtn?.setOnClickListener {
             disalbeGrayEvent()
-            binding?.playImage?.setImageResource(R.drawable.ico_player_black)
+            binding?.playImage?.setImageResource(R.drawable.ico_playerbar_player_icon_on)
             supportFragmentManager.beginTransaction().replace(R.id.main_content, play).commitAllowingStateLoss()
             binding?.titleTextview?.text = "플레이어"
             displayOn()
         }
         binding?.listBtn?.setOnClickListener {
             disalbeGrayEvent()
-            binding?.listImage?.setImageResource(R.drawable.ico_playlist_black)
+            binding?.listImage?.setImageResource(R.drawable.ico_playerbar_playlist_icon_on)
             supportFragmentManager.beginTransaction().replace(R.id.main_content, list).commit()
             binding?.titleTextview?.text = "재생목록"
             displayOn()
         }
         binding?.mypageBtn?.setOnClickListener {
             disalbeGrayEvent()
-            binding?.mypageImage?.setImageResource(R.drawable.ico_mypage_black)
+            binding?.mypageImage?.setImageResource(R.drawable.ico_playerbar_mypage_icon_on)
             supportFragmentManager.beginTransaction().replace(R.id.main_content, mypage).commit()
             binding?.titleTextview?.text = "마이페이지"
             displayOff()
