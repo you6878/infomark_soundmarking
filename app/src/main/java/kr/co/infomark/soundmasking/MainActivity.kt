@@ -80,7 +80,9 @@ class MainActivity : AppCompatActivity() {
 
         supportFragmentManager.beginTransaction().replace(R.id.main_content, home).commitAllowingStateLoss()
         initTabbar()
+
         loadFile()
+
         checkWifiState()
     }
     fun initSetting(){
@@ -91,8 +93,14 @@ class MainActivity : AppCompatActivity() {
         progress?.value = 0
     }
     fun loadFile(){
+
         val dir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_MUSIC)
         lsDir(dir)
+        //오룸차순 설정
+        storageFiles.sortBy{ it.name }
+        musicBox.setPlayList(storageFiles.toList())
+        storageFiles.clear()
+
     }
     fun displayOn(){
         val win: Window = window
@@ -158,11 +166,9 @@ class MainActivity : AppCompatActivity() {
     }
 
     fun lsDir(dir: File) {
-
         //contains list of all files ending with
         val listFile = dir.listFiles()
         if (listFile != null) {
-
             for (i in listFile.indices) {
                 if (listFile[i].isDirectory) { // if its a directory need to get the files under that directory
                     lsDir(listFile[i])
@@ -178,10 +184,7 @@ class MainActivity : AppCompatActivity() {
         }
 
 
-        //오룸차순 설정
-        storageFiles.sortBy{ it.name }
-        musicBox.setPlayList(storageFiles.toList())
-        storageFiles.clear()
+
 
     }
 

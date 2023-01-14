@@ -74,12 +74,16 @@ class MusicBox(var mainActivity : MainActivity) :OnCompletionListener,MediaPlaye
                 playMusic(file.absolutePath)
                 currentIndex = index
                 currentPlayMusicName.value = file.name
-            }else{
-                val file = playFiles[0]
                 playMusic(file.absolutePath)
-                currentPlayMusicName.value = file.name
+                return@forEachIndexed
             }
         }
+        if(selectFileSize == -1L){
+            val file = playFiles[0]
+            playMusic(file.absolutePath)
+            currentPlayMusicName.value = file.name
+        }
+
 
 
 

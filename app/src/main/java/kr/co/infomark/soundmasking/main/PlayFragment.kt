@@ -9,9 +9,13 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
+import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.LinearLayoutManager
 import kr.co.infomark.soundmasking.MainActivity
 import kr.co.infomark.soundmasking.R
 import kr.co.infomark.soundmasking.databinding.FragmentPlayBinding
+import kr.co.infomark.soundmasking.main.adpater.VisualizerGaugeAdapter
+import kr.co.infomark.soundmasking.main.adpater.VolumeGaugeAdapter
 import java.util.*
 import java.util.concurrent.TimeUnit
 
@@ -32,6 +36,15 @@ class PlayFragment : Fragment() {
     private var param2: String? = null
     var binding : FragmentPlayBinding? = null
     lateinit var timer : Timer
+
+
+    lateinit var volumeGaugeAdapter : VolumeGaugeAdapter
+
+    lateinit var visualizerGaugeAdapter1 : VisualizerGaugeAdapter
+    lateinit var visualizerGaugeAdapter2 : VisualizerGaugeAdapter
+    lateinit var visualizerGaugeAdapter3 : VisualizerGaugeAdapter
+    lateinit var visualizerGaugeAdapter4 : VisualizerGaugeAdapter
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
@@ -46,15 +59,34 @@ class PlayFragment : Fragment() {
     ): View? {
         binding = DataBindingUtil.inflate(inflater,R.layout.fragment_play, container, false)
         // Inflate the layout for this fragment
-
-
-
-
-
         setMusicPlay()
         setCheckTime()
-
+        setVolumeGauge()
         return binding?.root
+    }
+
+    fun setVolumeGauge(){
+        volumeGaugeAdapter = VolumeGaugeAdapter(activity)
+        visualizerGaugeAdapter1 = VisualizerGaugeAdapter(activity)
+        visualizerGaugeAdapter2 = VisualizerGaugeAdapter(activity)
+        visualizerGaugeAdapter3 = VisualizerGaugeAdapter(activity)
+        visualizerGaugeAdapter4 = VisualizerGaugeAdapter(activity)
+
+
+        binding?.volumeGaugeRecyclerview?.adapter = volumeGaugeAdapter
+        binding?.volumeGaugeRecyclerview?.layoutManager = GridLayoutManager(activity,44)
+
+        binding?.recyclerviewVisualizer1?.adapter = visualizerGaugeAdapter1
+        binding?.recyclerviewVisualizer1?.layoutManager = LinearLayoutManager(activity)
+
+        binding?.recyclerviewVisualizer2?.adapter = visualizerGaugeAdapter2
+        binding?.recyclerviewVisualizer2?.layoutManager = LinearLayoutManager(activity)
+
+        binding?.recyclerviewVisualizer3?.adapter = visualizerGaugeAdapter3
+        binding?.recyclerviewVisualizer3?.layoutManager = LinearLayoutManager(activity)
+
+        binding?.recyclerviewVisualizer4?.adapter = visualizerGaugeAdapter4
+        binding?.recyclerviewVisualizer4?.layoutManager = LinearLayoutManager(activity)
     }
     fun setMusicPlay(){
         val mainActivity = activity as? MainActivity
