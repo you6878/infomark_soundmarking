@@ -62,7 +62,23 @@ class PlayFragment : Fragment() {
         setMusicPlay()
         setCheckTime()
         setVolumeGauge()
+        setObserve()
         return binding?.root
+    }
+    fun setObserve(){
+        var mainActivity = activity as? MainActivity
+        mainActivity?.visualizerFloat1?.observe(viewLifecycleOwner) {
+            visualizerGaugeAdapter1.setVolume(it)
+        }
+        mainActivity?.visualizerFloat2?.observe(viewLifecycleOwner) {
+            visualizerGaugeAdapter2.setVolume(it)
+        }
+        mainActivity?.visualizerFloat3?.observe(viewLifecycleOwner) {
+            visualizerGaugeAdapter3.setVolume(it)
+        }
+        mainActivity?.visualizerFloat4?.observe(viewLifecycleOwner) {
+            visualizerGaugeAdapter4.setVolume(it)
+        }
     }
 
     fun setVolumeGauge(){

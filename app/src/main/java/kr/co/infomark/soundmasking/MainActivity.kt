@@ -72,6 +72,16 @@ class MainActivity : AppCompatActivity() {
 
     var progress: MutableLiveData<Int>? = MutableLiveData(0)
 
+
+    var volumeFloat: MutableLiveData<Float>? = MutableLiveData(0f)
+    var visualizerFloat1: MutableLiveData<Float>? = MutableLiveData(0f)
+    var visualizerFloat2: MutableLiveData<Float>? = MutableLiveData(0f)
+    var visualizerFloat3: MutableLiveData<Float>? = MutableLiveData(0f)
+    var visualizerFloat4: MutableLiveData<Float>? = MutableLiveData(0f)
+
+
+
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_main)
@@ -192,6 +202,22 @@ class MainActivity : AppCompatActivity() {
 
         bt?.setOnDataReceivedListener { data, message ->
             println(message)
+            volumeFloat
+
+
+            var state = JSONObject(message).isNull("state")
+            if(!state){
+                val item = gson.fromJson(message, StateModel::class.java)
+                if(item.state == "masking"){
+                    visualizerFloat1?.value = item.bands[0].gain.toFloat() + 3.0f
+                    visualizerFloat2?.value = item.bands[1].gain.toFloat() + 3.0f
+                    visualizerFloat3?.value = item.bands[2].gain.toFloat() + 3.0f
+                    visualizerFloat4?.value = item.bands[3].gain.toFloat() + 3.0f
+                }
+            }
+
+
+
             var isLog = JSONObject(message).isNull("log")
             if (!isLog) {
                 val item = gson.fromJson(message, LogModel::class.java)

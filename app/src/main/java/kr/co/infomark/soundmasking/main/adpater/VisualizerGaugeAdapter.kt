@@ -10,8 +10,9 @@ import kr.co.infomark.soundmasking.databinding.VisualizerGaugeItemBinding
 import kr.co.infomark.soundmasking.databinding.VolumeGaugeItemBinding
 
 class VisualizerGaugeAdapter(var context : Context?) : RecyclerView.Adapter<VisualizerGaugeAdapter.VisualizerGaugeViewHolder>() {
-    var volumeGague  = 20f
-    var totalVolumeCount = 10
+    var maxDegree = 6
+    var volumeGague  = 3f
+    var totalVolumeCount = 11
     inner class VisualizerGaugeViewHolder(val binding: VisualizerGaugeItemBinding) : RecyclerView.ViewHolder(binding.root)
     lateinit var visualizerGaugeItemBinding : VisualizerGaugeItemBinding
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): VisualizerGaugeViewHolder {
@@ -22,12 +23,36 @@ class VisualizerGaugeAdapter(var context : Context?) : RecyclerView.Adapter<Visu
     }
 
     override fun onBindViewHolder(holder: VisualizerGaugeViewHolder, position: Int) {
-        val matchPostion = (totalVolumeCount - 1) - (volumeGague / 100 * totalVolumeCount)
-        if(matchPostion >= position){
-            holder.binding.gaugeBar.setBackgroundResource(R.color.gauge_gray)
-        } else{
-            holder.binding.gaugeBar.setBackgroundResource(R.color.gauge_red)
 
+        if(volumeGague > 0){
+            val matchPostion = totalVolumeCount - (volumeGague / maxDegree * totalVolumeCount)
+
+            if(position >= matchPostion){
+
+                holder.binding.gaugeBar.setBackgroundResource(R.color.gauge_red)
+            }
+            if(position > 5){
+                holder.binding.gaugeBar.setBackgroundResource(R.color.gauge_gray)
+            }
+
+
+        }else{
+            val matchPostion = totalVolumeCount - (volumeGague / maxDegree * totalVolumeCount)
+
+            if(position <= matchPostion){
+                //보다 작을때
+                holder.binding.gaugeBar.setBackgroundResource(R.color.gauge_red)
+            }
+            if(position < 5){
+                holder.binding.gaugeBar.setBackgroundResource(R.color.gauge_gray)
+            }
+        }
+
+
+
+
+        if(position == 5){
+            holder.binding.gaugeBar.setBackgroundResource(R.color.gauge_red)
         }
     }
 
