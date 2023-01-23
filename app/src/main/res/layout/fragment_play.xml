@@ -1,66 +1,88 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
 
     <data>
 
     </data>
 
-    <RelativeLayout
-        android:keepScreenOn="true"
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:keepScreenOn="true"
         tools:context=".main.PlayFragment">
 
         <ImageView
             android:id="@+id/music_imageview"
-            android:layout_marginTop="32dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:layout_centerHorizontal="true"
             android:src="@drawable/ico_music_image"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
+            app:layout_constraintBottom_toTopOf="@+id/info_title"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
         <LinearLayout
+
             android:id="@+id/info_title"
-            android:layout_marginTop="20dp"
-            android:layout_below="@+id/music_imageview"
-            android:orientation="vertical"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="40dp"
-            android:layout_marginRight="40dp">
+            android:layout_below="@+id/music_imageview"
+            android:layout_marginBottom="32dp"
+            android:orientation="vertical"
+            app:layout_constraintBottom_toTopOf="@+id/playbtns_relativelayout"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent">
 
             <TextView
-                android:singleLine="true"
                 android:id="@+id/current_play_title"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:textStyle="bold"
-                android:textSize="20dp"
-                android:textColor="@color/light_black"
                 android:layout_centerHorizontal="true"
                 android:gravity="center"
-                android:text="" />
+                android:singleLine="true"
+                android:text=""
+                android:textColor="@color/light_black"
+                android:textSize="20dp"
+                android:textStyle="bold" />
+
             <LinearLayout
-                android:gravity="center_vertical"
+                android:layout_width="wrap_content"
+                android:layout_height="20dp"
                 android:layout_marginTop="8dp"
-                android:layout_width="match_parent"
-                android:layout_height="20dp">
-                <TextView
-                    android:text="65"
-                    android:textColor="@color/black"
-                    android:id="@+id/volume_count_textview"
-                    android:layout_width="28dp"
-                    android:layout_height="wrap_content"/>
+                android:gravity="center_vertical">
+
+                <LinearLayout
+                    android:gravity="center"
+                    android:layout_width="40dp"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:id="@+id/volume_count_textview"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:text="0"
+                        android:textColor="@color/black" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:text="%"
+                        android:textColor="@color/black" />
+                </LinearLayout>
+
                 <androidx.recyclerview.widget.RecyclerView
-                    android:orientation="horizontal"
-                    app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-                    tools:listitem="@layout/volume_gauge_item"
                     android:id="@+id/volume_gauge_recyclerview"
                     android:layout_width="301dp"
-                    android:layout_height="16dp"/>
+                    android:layout_height="16dp"
+                    android:orientation="horizontal"
+                    app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                    tools:listitem="@layout/volume_gauge_item" />
             </LinearLayout>
+
             <ProgressBar
                 android:id="@+id/progress_bar"
                 style="?android:attr/progressBarStyleHorizontal"
@@ -68,17 +90,7 @@
                 android:layout_height="wrap_content"
                 android:layout_alignParentTop="true"
                 android:layout_centerHorizontal="true"
-                android:layout_marginTop="16dp"
-                />
-
-<!--            <ProgressBar-->
-<!--                style="?android:attr/progressBarStyleHorizontal"-->
-<!--                android:progressDrawable="@drawable/progress"-->
-<!--                android:layout_gravity="center"-->
-<!--                android:id="@+id/progress_bar"-->
-<!--                android:layout_marginTop="16dp"-->
-<!--                android:layout_width="match_parent"-->
-<!--                android:layout_height="wrap_content"></ProgressBar>-->
+                android:layout_marginTop="16dp" />
 
             <RelativeLayout
                 android:layout_width="match_parent"
@@ -87,26 +99,26 @@
                 <TextView
 
                     android:id="@+id/current_time_textview"
-                    android:layout_marginTop="10dp"
-                    android:layout_alignParentLeft="true"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textStyle="normal"
-                    android:textSize="14dp"
-                    android:textColor="@color/light_black"
+                    android:layout_alignParentLeft="true"
+                    android:layout_marginTop="10dp"
                     android:lineSpacingExtra="0sp"
-                    android:text="00:00" />
+                    android:text="00:00"
+                    android:textColor="@color/light_black"
+                    android:textSize="14dp"
+                    android:textStyle="normal" />
 
                 <TextView
                     android:id="@+id/remain_time_textview"
-                    android:layout_marginTop="10dp"
-                    android:layout_alignParentRight="true"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textStyle="normal"
-                    android:textSize="14dp"
+                    android:layout_alignParentRight="true"
+                    android:layout_marginTop="10dp"
+                    android:text="00:00"
                     android:textColor="@color/light_black"
-                    android:text="00:00" />
+                    android:textSize="14dp"
+                    android:textStyle="normal" />
             </RelativeLayout>
 
 
@@ -114,28 +126,29 @@
 
         <RelativeLayout
             android:id="@+id/playbtns_relativelayout"
-            android:layout_marginTop="32dp"
-            android:layout_below="@+id/info_title"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/info_title"
+            android:layout_marginBottom="18dp"
+            app:layout_constraintBottom_toTopOf="@+id/linearLayout3">
 
             <ImageButton
                 android:id="@+id/repeat_btn"
+                android:layout_width="70dp"
+                android:layout_height="70dp"
                 android:layout_centerVertical="true"
                 android:layout_toLeftOf="@+id/preview_btn"
                 android:background="@android:color/transparent"
-                android:src="@drawable/ico_light_repeat_deactivated"
-                android:layout_width="70dp"
-                android:layout_height="70dp" />
+                android:src="@drawable/ico_light_repeat_deactivated" />
 
             <ImageButton
                 android:id="@+id/preview_btn"
+                android:layout_width="70dp"
+                android:layout_height="70dp"
                 android:layout_centerVertical="true"
                 android:layout_toLeftOf="@+id/play_btn"
                 android:background="@android:color/transparent"
-                android:src="@drawable/ico_playbutton_before"
-                android:layout_width="70dp"
-                android:layout_height="70dp" />
+                android:src="@drawable/ico_playbutton_before" />
 
             <ImageButton
                 android:id="@+id/play_btn"
@@ -147,60 +160,62 @@
 
             <ImageButton
                 android:id="@+id/next_btn"
+                android:layout_width="70dp"
+                android:layout_height="70dp"
                 android:layout_centerVertical="true"
                 android:layout_toRightOf="@+id/play_btn"
                 android:background="@android:color/transparent"
-                android:src="@drawable/ico_playbutton_next"
-                android:layout_width="70dp"
-                android:layout_height="70dp" />
+                android:src="@drawable/ico_playbutton_next" />
 
             <ImageButton
                 android:id="@+id/random_btn"
+                android:layout_width="70dp"
+                android:layout_height="70dp"
                 android:layout_centerVertical="true"
                 android:layout_toRightOf="@+id/next_btn"
                 android:background="@android:color/transparent"
-                android:src="@drawable/ico_light_shuffle_deactivated"
-                android:layout_width="70dp"
-                android:layout_height="70dp" />
+                android:src="@drawable/ico_light_shuffle_deactivated" />
 
 
         </RelativeLayout>
 
         <LinearLayout
-            android:gravity="center_horizontal"
-            android:layout_marginTop="18dp"
-            android:layout_below="@+id/playbtns_relativelayout"
+
+            android:id="@+id/linearLayout3"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/playbtns_relativelayout"
+            android:gravity="center_horizontal"
+            app:layout_constraintBottom_toBottomOf="parent">
+
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/recyclerview_visualizer_1"
                 android:layout_width="22dp"
                 android:layout_height="66dp"
-                tools:listitem="@layout/visualizer_gauge_item"
-                />
+                tools:listitem="@layout/visualizer_gauge_item" />
+
             <androidx.recyclerview.widget.RecyclerView
-                android:layout_marginLeft="20dp"
                 android:id="@+id/recyclerview_visualizer_2"
                 android:layout_width="22dp"
                 android:layout_height="66dp"
-                tools:listitem="@layout/visualizer_gauge_item"
-                />
-            <androidx.recyclerview.widget.RecyclerView
                 android:layout_marginLeft="20dp"
+                tools:listitem="@layout/visualizer_gauge_item" />
+
+            <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/recyclerview_visualizer_3"
                 android:layout_width="22dp"
                 android:layout_height="66dp"
-                tools:listitem="@layout/visualizer_gauge_item"
-                />
-            <androidx.recyclerview.widget.RecyclerView
                 android:layout_marginLeft="20dp"
+                tools:listitem="@layout/visualizer_gauge_item" />
+
+            <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/recyclerview_visualizer_4"
                 android:layout_width="22dp"
                 android:layout_height="66dp"
-                tools:listitem="@layout/visualizer_gauge_item"
-                />
-            
+                android:layout_marginLeft="20dp"
+                tools:listitem="@layout/visualizer_gauge_item" />
+
         </LinearLayout>
 
-    </RelativeLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

@@ -154,8 +154,8 @@ class MusicBox(var mainActivity : MainActivity) :OnCompletionListener,MediaPlaye
 //        if(randomPlay.value == true){
 //            currentIndex = makeRandom(maxSize)
 //        }else
-            if(currentIndex < maxSize){
-            currentIndex ++
+        if(currentIndex < maxSize){
+           currentIndex ++
         }else{
             currentIndex = 0
         }

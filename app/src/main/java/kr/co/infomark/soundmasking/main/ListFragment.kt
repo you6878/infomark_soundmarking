@@ -52,7 +52,7 @@ class ListFragment : Fragment() {
         binding?.fileRecyclerview?.layoutManager = LinearLayoutManager(requireContext())
         binding?.fileRecyclerview?.apply {
             val mainActivity = activity as? MainActivity
-            playListAdapter = PlayListAdapter(mainActivity?.musicBox?.playFilesOrigin)
+            playListAdapter = PlayListAdapter(mainActivity?.musicBox?.playFiles)
             adapter = playListAdapter
         }
         var mainActivity = activity as? MainActivity
@@ -87,7 +87,7 @@ class ListFragment : Fragment() {
     }
     fun refreshList(){
         val mainActivity = activity as? MainActivity
-        playListAdapter?.files = mainActivity?.musicBox?.playFilesOrigin
+        playListAdapter?.files = mainActivity?.musicBox?.playFiles
         playListAdapter?.notifyDataSetChanged()
     }
 

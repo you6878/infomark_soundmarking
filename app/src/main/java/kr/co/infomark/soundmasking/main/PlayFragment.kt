@@ -79,6 +79,10 @@ class PlayFragment : Fragment() {
         mainActivity?.visualizerFloat4?.observe(viewLifecycleOwner) {
             visualizerGaugeAdapter4.setVolume(it)
         }
+        mainActivity?.volumeFloat?.observe(viewLifecycleOwner) {
+            volumeGaugeAdapter.setVolume(it)
+            binding?.volumeCountTextview?.text = it.toInt().toString()
+        }
     }
 
     fun setVolumeGauge(){

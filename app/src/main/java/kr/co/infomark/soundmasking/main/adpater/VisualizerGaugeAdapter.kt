@@ -10,9 +10,10 @@ import kr.co.infomark.soundmasking.databinding.VisualizerGaugeItemBinding
 import kr.co.infomark.soundmasking.databinding.VolumeGaugeItemBinding
 
 class VisualizerGaugeAdapter(var context : Context?) : RecyclerView.Adapter<VisualizerGaugeAdapter.VisualizerGaugeViewHolder>() {
-    var maxDegree = 6
-    var volumeGague  = 3f
-    var totalVolumeCount = 11
+    var maxDegree = 3
+    var volumeGague  = 0f
+    var totalVolumeCount = 11f
+    var volumeSideCount = 5
     inner class VisualizerGaugeViewHolder(val binding: VisualizerGaugeItemBinding) : RecyclerView.ViewHolder(binding.root)
     lateinit var visualizerGaugeItemBinding : VisualizerGaugeItemBinding
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): VisualizerGaugeViewHolder {
@@ -24,22 +25,26 @@ class VisualizerGaugeAdapter(var context : Context?) : RecyclerView.Adapter<Visu
 
     override fun onBindViewHolder(holder: VisualizerGaugeViewHolder, position: Int) {
 
-        if(volumeGague > 0){
-            val matchPostion = totalVolumeCount - (volumeGague / maxDegree * totalVolumeCount)
+        //초기화
+        if(position == volumeSideCount){
+            holder.binding.gaugeBar.setBackgroundResource(R.color.gauge_red)
+        }else{
+            holder.binding.gaugeBar.setBackgroundResource(R.color.gauge_gray)
+        }
 
-            if(position >= matchPostion){
 
+        val matchPostion = volumeSideCount - (volumeGague / maxDegree * volumeSideCount)
+        if(matchPostion.toInt() < volumeSideCount){
+            val matchPostion = volumeSideCount - (volumeGague / maxDegree * volumeSideCount)
+
+            if(position >= matchPostion.toInt()){
                 holder.binding.gaugeBar.setBackgroundResource(R.color.gauge_red)
             }
             if(position > 5){
                 holder.binding.gaugeBar.setBackgroundResource(R.color.gauge_gray)
             }
-
-
-        }else{
-            val matchPostion = totalVolumeCount - (volumeGague / maxDegree * totalVolumeCount)
-
-            if(position <= matchPostion){
+        }else if(matchPostion.toInt() > volumeSideCount){
+            if(position <= matchPostion.toInt()){
                 //보다 작을때
                 holder.binding.gaugeBar.setBackgroundResource(R.color.gauge_red)
             }
@@ -51,13 +56,11 @@ class VisualizerGaugeAdapter(var context : Context?) : RecyclerView.Adapter<Visu
 
 
 
-        if(position == 5){
-            holder.binding.gaugeBar.setBackgroundResource(R.color.gauge_red)
-        }
+
     }
 
     override fun getItemCount(): Int {
-        return totalVolumeCount
+        return totalVolumeCount.toInt()
     }
     fun setVolume(volume : Float){
         this.volumeGague = volume

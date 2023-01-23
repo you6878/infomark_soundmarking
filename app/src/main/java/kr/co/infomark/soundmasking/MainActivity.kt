@@ -14,10 +14,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.MutableLiveData
 import com.google.gson.Gson
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.Job
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.*
 import kr.co.infomark.soundmasking.bluetooth.BluetoothManager
 import kr.co.infomark.soundmasking.bluetooth.BluetoothSPP
 import kr.co.infomark.soundmasking.bluetooth.BluetoothState
@@ -200,6 +197,19 @@ class MainActivity : AppCompatActivity() {
 
     fun setBTListener() {
 
+
+//        GlobalScope.launch {
+//            delay(3000)
+//            runOnUiThread {
+//                visualizerFloat1?.value = -2.384672962752f
+//            }
+//
+//            delay(1000)
+//            runOnUiThread {
+//                visualizerFloat1?.value = 0.480418320244f
+//            }
+//            delay(1000)
+//        }.start()
         bt?.setOnDataReceivedListener { data, message ->
             println(message)
             volumeFloat
@@ -209,10 +219,11 @@ class MainActivity : AppCompatActivity() {
             if(!state){
                 val item = gson.fromJson(message, StateModel::class.java)
                 if(item.state == "masking"){
-                    visualizerFloat1?.value = item.bands[0].gain.toFloat() + 3.0f
-                    visualizerFloat2?.value = item.bands[1].gain.toFloat() + 3.0f
-                    visualizerFloat3?.value = item.bands[2].gain.toFloat() + 3.0f
-                    visualizerFloat4?.value = item.bands[3].gain.toFloat() + 3.0f
+                    visualizerFloat1?.value = item.bands[0].gain.toFloat()
+                    visualizerFloat2?.value = item.bands[1].gain.toFloat()
+                    visualizerFloat3?.value = item.bands[2].gain.toFloat()
+                    visualizerFloat4?.value = item.bands[3].gain.toFloat()
+                    volumeFloat?.value = item.gain.toFloat() * 100
                 }
             }
 

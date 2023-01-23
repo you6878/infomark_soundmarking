@@ -10,8 +10,9 @@ import kr.co.infomark.soundmasking.R
 import kr.co.infomark.soundmasking.databinding.VolumeGaugeItemBinding
 
 class VolumeGaugeAdapter(var context : Context?) : RecyclerView.Adapter<VolumeGaugeAdapter.VolumeGaugeViewHolder>() {
-    var volumeGague  = 50f
+    var volumeGague  = 0f
     var totalVolumeCount = 44
+    var maxVolume = 200
     inner class VolumeGaugeViewHolder(val binding: VolumeGaugeItemBinding) : RecyclerView.ViewHolder(binding.root)
     lateinit var volumeGaugeItemBinding : VolumeGaugeItemBinding
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): VolumeGaugeViewHolder {
@@ -22,7 +23,7 @@ class VolumeGaugeAdapter(var context : Context?) : RecyclerView.Adapter<VolumeGa
     }
 
     override fun onBindViewHolder(holder: VolumeGaugeViewHolder, position: Int) {
-        val matchPostion = volumeGague / 100 * totalVolumeCount
+        val matchPostion = volumeGague / maxVolume * totalVolumeCount
         if(matchPostion >= position){
             holder.binding.gaugeBar.setBackgroundResource(R.color.black)
         } else{
