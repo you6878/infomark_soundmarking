@@ -27,7 +27,7 @@ class VisualizerGaugeAdapter(var context : Context?) : RecyclerView.Adapter<Visu
 
         //초기화
         if(position == volumeSideCount){
-            holder.binding.gaugeBar.setBackgroundResource(R.color.gauge_red)
+            holder.binding.gaugeBar.setBackgroundResource(R.color.black)
         }else{
             holder.binding.gaugeBar.setBackgroundResource(R.color.gauge_gray)
         }
@@ -38,7 +38,7 @@ class VisualizerGaugeAdapter(var context : Context?) : RecyclerView.Adapter<Visu
             val matchPostion = volumeSideCount - (volumeGague / maxDegree * volumeSideCount)
 
             if(position >= matchPostion.toInt()){
-                holder.binding.gaugeBar.setBackgroundResource(R.color.gauge_red)
+                holder.binding.gaugeBar.setBackgroundResource(R.color.black)
             }
             if(position > 5){
                 holder.binding.gaugeBar.setBackgroundResource(R.color.gauge_gray)
@@ -46,7 +46,7 @@ class VisualizerGaugeAdapter(var context : Context?) : RecyclerView.Adapter<Visu
         }else if(matchPostion.toInt() > volumeSideCount){
             if(position <= matchPostion.toInt()){
                 //보다 작을때
-                holder.binding.gaugeBar.setBackgroundResource(R.color.gauge_red)
+                holder.binding.gaugeBar.setBackgroundResource(R.color.black)
             }
             if(position < 5){
                 holder.binding.gaugeBar.setBackgroundResource(R.color.gauge_gray)
