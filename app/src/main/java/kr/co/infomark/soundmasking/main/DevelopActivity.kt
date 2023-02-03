@@ -1,8 +1,8 @@
 package kr.co.infomark.soundmasking.main
 
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import com.google.gson.Gson
 import kotlinx.coroutines.GlobalScope
@@ -13,11 +13,14 @@ import kr.co.infomark.soundmasking.databinding.ActivityDevelopBinding
 import kr.co.infomark.soundmasking.model.*
 import kr.co.infomark.soundmasking.util.Util
 import org.json.JSONObject
+import java.text.DecimalFormat
+import java.text.NumberFormat
 
 class DevelopActivity : AppCompatActivity() {
     lateinit var gson: Gson
     var bt: BluetoothSPP? = null
     var binding: ActivityDevelopBinding? = null
+    var formatter = DecimalFormat("###.#############")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_develop)
@@ -44,7 +47,7 @@ class DevelopActivity : AppCompatActivity() {
         binding?.soundEnOffsetBtn?.setOnClickListener {
             var commandModel = MaskingSetParameterDTO()
             commandModel.cmd = "masking_set_parameter"
-            commandModel.key = "en_offset"
+            commandModel.key = "gg_momentum"
             commandModel.value = binding?.soundEnOffsetTextview?.text.toString()
             bt?.send(gson.toJson(commandModel))
         }
@@ -174,18 +177,20 @@ class DevelopActivity : AppCompatActivity() {
 //                    MaskingGetParameterDTO();
                     var model = gson.fromJson(message, MaskingGetParameterDTO::class.java)
                     if (model.result == "ok") {
+                        binding?.soundEnOffsetTextview?.setText(formatter.format(model.gg_momentum.toDouble()))
 
-                        binding?.soundEnOffsetTextview?.setText(model.en_offset)
-                        binding?.soundGgPstepTextview?.setText(model.gg_pstep)
-                        binding?.soundGgNstepTextview?.setText(model.gg_nstep)
-                        binding?.soundEqPsetpTextview?.setText(model.eq_step)
+                        binding?.soundGgPstepTextview?.setText(formatter.format(model.gg_pstep.toDouble()))
+
+                        binding?.soundGgNstepTextview?.setText(formatter.format(model.gg_nstep.toDouble()))
+
+                        binding?.soundEqPsetpTextview?.setText(formatter.format(model.eq_step.toDouble()))
 
                         //gg_pclip
-                        binding?.soundGgPclipTextview?.setText(model.gg_pclip)
+                        binding?.soundGgPclipTextview?.setText(formatter.format(model.gg_pclip.toDouble()))
                         //gg_nclip
-                        binding?.soundGgNclipTextview?.setText(model.gg_nclip)
+                        binding?.soundGgNclipTextview?.setText(formatter.format(model.gg_nclip.toDouble()))
                         //eq_clip
-                        binding?.soundEqClipTextview?.setText(model.eq_clip)
+                        binding?.soundEqClipTextview?.setText(formatter.format(model.eq_clip.toDouble()))
                     }
                 }
                 if (cmd == MaskingSetParameter) {

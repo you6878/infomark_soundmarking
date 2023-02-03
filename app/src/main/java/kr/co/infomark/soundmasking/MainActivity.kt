@@ -197,19 +197,6 @@ class MainActivity : AppCompatActivity() {
 
     fun setBTListener() {
 
-
-//        GlobalScope.launch {
-//            delay(3000)
-//            runOnUiThread {
-//                visualizerFloat1?.value = -2.384672962752f
-//            }
-//
-//            delay(1000)
-//            runOnUiThread {
-//                visualizerFloat1?.value = 0.480418320244f
-//            }
-//            delay(1000)
-//        }.start()
         bt?.setOnDataReceivedListener { data, message ->
             println(message)
             volumeFloat
@@ -218,7 +205,7 @@ class MainActivity : AppCompatActivity() {
             var state = JSONObject(message).isNull("state")
             if(!state){
                 val item = gson.fromJson(message, StateModel::class.java)
-                if(item.state == "masking"){
+                if(item.state == "masking" && item.bands.size == 4){
                     visualizerFloat1?.value = item.bands[0].gain.toFloat()
                     visualizerFloat2?.value = item.bands[1].gain.toFloat()
                     visualizerFloat3?.value = item.bands[2].gain.toFloat()

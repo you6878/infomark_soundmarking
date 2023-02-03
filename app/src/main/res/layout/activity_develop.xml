@@ -53,7 +53,7 @@
                     android:gravity="center"
                     android:text="SOUND MASKING : "
                     android:textColor="@color/light_black"
-                    android:textSize="16dp"
+                    android:textSize="13dp"
                     android:textStyle="normal" />
                 <androidx.appcompat.widget.AppCompatButton
                     android:layout_alignParentRight="true"
@@ -96,7 +96,7 @@
                     android:gravity="center"
                     android:text="NOISE Report : "
                     android:textColor="@color/light_black"
-                    android:textSize="16dp"
+                    android:textSize="13dp"
                     android:textStyle="normal" />
                 <androidx.appcompat.widget.AppCompatButton
                     android:layout_alignParentRight="true"
@@ -135,11 +135,11 @@
                     android:id="@+id/en_offset_textview"
                     android:layout_height="match_parent"
                     android:layout_marginLeft="36dp"
-                    android:layout_width="100dp"
+                    android:layout_width="120dp"
+                    android:textSize="13dp"
                     android:gravity="center_vertical"
-                    android:text="EN_OFFSET : "
+                    android:text="GG_MOMENTUM : "
                     android:textColor="@color/light_black"
-                    android:textSize="16dp"
                     android:textStyle="normal" />
                 <EditText
                     android:layout_marginRight="10dp"
@@ -188,11 +188,11 @@
                     android:id="@+id/gg_pestep_textview"
                     android:layout_height="match_parent"
                     android:layout_marginLeft="36dp"
-                    android:layout_width="100dp"
                     android:gravity="center_vertical"
                     android:text="GG_PSTEP : "
                     android:textColor="@color/light_black"
-                    android:textSize="16dp"
+                    android:layout_width="120dp"
+                    android:textSize="13dp"
                     android:textStyle="normal" />
                 <EditText
                     android:layout_marginRight="10dp"
@@ -239,13 +239,14 @@
 
                 <TextView
                     android:id="@+id/gg_nestep_textview"
-                    android:layout_width="100dp"
+                    android:layout_width="120dp"
+                    android:textSize="13dp"
                     android:gravity="center_vertical"
                     android:layout_height="match_parent"
                     android:layout_marginLeft="36dp"
                     android:text="GG_NSTEP : "
                     android:textColor="@color/light_black"
-                    android:textSize="16dp"
+
                     android:textStyle="normal" />
                 <EditText
                     android:layout_marginRight="10dp"
@@ -294,15 +295,15 @@
 
                 <TextView
                     android:id="@+id/eq_step_textview"
-                    android:layout_width="100dp"
                     android:gravity="center_vertical"
+                    android:layout_width="120dp"
+                    android:textSize="13dp"
                     android:layout_height="match_parent"
                     android:layout_marginLeft="36dp"
 
 
                     android:text="EQ_STEP : "
                     android:textColor="@color/light_black"
-                    android:textSize="16dp"
                     android:textStyle="normal" />
                 <EditText
                     android:layout_marginRight="10dp"
@@ -350,13 +351,14 @@
 
                 <TextView
                     android:id="@+id/gg_pclip_textview"
-                    android:layout_width="100dp"
+                    android:layout_width="120dp"
+                    android:textSize="13dp"
                     android:gravity="center_vertical"
                     android:layout_height="match_parent"
                     android:layout_marginLeft="36dp"
                     android:text="GG_PCLIP : "
                     android:textColor="@color/light_black"
-                    android:textSize="16dp"
+
                     android:textStyle="normal" />
                 <EditText
                     android:layout_marginRight="10dp"
@@ -404,13 +406,14 @@
 
                 <TextView
                     android:id="@+id/gg_nclip_textview"
-                    android:layout_width="100dp"
+                    android:layout_width="120dp"
+                    android:textSize="13dp"
                     android:gravity="center_vertical"
                     android:layout_height="match_parent"
                     android:layout_marginLeft="36dp"
                     android:text="GG_NCLIP : "
                     android:textColor="@color/light_black"
-                    android:textSize="16dp"
+
                     android:textStyle="normal" />
                 <EditText
                     android:layout_marginRight="10dp"
@@ -458,13 +461,13 @@
 
                 <TextView
                     android:id="@+id/eq_clip_textview"
-                    android:layout_width="100dp"
+                    android:layout_width="120dp"
+                    android:textSize="13dp"
                     android:gravity="center_vertical"
                     android:layout_height="match_parent"
                     android:layout_marginLeft="36dp"
                     android:text="EQ_CLIP : "
                     android:textColor="@color/light_black"
-                    android:textSize="16dp"
                     android:textStyle="normal" />
                 <EditText
                     android:layout_marginRight="10dp"
