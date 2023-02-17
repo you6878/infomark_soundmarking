@@ -51,6 +51,7 @@ class DevelopActivity : AppCompatActivity() {
             commandModel.value = binding?.soundEnOffsetTextview?.text.toString()
             bt?.send(gson.toJson(commandModel))
         }
+        binding?.soundGgPstepBtn?.isEnabled = false
         binding?.soundGgPstepBtn?.setOnClickListener {
             var commandModel = MaskingSetParameterDTO()
             commandModel.cmd = "masking_set_parameter"
@@ -58,6 +59,7 @@ class DevelopActivity : AppCompatActivity() {
             commandModel.value = binding?.soundGgPstepTextview?.text.toString()
             bt?.send(gson.toJson(commandModel))
         }
+        binding?.soundGgNstepBtn?.isEnabled = false
         binding?.soundGgNstepBtn?.setOnClickListener {
             var commandModel = MaskingSetParameterDTO()
             commandModel.cmd = "masking_set_parameter"
@@ -66,6 +68,7 @@ class DevelopActivity : AppCompatActivity() {
             println(gson.toJson(commandModel))
             bt?.send(gson.toJson(commandModel))
         }
+        binding?.soundEqPsetpBtn?.isEnabled = false
         binding?.soundEqPsetpBtn?.setOnClickListener {
             var commandModel = MaskingSetParameterDTO()
             commandModel.cmd = "masking_set_parameter"
@@ -74,7 +77,7 @@ class DevelopActivity : AppCompatActivity() {
 
             bt?.send(gson.toJson(commandModel))
         }
-
+        binding?.soundGgPclipBtn?.isEnabled = false
         binding?.soundGgPclipBtn?.setOnClickListener {
             var commandModel = MaskingSetParameterDTO()
             commandModel.cmd = "masking_set_parameter"
@@ -83,7 +86,7 @@ class DevelopActivity : AppCompatActivity() {
 
             bt?.send(gson.toJson(commandModel))
         }
-
+        binding?.soundGgNclipBtn?.isEnabled = false
         binding?.soundGgNclipBtn?.setOnClickListener {
             var commandModel = MaskingSetParameterDTO()
             commandModel.cmd = "masking_set_parameter"
@@ -92,7 +95,7 @@ class DevelopActivity : AppCompatActivity() {
 
             bt?.send(gson.toJson(commandModel))
         }
-
+        binding?.soundEqClipBtn?.isEnabled = false
         binding?.soundEqClipBtn?.setOnClickListener {
             var commandModel = MaskingSetParameterDTO()
             commandModel.cmd = "masking_set_parameter"
